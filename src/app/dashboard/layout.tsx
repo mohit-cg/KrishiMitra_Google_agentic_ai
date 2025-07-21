@@ -35,10 +35,12 @@ export default function DashboardLayout({
     }
   }, [user, loading, router]);
 
+  // While loading, or if there's no user (and redirecting), show a loading state.
   if (loading || !user) {
     return <div className="flex h-screen items-center justify-center">Loading...</div>;
   }
-
+  
+  // Only render the dashboard if not loading and a user is present.
   return (
     <TooltipProvider>
       <SidebarProvider>

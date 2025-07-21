@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     });
 
+    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
@@ -34,9 +35,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error("Error during Google sign-in", error);
-    } finally {
-        setLoading(false);
+      // Set loading to false in case of an error to avoid getting stuck.
+      setLoading(false);
     }
+    // The onAuthStateChanged listener will handle setting the user and loading state.
   };
 
   const signOut = async () => {

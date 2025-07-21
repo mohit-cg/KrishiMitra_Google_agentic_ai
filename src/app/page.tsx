@@ -27,10 +27,12 @@ export default function LoginPage() {
     }
   };
 
+  // While loading, or if the user is logged in (and redirecting), show a loading state.
   if (loading || user) {
     return <div className="flex h-screen items-center justify-center">Loading...</div>;
   }
-
+  
+  // Only render the login page if not loading and no user is present.
   return (
     <div className="w-full h-screen lg:grid lg:grid-cols-2">
       <div className="flex items-center justify-center py-12 bg-background">
