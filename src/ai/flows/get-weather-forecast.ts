@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -11,7 +12,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-export const GetWeatherForecastInputSchema = z.object({
+const GetWeatherForecastInputSchema = z.object({
   city: z.string().describe('The city for which to get the weather forecast.'),
 });
 export type GetWeatherForecastInput = z.infer<
@@ -25,7 +26,7 @@ const DailyForecastSchema = z.object({
   icon: z.enum(['CloudSun', 'Sun', 'CloudRain', 'Cloud', 'Wind', 'Droplets']).describe('An icon representing the condition.'),
 });
 
-export const GetWeatherForecastOutputSchema = z.object({
+const GetWeatherForecastOutputSchema = z.object({
   city: z.string().describe('The city of the forecast.'),
   current: z.object({
     temperature: z.string().describe('The current temperature.'),
