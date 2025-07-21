@@ -1,5 +1,5 @@
 
-import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -11,12 +11,15 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-let app: FirebaseApp;
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
-} else {
-  app = getApp();
+// Initialize Firebase for SSR and client
+function getClientApp() {
+  if (getApps().length) {
+    return getApp();
+  }
+
+  const app = initializeApp(firebaseConfig);
+  return app;
 }
 
+const app: FirebaseApp = getClientApp();
 export const auth = getAuth(app);
