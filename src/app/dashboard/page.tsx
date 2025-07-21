@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -17,7 +19,13 @@ import {
   Wind,
   Droplets,
   Calendar,
+  Sun,
+  CloudRain,
+  CloudSun,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getWeatherForecast, type GetWeatherForecastOutput } from "@/ai/flows/get-weather-forecast";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const quickLinks = [
   {
@@ -40,21 +48,40 @@ const quickLinks = [
   },
 ];
 
-const weatherData = {
-  city: "Pune",
-  temperature: "31°C",
-  condition: "Partly Cloudy",
-  wind: "12 km/h",
-  humidity: "55%",
-  forecast: [
-    { day: "Tue", temp: "32°C", icon: Cloud },
-    { day: "Wed", temp: "30°C", icon: Cloud },
-    { day: "Thu", temp: "33°C", icon: Cloud },
-    { day: "Fri", temp: "29°C", icon: Cloud },
-  ],
+const iconMap = {
+  Cloud,
+  Sun,
+  CloudRain,
+  CloudSun,
+  Wind,
+  Droplets,
 };
 
 export default function DashboardPage() {
+  const [weatherData, setWeatherData] = useState<GetWeatherForecastOutput | null>(null);
+  const [loadingWeather, setLoadingWeather] = useState(true);
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        setLoadingWeather(true);
+        const data = await getWeatherForecast({ city: "Pune" });
+        setWeatherData(data);
+      } catch (error) {
+        console.error("Failed to fetch weather", error);
+        // Handle error, maybe set default data
+      } finally {
+        setLoadingWeather(false);
+      }
+    };
+    fetchWeather();
+  }, []);
+  
+  const getIcon = (iconName: keyof typeof iconMap) => {
+    const IconComponent = iconMap[iconName] || Cloud;
+    return <IconComponent className="h-6 w-6 text-accent" />;
+  };
+
   return (
     <div className="flex-1 space-y-4">
       <h1 className="text-3xl font-bold font-headline">Welcome, Farmer!</h1>
@@ -68,18 +95,30 @@ export default function DashboardPage() {
             <Cloud className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{weatherData.temperature}</div>
-            <p className="text-xs text-muted-foreground">
-              {weatherData.condition} in {weatherData.city}
-            </p>
-            <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-              <div className="flex items-center gap-1">
-                <Wind className="h-3 w-3" /> <span>{weatherData.wind}</span>
+            {loadingWeather ? (
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-1/2" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-full" />
               </div>
-              <div className="flex items-center gap-1">
-                <Droplets className="h-3 w-3" /> <span>{weatherData.humidity}</span>
-              </div>
-            </div>
+            ) : weatherData ? (
+              <>
+                <div className="text-2xl font-bold">{weatherData.current.temperature}</div>
+                <p className="text-xs text-muted-foreground">
+                  {weatherData.current.condition} in {weatherData.city}
+                </p>
+                <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
+                  <div className="flex items-center gap-1">
+                    <Wind className="h-3 w-3" /> <span>{weatherData.current.wind}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Droplets className="h-3 w-3" /> <span>{weatherData.current.humidity}</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+               <p className="text-xs text-muted-foreground">Weather data unavailable.</p>
+            )}
           </CardContent>
         </Card>
         <Card className="lg:col-span-2">
@@ -90,16 +129,22 @@ export default function DashboardPage() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent className="flex justify-around items-center pt-2">
-            {weatherData.forecast.map((day) => (
-              <div key={day.day} className="flex flex-col items-center gap-1">
-                <span className="text-xs text-muted-foreground">
-                  {day.day}
-                </span>
-                <day.icon className="h-6 w-6 text-accent" />
-                <span className="text-sm font-bold">{day.temp}</span>
-              </div>
-            ))}
-             <Button variant="outline" size="sm" className="ml-4" asChild>
+            {loadingWeather ? (
+                Array.from({length: 4}).map((_, i) => <Skeleton key={i} className="h-12 w-12" />)
+            ) : weatherData ? (
+              weatherData.forecast.slice(0, 4).map((day) => (
+                <div key={day.day} className="flex flex-col items-center gap-1">
+                  <span className="text-xs text-muted-foreground">
+                    {day.day.substring(0, 3)}
+                  </span>
+                  {getIcon(day.icon as keyof typeof iconMap)}
+                  <span className="text-sm font-bold">{day.temp}</span>
+                </div>
+              ))
+            ) : (
+                <p className="text-xs text-muted-foreground">Forecast unavailable.</p>
+            )}
+            <Button variant="outline" size="sm" className="ml-4" asChild>
               <Link href="/dashboard/weather">View More</Link>
             </Button>
           </CardContent>
