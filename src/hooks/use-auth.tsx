@@ -31,10 +31,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // onAuthStateChanged will handle setting the user and loading state
+      // onAuthStateChanged will handle setting the user and updating loading state to false
     } catch (error) {
       console.error("Error during Google sign-in", error);
-      setLoading(false);
+      // If sign-in fails, ensure loading is set back to false
+      setLoading(false); 
     }
   };
 
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   
   const value = { user, loading, signInWithGoogle, signOut };
   
-  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
