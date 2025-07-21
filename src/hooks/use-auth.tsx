@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup, User } from "firebase/auth";
 import { auth } from "@/lib/firebase-config";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface AuthContextType {
   user: User | null;
@@ -18,47 +18,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const pathname = usePathname();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       setLoading(false);
-      
-      const isAuthPage = pathname === '/';
-      if (!user && !isAuthPage) {
-        router.push('/');
-      } else if (user && isAuthPage) {
-        router.push('/dashboard');
-      }
     });
 
     return () => unsubscribe();
-  }, [router, pathname]);
+  }, []);
 
   const signInWithGoogle = async () => {
+    setLoading(true);
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      setUser(result.user);
+      router.push('/dashboard');
     } catch (error) {
       console.error("Error during Google sign-in", error);
-      throw error;
+      // Optionally, show a toast notification to the user
+    } finally {
+      setLoading(false);
     }
   };
 
   const signOut = async () => {
+    setLoading(true);
     try {
       await firebaseSignOut(auth);
+      setUser(null);
+      router.push('/');
     } catch (error) {
       console.error("Error signing out", error);
+    } finally {
+      setLoading(false);
     }
   };
   
   const value = { user, loading, signInWithGoogle, signOut };
-
-  if (loading && pathname !== '/') {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
-  }
   
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
