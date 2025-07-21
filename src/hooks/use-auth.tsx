@@ -3,7 +3,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup, User, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth, allConfigured } from "@/lib/firebase-config";
+import { auth } from "@/lib/firebase-config";
 
 interface AuthContextType {
   user: User | null;
@@ -30,10 +30,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signInWithGoogle = async () => {
-    if (!allConfigured) {
-      alert("Firebase environment variables are not configured. Please check your .env file.");
-      return;
-    }
     setLoading(true);
     const provider = new GoogleAuthProvider();
     try {
@@ -46,38 +42,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signInWithEmail = async (email: string, pass: string) => {
-    if (!allConfigured) {
-      alert("Firebase environment variables are not configured. Please check your .env file.");
-      return;
-    }
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, pass);
     } catch (error) {
       console.error("Error during email sign-in", error);
       setLoading(false);
-      throw error;
+      throw error; // Re-throw the error to be caught by the UI
     }
   };
 
   const signUpWithEmail = async (email: string, pass: string) => {
-    if (!allConfigured) {
-      alert("Firebase environment variables are not configured. Please check your .env file.");
-      return;
-    }
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, pass);
     } catch (error) {
       console.error("Error during email sign-up", error);
-      throw error;
+      throw error; // Re-throw the error to be caught by the UI
     } finally {
         setLoading(false);
     }
   };
 
   const signOut = async () => {
+    setLoading(true);
     await firebaseSignOut(auth);
+    setUser(null);
+    setLoading(false);
   };
 
   const value = { user, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut };
@@ -85,7 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   if (loading) {
     return <div className="flex h-screen items-center justify-center">Loading...</div>;
   }
-
+  
   return (
     <AuthContext.Provider value={value}>
       {children}
