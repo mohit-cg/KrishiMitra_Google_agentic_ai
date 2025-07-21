@@ -7,11 +7,29 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Icons } from '@/components/icons';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { toast } from '@/hooks/use-toast';
+
+const authSchema = z.object({
+  email: z.string().email({ message: "Invalid email address." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+});
+
+type AuthFormValues = z.infer<typeof authSchema>;
 
 export default function LoginPage() {
-  const { user, loading, signInWithGoogle } = useAuth();
+  const { user, loading, signInWithEmail, signUpWithEmail } = useAuth();
   const router = useRouter();
+  const [isSignUp, setIsSignUp] = useState(false);
+
+  const { register, handleSubmit, formState: { errors } } = useForm<AuthFormValues>({
+    resolver: zodResolver(authSchema),
+  });
 
   useEffect(() => {
     if (!loading && user) {
@@ -19,20 +37,29 @@ export default function LoginPage() {
     }
   }, [user, loading, router]);
 
-  const handleGoogleSignIn = async () => {
+  const onSubmit = async (data: AuthFormValues) => {
     try {
-      await signInWithGoogle();
-    } catch (error) {
-      console.error("Google Sign-In failed", error);
+      if (isSignUp) {
+        await signUpWithEmail(data.email, data.password);
+        toast({ title: "Sign Up Successful", description: "You can now log in." });
+        setIsSignUp(false); // Switch to login view after successful signup
+      } else {
+        await signInWithEmail(data.email, data.password);
+      }
+    } catch (error: any) {
+      console.error(`${isSignUp ? 'Sign-up' : 'Sign-in'} failed`, error);
+      toast({
+        title: `${isSignUp ? 'Sign Up' : 'Sign In'} Failed`,
+        description: error.message || "An unexpected error occurred.",
+        variant: "destructive",
+      });
     }
   };
 
-  // While loading, or if the user is logged in (and redirecting), show a loading state.
   if (loading || user) {
     return <div className="flex h-screen items-center justify-center">Loading...</div>;
   }
-  
-  // Only render the login page if not loading and no user is present.
+
   return (
     <div className="w-full h-screen lg:grid lg:grid-cols-2">
       <div className="flex items-center justify-center py-12 bg-background">
@@ -48,16 +75,33 @@ export default function LoginPage() {
           </div>
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl font-headline">Welcome</CardTitle>
+              <CardTitle className="text-2xl font-headline">{isSignUp ? 'Create an Account' : 'Welcome Back'}</CardTitle>
               <CardDescription>
-                Sign in to access your dashboard.
+                {isSignUp ? 'Enter your email and password to sign up.' : 'Sign in to access your dashboard.'}
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4">
-              <Button onClick={handleGoogleSignIn} disabled={loading} variant="outline">
-                <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 21.2 177.2 56.5L357 128C330.5 102.5 293.5 88 248 88c-73.2 0-132.3 59.2-132.3 132.3s59.2 132.3 132.3 132.3c76.9 0 115.7-31.5 122.9-76.7H248V261.8h239.2c.8 12.2 1.2 24.5 1.2 37.2z"></path></svg>
-                {loading ? 'Signing in...' : 'Sign in with Google'}
-              </Button>
+            <CardContent>
+              <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input id="email" type="email" placeholder="m@example.com" {...register('email')} />
+                  {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input id="password" type="password" {...register('password')} />
+                  {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+                </div>
+                <Button type="submit" disabled={loading} className="w-full">
+                  {loading ? 'Processing...' : (isSignUp ? 'Sign Up' : 'Sign In')}
+                </Button>
+              </form>
+              <div className="mt-4 text-center text-sm">
+                {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+                <Button variant="link" onClick={() => setIsSignUp(!isSignUp)} className="pl-1">
+                  {isSignUp ? 'Sign In' : 'Sign Up'}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
