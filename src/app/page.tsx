@@ -14,10 +14,10 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (user) {
+    if (!loading && user) {
       router.push('/dashboard');
     }
-  }, [user, router]);
+  }, [user, loading, router]);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -26,6 +26,10 @@ export default function LoginPage() {
       console.error("Google Sign-In failed", error);
     }
   };
+
+  if (loading || user) {
+    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div className="w-full h-screen lg:grid lg:grid-cols-2">

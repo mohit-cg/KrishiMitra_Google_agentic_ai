@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup, User } from "firebase/auth";
 import { auth } from "@/lib/firebase-config";
-import { useRouter } from "next/navigation";
 
 interface AuthContextType {
   user: User | null;
@@ -17,7 +16,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -32,37 +30,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      setUser(result.user);
-      router.push('/dashboard');
+      await signInWithPopup(auth, provider);
+      // onAuthStateChanged will handle setting the user and loading state
     } catch (error) {
       console.error("Error during Google sign-in", error);
-    } finally {
       setLoading(false);
     }
   };
 
   const signOut = async () => {
-    setLoading(true);
     try {
       await firebaseSignOut(auth);
-      setUser(null);
-      router.push('/');
+      // onAuthStateChanged will handle setting the user to null
     } catch (error) {
       console.error("Error signing out", error);
-    } finally {
-      setLoading(false);
     }
   };
   
   const value = { user, loading, signInWithGoogle, signOut };
-
-  // Prevent hydration mismatch by not rendering children until auth state is resolved.
-  if (loading) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
-  }
   
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
