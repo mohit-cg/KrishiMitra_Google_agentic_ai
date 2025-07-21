@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       router.push('/dashboard');
     } catch (error) {
       console.error("Error during Google sign-in", error);
-      // Optionally, show a toast notification to the user
     } finally {
       setLoading(false);
     }
@@ -57,6 +56,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const value = { user, loading, signInWithGoogle, signOut };
+
+  // Prevent hydration mismatch by not rendering children until auth state is resolved.
+  if (loading) {
+    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+  }
   
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
