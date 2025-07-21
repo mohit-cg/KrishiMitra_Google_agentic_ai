@@ -1,14 +1,14 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { analyzeMarketPrices, type AnalyzeMarketPricesOutput } from '@/ai/flows/analyze-market-prices';
 import { generateSpeech } from '@/ai/flows/text-to-speech';
-import { Bot, LineChart, Mic, TrendingUp, Volume2, Square } from 'lucide-react';
+import { Bot, LineChart, Mic, TrendingUp, Volume2, Square, Pause } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -21,17 +21,20 @@ export function MarketAnalystClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [result, setResult] = useState<AnalyzeMarketPricesOutput | null>(null);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isGeneratingSpeech, setIsGeneratingSpeech] = useState(false);
+  const [activeAudio, setActiveAudio] = useState<{ id: 'recommendation' | 'analysis'; isPlaying: boolean } | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    // Cleanup audio object URL
+    // Cleanup audio element and its event listeners
     return () => {
-      if (audioUrl) {
-        URL.revokeObjectURL(audioUrl);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+        audioRef.current = null;
       }
     };
-  }, [audioUrl]);
+  }, []);
 
   const handleMicClick = () => {
     if (!SpeechRecognition) {
@@ -72,40 +75,58 @@ export function MarketAnalystClient() {
     recognition.start();
   };
 
-  const playAudio = (text: string) => {
-    if (isSpeaking) {
-      // Logic to stop audio would go here if we were using an Audio element directly
-      setIsSpeaking(false);
-      if(audioUrl) URL.revokeObjectURL(audioUrl);
-      setAudioUrl(null);
+  const playAudio = async (text: string, id: 'recommendation' | 'analysis') => {
+    // If this audio is already playing, pause it
+    if (activeAudio?.id === id && activeAudio.isPlaying) {
+      audioRef.current?.pause();
+      setActiveAudio({ ...activeAudio, isPlaying: false });
       return;
     }
+    
+    // If another audio is playing, pause it before starting the new one
+    if (audioRef.current && !audioRef.current.paused) {
+        audioRef.current.pause();
+    }
+    
+    // If we're resuming a paused audio
+    if (activeAudio?.id === id && !activeAudio.isPlaying) {
+        audioRef.current?.play();
+        setActiveAudio({ ...activeAudio, isPlaying: true });
+        return;
+    }
 
-    setIsSpeaking(true);
-    generateSpeech(text)
-      .then(response => {
-        if(response.media) {
-            const audio = new Audio(response.media);
-            audio.play();
-            audio.onended = () => {
-                setIsSpeaking(false);
-                setAudioUrl(null); // Clean up after playing
-            };
-            // To allow stopping, we'd need to manage the audio element in state.
-            // For simplicity, we'll just let it play out.
-        } else {
-            setIsSpeaking(false);
+    // Otherwise, generate new audio
+    setIsGeneratingSpeech(true);
+    setActiveAudio(null);
+    try {
+      const response = await generateSpeech(text);
+      if (response.media) {
+        if (!audioRef.current) {
+          audioRef.current = new Audio();
+          audioRef.current.onended = () => {
+            setActiveAudio((current) => current ? { ...current, isPlaying: false } : null);
+          };
+          audioRef.current.onpause = () => {
+             setActiveAudio((current) => current ? { ...current, isPlaying: false } : null);
+          };
+          audioRef.current.onplay = () => {
+            setActiveAudio((current) => current ? { ...current, isPlaying: true } : null);
+          };
         }
-      })
-      .catch(error => {
-        console.error("Speech generation failed", error);
-        toast({
-          title: "Speech Generation Failed",
-          description: "Could not generate audio for the analysis.",
-          variant: "destructive",
-        });
-        setIsSpeaking(false);
+        audioRef.current.src = response.media;
+        audioRef.current.play();
+        setActiveAudio({ id, isPlaying: true });
+      }
+    } catch (error) {
+      console.error("Speech generation failed", error);
+      toast({
+        title: "Speech Generation Failed",
+        description: "Could not generate audio for the analysis.",
+        variant: "destructive",
       });
+    } finally {
+      setIsGeneratingSpeech(false);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -120,8 +141,11 @@ export function MarketAnalystClient() {
     }
     setIsLoading(true);
     setResult(null);
-    setAudioUrl(null);
-    if(isSpeaking) setIsSpeaking(false);
+    setActiveAudio(null);
+    if (audioRef.current) {
+        audioRef.current.pause();
+    }
+
 
     try {
       const analysisResult = await analyzeMarketPrices({ query });
@@ -176,8 +200,8 @@ export function MarketAnalystClient() {
                   <AlertTitle>Recommendation</AlertTitle>
                   <AlertDescription>{result.recommendation}</AlertDescription>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => playAudio(result.recommendation)} disabled={isSpeaking}>
-                    <Volume2 className="h-5 w-5 text-accent"/>
+                <Button variant="ghost" size="icon" onClick={() => playAudio(result.recommendation, 'recommendation')} disabled={isGeneratingSpeech}>
+                    {activeAudio?.id === 'recommendation' && activeAudio.isPlaying ? <Pause className="h-5 w-5 text-accent"/> : <Volume2 className="h-5 w-5 text-accent"/>}
                 </Button>
               </div>
             </Alert>
@@ -187,8 +211,8 @@ export function MarketAnalystClient() {
                     <AlertTitle>Market Analysis</AlertTitle>
                     <AlertDescription>{result.analysis}</AlertDescription>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => playAudio(result.analysis)} disabled={isSpeaking}>
-                    <Volume2 className="h-5 w-5"/>
+                <Button variant="ghost" size="icon" onClick={() => playAudio(result.analysis, 'analysis')} disabled={isGeneratingSpeech}>
+                     {activeAudio?.id === 'analysis' && activeAudio.isPlaying ? <Pause className="h-5 w-5"/> : <Volume2 className="h-5 w-5"/>}
                 </Button>
               </div>
             </Alert>
