@@ -3,7 +3,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup, User } from "firebase/auth";
-import { auth } from "@/lib/firebase-config";
+import { auth, allConfigured } from "@/lib/firebase-config";
 
 interface AuthContextType {
   user: User | null;
@@ -24,37 +24,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
   const signInWithGoogle = async () => {
+    if (!allConfigured) {
+      alert("Firebase environment variables are not configured. Please check your .env file.");
+      return;
+    }
     setLoading(true);
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error("Error during Google sign-in", error);
-      // Set loading to false in case of an error to avoid getting stuck.
-      setLoading(false);
+    } finally {
+      // onAuthStateChanged will set loading to false
     }
-    // The onAuthStateChanged listener will handle setting the user and loading state.
   };
 
   const signOut = async () => {
-    try {
-      await firebaseSignOut(auth);
-    } catch (error) {
-      console.error("Error signing out", error);
-    }
+    await firebaseSignOut(auth);
   };
-  
+
   const value = { user, loading, signInWithGoogle, signOut };
-  
-  // By not rendering children until loading is false, we prevent a hydration
-  // mismatch. The server renders nothing for this component's children,
-  // and the client will also render nothing on its first pass.
-  // Once the auth state is confirmed (loading = false), the client re-renders.
+
   return (
     <AuthContext.Provider value={value}>
       {!loading && children}
