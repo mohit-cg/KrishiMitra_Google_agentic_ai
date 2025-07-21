@@ -98,21 +98,10 @@ const getWeatherForecastFlow = ai.defineFlow(
     name: 'getWeatherForecastFlow',
     inputSchema: GetWeatherForecastInputSchema,
     outputSchema: GetWeatherForecastOutputSchema,
-    tools: [weatherTool]
   },
-  async ({ city }) => {
-     const llmResponse = await ai.generate({
-      prompt: `Get the weather for ${city}.`,
-      tools: [weatherTool],
-      toolChoice: "required",
-    });
-
-    const toolResponse = llmResponse.toolRequest?.output;
-
-    if (!toolResponse) {
-      throw new Error('Failed to get weather data from tool.');
-    }
-    
-    return toolResponse as GetWeatherForecastOutput;
+  async (input) => {
+    // Directly call the tool's implementation function to avoid LLM loops.
+    // The LLM isn't needed here since we just want to fetch data.
+    return await weatherTool.fn(input);
   }
 );
