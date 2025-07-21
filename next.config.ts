@@ -13,8 +13,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'placehold.co',
-        port: '',
+        hostname: 'localhost',
+        port: '3000',
         pathname: '/**',
       },
     ],

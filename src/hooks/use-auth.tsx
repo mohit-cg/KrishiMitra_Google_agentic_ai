@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
@@ -31,11 +32,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // onAuthStateChanged will handle setting the user and updating loading state to false
+      // onAuthStateChanged will handle setting the user and updating loading state
     } catch (error) {
       console.error("Error during Google sign-in", error);
-      // If sign-in fails, ensure loading is set back to false
-      setLoading(false); 
+      setLoading(false); // Ensure loading is reset on error
     }
   };
 
@@ -50,6 +50,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   
   const value = { user, loading, signInWithGoogle, signOut };
   
+  // By returning null during the initial client-side loading phase,
+  // we prevent a hydration mismatch. The server renders nothing,
+  // and the client's first render also shows nothing, then re-renders with children.
+  if (loading) {
+    return null;
+  }
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
