@@ -1,3 +1,5 @@
+"use client";
+
 import { MainNav } from "@/components/main-nav";
 import { UserNav } from "@/components/user-nav";
 import { Icons } from "@/components/icons";
@@ -14,12 +16,28 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { PanelLeft } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
+    return <div className="flex h-screen items-center justify-center">Loading dashboard...</div>;
+  }
+
   return (
     <TooltipProvider>
       <SidebarProvider>
@@ -60,7 +78,7 @@ export default function DashboardLayout({
               </div>
               <UserNav />
             </header>
-            <main className="flex-1 p-4 sm:px-6 sm:py-0 ">{children}</main>
+            <main className="flex-1 p-4 sm:px-6 sm-py-0 ">{children}</main>
           </div>
         </div>
       </SidebarProvider>

@@ -1,12 +1,32 @@
-import Link from 'next/link';
+
+"use client";
+
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Icons } from '@/components/icons';
+import { useAuth } from '@/hooks/use-auth';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function LoginPage() {
+  const { user, loading, signInWithGoogle } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error("Google Sign-In failed", error);
+    }
+  };
+
   return (
     <div className="w-full h-screen lg:grid lg:grid-cols-2">
       <div className="flex items-center justify-center py-12 bg-background">
@@ -22,44 +42,18 @@ export default function LoginPage() {
           </div>
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl font-headline">Login</CardTitle>
+              <CardTitle className="text-2xl font-headline">Welcome</CardTitle>
               <CardDescription>
-                Enter your credentials to access your dashboard.
+                Sign in to access your dashboard.
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="farmer@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="#"
-                    className="ml-auto inline-block text-sm underline"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <Input id="password" type="password" required />
-              </div>
-              <Button type="submit" className="w-full" asChild>
-                <Link href="/dashboard">Login</Link>
+              <Button onClick={handleGoogleSignIn} disabled={loading} variant="outline">
+                <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 21.2 177.2 56.5L357 128C330.5 102.5 293.5 88 248 88c-73.2 0-132.3 59.2-132.3 132.3s59.2 132.3 132.3 132.3c76.9 0 115.7-31.5 122.9-76.7H248V261.8h239.2c.8 12.2 1.2 24.5 1.2 37.2z"></path></svg>
+                {loading ? 'Signing in...' : 'Sign in with Google'}
               </Button>
             </CardContent>
           </Card>
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link href="#" className="underline">
-              Sign up
-            </Link>
-          </div>
         </div>
       </div>
       <div className="hidden bg-muted lg:block">
@@ -69,7 +63,7 @@ export default function LoginPage() {
           data-ai-hint="lush farm"
           width="1200"
           height="900"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
     </div>
