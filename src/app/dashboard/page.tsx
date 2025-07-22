@@ -23,6 +23,7 @@ import {
   Sun,
   CloudRain,
   CloudSun,
+  ShoppingCart,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getWeatherForecast, type GetWeatherForecastOutput } from "@/ai/flows/get-weather-forecast";
@@ -46,6 +47,12 @@ const quickLinks = [
     description: "Find government schemes for you.",
     href: "/dashboard/schemes",
     icon: Banknote,
+  },
+  {
+    title: "E-Commerce",
+    description: "Buy farming products.",
+    href: "/dashboard/shop",
+    icon: ShoppingCart,
   },
 ];
 
@@ -89,7 +96,7 @@ export default function DashboardPage() {
       <p className="text-muted-foreground">
         Here&apos;s a quick overview of your farm and market.
       </p>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {quickLinks.map((link) => (
           <Card key={link.href}>
             <CardHeader>
