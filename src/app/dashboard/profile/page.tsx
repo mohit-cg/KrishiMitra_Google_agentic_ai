@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 const districts = [
@@ -78,23 +79,55 @@ export default function ProfilePage() {
   const [crops, setCrops] = useState('Tomatoes, Onions, Sugarcane');
   const [isSaving, setIsSaving] = useState(false);
   const [open, setOpen] = useState(false);
+  const [photoURL, setPhotoURL] = useState<string | null>(null);
+  const [newPhotoDataUrl, setNewPhotoDataUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (user) {
       setDisplayName(user.displayName || 'Farmer Patil');
       setEmail(user.email || '');
+      setPhotoURL(user.photoURL);
     }
   }, [user]);
+  
+  const getInitials = (name: string | null | undefined) => {
+    if (!name) return 'FP';
+    const names = name.split(' ');
+    if (names.length > 1) {
+      return names[0][0] + names[names.length - 1][0];
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
+
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewPhotoDataUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
 
   const handleSaveChanges = async () => {
     setIsSaving(true);
     try {
-      await updateUserProfile({ displayName });
+      const profileData: { displayName?: string; photoURL?: string } = { displayName };
+      if (newPhotoDataUrl) {
+        profileData.photoURL = newPhotoDataUrl;
+      }
+      
+      await updateUserProfile(profileData);
+
       // In a real app, you would also save location, language, and crops to a database like Firestore.
       toast({
         title: "Profile Updated",
         description: "Your information has been successfully saved.",
       });
+      setNewPhotoDataUrl(null); // Reset after saving
     } catch (error) {
       console.error("Failed to update profile", error);
       toast({
@@ -126,6 +159,23 @@ export default function ProfilePage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+           <div className="flex flex-col items-center space-y-4">
+              <Avatar className="h-24 w-24">
+                <AvatarImage src={newPhotoDataUrl || photoURL || "https://placehold.co/100x100.png"} alt={displayName} data-ai-hint="farmer portrait" />
+                <AvatarFallback className="text-3xl">{getInitials(displayName)}</AvatarFallback>
+              </Avatar>
+              <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
+                Change Photo
+              </Button>
+              <Input 
+                ref={fileInputRef}
+                type="file" 
+                className="hidden" 
+                accept="image/*" 
+                onChange={handlePhotoChange} 
+              />
+            </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
@@ -226,6 +276,10 @@ const ProfileSkeleton = () => (
         <Skeleton className="h-4 w-3/4 mt-2" />
       </CardHeader>
       <CardContent className="space-y-6">
+        <div className="flex flex-col items-center space-y-4">
+            <Skeleton className="h-24 w-24 rounded-full" />
+            <Skeleton className="h-10 w-28" />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Skeleton className="h-4 w-1/4" />
@@ -258,5 +312,3 @@ const ProfileSkeleton = () => (
     </Card>
   </div>
 );
-
-    
