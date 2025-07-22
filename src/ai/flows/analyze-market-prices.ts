@@ -22,6 +22,21 @@ const AnalyzeMarketPricesOutputSchema = z.object({
 });
 export type AnalyzeMarketPricesOutput = z.infer<typeof AnalyzeMarketPricesOutputSchema>;
 
+
+const PriceInfoSchema = z.object({
+    crop: z.string().describe("The crop to get the price for, e.g., 'tomato', 'onion'."),
+    city: z.string().describe("The city to get the price in, e.g., 'Pune', 'Mumbai'."),
+});
+
+// This is an internal-only prompt that extracts structured data from the user's unstructured query.
+const extractPriceInfoPrompt = ai.definePrompt({
+    name: 'extractPriceInfo',
+    input: { schema: z.object({ query: z.string() }) },
+    output: { schema: PriceInfoSchema },
+    prompt: 'Extract the crop and city from the following user query: "{{query}}"',
+});
+
+
 // Mock prices - in a real app this would come from an API call.
 // This is an expanded, more realistic dataset.
 const mockPriceData: Record<string, Record<string, number>> = {
@@ -89,20 +104,24 @@ const getMarketPriceTool = ai.defineTool(
   {
     name: 'getMarketPrice',
     description: 'Gets the current market price for a specific crop in a specific city.',
-    inputSchema: z.object({
-      crop: z.string().describe("The crop to get the price for, e.g., 'tomato', 'onion'."),
-      city: z.string().describe("The city to get the price in, e.g., 'Pune', 'Mumbai'."),
-    }),
+    inputSchema: PriceInfoSchema,
     outputSchema: z.object({
       price: z.number().describe('The price of the crop in the specified city, in INR per kg (or per quintal for grains).'),
     }),
   },
   async ({ crop, city }) => {
     // In a real application, you would use process.env.MARKET_DATA_API_KEY to call a real API here.
-    // For now, we'll use our expanded mock data.
     const cityKey = city.toLowerCase();
-    const cropKey = crop.toLowerCase().replace(/\s+/g, ''); // a simple normalization
-    const price = mockPriceData[cropKey]?.[cityKey] || (Math.random() * 20 + 10); // fallback to random
+    const cropKey = crop.toLowerCase().replace(/\s+/g, '');
+    const isGrain = ['wheat', 'rice', 'cotton'].includes(cropKey);
+    
+    // Use mock data or generate a plausible random price as a fallback
+    const price = mockPriceData[cropKey]?.[cityKey] || 
+        (isGrain 
+            ? Math.floor(Math.random() * 1000) + 1500  // Plausible price for grains
+            : Math.floor(Math.random() * 40) + 10       // Plausible price for vegetables
+        );
+    
     return { price: parseFloat(price.toFixed(2)) };
   }
 );
@@ -112,20 +131,28 @@ export async function analyzeMarketPrices(input: AnalyzeMarketPricesInput): Prom
   return analyzeMarketPricesFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'analyzeMarketPricesPrompt',
-  input: {schema: AnalyzeMarketPricesInputSchema},
+const analysisPrompt = ai.definePrompt({
+  name: 'marketAnalysisPrompt',
+  input: {
+    schema: z.object({
+      query: z.string(),
+      crop: z.string(),
+      city: z.string(),
+      price: z.number(),
+    }),
+  },
   output: {schema: AnalyzeMarketPricesOutputSchema},
-  tools: [getMarketPriceTool],
   prompt: `You are a market analyst providing advice to farmers in India.
-
+  
   A farmer has the following query: "{{query}}".
   
-  First, use the getMarketPrice tool to find the current price for the specified crop and city. The tool will return price per kg for vegetables/fruits and price per quintal for grains like wheat and rice. Be mindful of this unit difference in your analysis.
+  The current price for {{crop}} in {{city}} is {{price}} INR.
   
-  Then, provide a recommendation on whether to sell or wait. 
+  Based on this price and the user's query, provide a recommendation on whether to sell or wait. 
   
-  Finally, provide a brief analysis of the market trends, incorporating the real-time price you fetched. For example, if the price is high, you could say "With tomato prices currently at ₹{price} per kg in {city}, it's a good time to sell." For grains, you might say "Wheat is trading at ₹{price} per quintal in {city}, which is a stable price. You could consider selling a portion of your stock."`,
+  Then, provide a brief analysis of the market situation. For vegetables/fruits, the price is per kg. For grains like wheat and rice, the price is per quintal. Be mindful of this unit difference.
+  
+  For example, if the price is high, you could say "With tomato prices currently at ₹{price} per kg in {city}, it's a good time to sell." For grains, you might say "Wheat is trading at ₹{price} per quintal in {city}, which is a stable price. You could consider selling a portion of your stock."`,
 });
 
 const analyzeMarketPricesFlow = ai.defineFlow(
@@ -134,8 +161,23 @@ const analyzeMarketPricesFlow = ai.defineFlow(
     inputSchema: AnalyzeMarketPricesInputSchema,
     outputSchema: AnalyzeMarketPricesOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
+  async ({query}) => {
+    // 1. Extract structured data (crop, city) from the user's query.
+    const { output: priceInfo } = await extractPriceInfoPrompt({query});
+    if (!priceInfo) {
+        throw new Error("Could not determine the crop and city from your query.");
+    }
+    
+    // 2. Call the tool to get the price for the extracted crop and city.
+    const { price } = await getMarketPriceTool(priceInfo);
+
+    // 3. Call the final analysis prompt with all the necessary information.
+    const { output: analysisResult } = await analysisPrompt({
+        query,
+        ...priceInfo,
+        price,
+    });
+    
+    return analysisResult!;
   }
 );
