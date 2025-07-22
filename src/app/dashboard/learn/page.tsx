@@ -292,9 +292,3 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
-
-    
-
-    
-
-    
