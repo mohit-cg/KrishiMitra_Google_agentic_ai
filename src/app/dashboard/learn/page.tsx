@@ -93,7 +93,6 @@ const SpeechRecognition =
 export default function LearnPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [isRecording, setIsRecording] = useState(false);
-    const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState("articles");
     const [videoResults, setVideoResults] = useState<Video[]>(initialVideos);
     const [isSearchingVideos, setIsSearchingVideos] = useState(false);
@@ -171,7 +170,7 @@ export default function LearnPage() {
     }, [searchQuery]);
 
     const playVideo = (videoId: string) => {
-        setPlayingVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1`);
+        window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank', 'noopener,noreferrer');
     }
 
     const showNoLocalResultsMessage =
@@ -180,29 +179,6 @@ export default function LearnPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-       {playingVideoUrl && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setPlayingVideoUrl(null)}>
-          <div className="relative aspect-video bg-black w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
-            <iframe
-              src={playingVideoUrl}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute -top-10 right-0 text-white hover:text-white"
-              onClick={() => setPlayingVideoUrl(null)}
-            >
-              <X className="h-6 w-6" />
-            </Button>
-          </div>
-        </div>
-      )}
       <h1 className="text-3xl font-bold mb-2 font-headline">E-Learning Hub</h1>
       <p className="text-muted-foreground mb-4">
         Expand your knowledge with our collection of farming guides and tutorials.
@@ -284,7 +260,8 @@ export default function LearnPage() {
             
             <h3 className="text-xl font-bold mt-8 mb-4 font-headline">Our Guides</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredArticles.map((article, index) => (
+            {filteredArticles.length > 0 ? (
+                filteredArticles.map((article, index) => (
                 <Card key={index} className="flex flex-col">
                     <CardHeader className="p-0">
                     <div className="aspect-video relative">
@@ -303,12 +280,12 @@ export default function LearnPage() {
                     </Button>
                     </CardFooter>
                 </Card>
-            ))}
-            {showNoLocalResultsMessage && (!summarizedArticle || summarizedArticle.articles.length === 0) && !isSummarizing && (
+                ))
+            ) : showNoLocalResultsMessage && (!summarizedArticle || summarizedArticle.articles.length === 0) && !isSummarizing ? (
                 <div className="md:col-span-2 lg:col-span-3">
                    <NoArticlesFoundAlert query={searchQuery} isWebSearchSuccessful={!!summarizedArticle && summarizedArticle.articles.length > 0} />
                 </div>
-            )}
+            ) : null }
           </div>
         </TabsContent>
         <TabsContent value="videos">
