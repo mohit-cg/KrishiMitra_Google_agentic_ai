@@ -233,7 +233,7 @@ export default function LearnPage() {
           <TabsTrigger value="videos">Video Tutorials</TabsTrigger>
         </TabsList>
         <TabsContent value="articles">
-            {(isSummarizing || summarizedArticle) && (
+            {(isSummarizing || (summarizedArticle && summarizedArticle.articles.length > 0)) && (
               <div className="my-6">
                 <h3 className="text-xl font-bold mb-4 font-headline">Web Search Results</h3>
                 {isSummarizing ? (
@@ -269,7 +269,7 @@ export default function LearnPage() {
                                             <CardDescription className="mt-2 text-sm max-h-24 overflow-y-auto">{article.summary}</CardDescription>
                                         </div>
                                         <Button asChild className="w-full mt-4 sm:w-fit self-end">
-                                            <Link href={article.sourceUrl!} target="_blank" rel="noopener noreferrer">
+                                            <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
                                                 Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
                                             </Link>
                                         </Button>
@@ -431,3 +431,6 @@ const VideoSkeletonCard = () => (
 
     
 
+
+
+    
