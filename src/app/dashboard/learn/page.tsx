@@ -174,12 +174,9 @@ export default function LearnPage() {
         setPlayingVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1`);
     }
 
-    const showNoResultsMessage =
-      searchQuery &&
-      !isSummarizing &&
-      !isSearchingVideos &&
-      filteredArticles.length === 0 &&
-      (!summarizedArticle || summarizedArticle.articles.length === 0);
+    const showNoLocalResultsMessage =
+      searchQuery.trim() !== '' &&
+      filteredArticles.length === 0;
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -278,6 +275,8 @@ export default function LearnPage() {
                             </Card>
                         ))}
                      </div>
+                  ) : showNoLocalResultsMessage && !isSummarizing ? (
+                      <NoArticlesFoundAlert query={searchQuery} isWebSearchSuccessful={false} />
                   ) : null
                 ) : null}
               </div>
@@ -285,53 +284,31 @@ export default function LearnPage() {
             
             <h3 className="text-xl font-bold mt-8 mb-4 font-headline">Our Guides</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredArticles.length > 0 ? (
-                filteredArticles.map((article, index) => (
-                    <Card key={index} className="flex flex-col">
-                        <CardHeader className="p-0">
-                        <div className="aspect-video relative">
-                            <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
-                        </div>
-                        </CardHeader>
-                        <CardContent className="p-4 flex-grow">
-                        <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
-                        <CardDescription className="mt-2 text-sm">{article.description}</CardDescription>
-                        </CardContent>
-                        <CardFooter className="p-4 pt-0">
-                        <Button asChild className="w-full">
-                            <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
-                                Read More <ArrowRight className="ml-2 h-4 w-4" />
-                            </Link>
-                        </Button>
-                        </CardFooter>
-                    </Card>
-                ))
-            ) : showNoResultsMessage ? (
+            {filteredArticles.map((article, index) => (
+                <Card key={index} className="flex flex-col">
+                    <CardHeader className="p-0">
+                    <div className="aspect-video relative">
+                        <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
+                    </div>
+                    </CardHeader>
+                    <CardContent className="p-4 flex-grow">
+                    <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
+                    <CardDescription className="mt-2 text-sm">{article.description}</CardDescription>
+                    </CardContent>
+                    <CardFooter className="p-4 pt-0">
+                    <Button asChild className="w-full">
+                        <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
+                            Read More <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                    </Button>
+                    </CardFooter>
+                </Card>
+            ))}
+            {showNoLocalResultsMessage && (!summarizedArticle || summarizedArticle.articles.length === 0) && !isSummarizing && (
                 <div className="md:col-span-2 lg:col-span-3">
-                   <NoArticlesFoundAlert query={searchQuery} />
+                   <NoArticlesFoundAlert query={searchQuery} isWebSearchSuccessful={!!summarizedArticle && summarizedArticle.articles.length > 0} />
                 </div>
-            ) : !searchQuery ? (
-                 articles.map((article, index) => (
-                    <Card key={index} className="flex flex-col">
-                        <CardHeader className="p-0">
-                        <div className="aspect-video relative">
-                            <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
-                        </div>
-                        </CardHeader>
-                        <CardContent className="p-4 flex-grow">
-                        <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
-                        <CardDescription className="mt-2 text-sm">{article.description}</CardDescription>
-                        </CardContent>
-                        <CardFooter className="p-4 pt-0">
-                        <Button asChild className="w-full">
-                            <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
-                                Read More <ArrowRight className="ml-2 h-4 w-4" />
-                            </Link>
-                        </Button>
-                        </CardFooter>
-                    </Card>
-                ))
-            ) : null}
+            )}
           </div>
         </TabsContent>
         <TabsContent value="videos">
@@ -379,20 +356,24 @@ export default function LearnPage() {
   );
 }
 
-const NoArticlesFoundAlert = ({ query }: { query: string }) => (
-    <Alert variant="destructive">
-        <SearchX className="h-4 w-4" />
-        <AlertTitle>No Matching Guides or Web Results</AlertTitle>
-        <AlertDescription className="flex flex-col gap-2">
-           <p>Your search for "{query}" did not match any of our guides or find any articles on the web. Please try a different search term.</p>
-           <Button asChild variant="destructive" className="mt-2 w-fit">
-              <Link href={`https://www.google.com/search?q=${encodeURIComponent(query)}`} target="_blank" rel="noopener noreferrer">
-                  Search on Google <ExternalLink className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-        </AlertDescription>
-    </Alert>
-);
+const NoArticlesFoundAlert = ({ query, isWebSearchSuccessful }: { query: string, isWebSearchSuccessful: boolean }) => {
+    if (isWebSearchSuccessful) return null;
+
+    return (
+        <Alert variant="destructive">
+            <SearchX className="h-4 w-4" />
+            <AlertTitle>No Matching Guides or Web Results</AlertTitle>
+            <AlertDescription className="flex flex-col gap-2">
+               <p>Your search for "{query}" did not match any of our guides or find any articles on the web. Please try a different search term.</p>
+               <Button asChild variant="destructive" className="mt-2 w-fit">
+                  <Link href={`https://www.google.com/search?q=${encodeURIComponent(query)}`} target="_blank" rel="noopener noreferrer">
+                      Search on Google <ExternalLink className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+            </AlertDescription>
+        </Alert>
+    );
+};
 
 const SummarizeSkeletonCard = () => (
     <Card>
@@ -426,11 +407,5 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
-
-    
-
-    
-
-
 
     
