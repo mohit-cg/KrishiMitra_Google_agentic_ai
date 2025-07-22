@@ -2,7 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup, User, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "@/lib/firebase-config";
 
 interface AuthContextType {
@@ -12,6 +12,7 @@ interface AuthContextType {
   signInWithEmail: (email: string, pass: string) => Promise<void>;
   signUpWithEmail: (email: string, pass: string) => Promise<void>;
   signOut: () => Promise<void>;
+  updateUserProfile: (data: { displayName?: string; photoURL?: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -70,8 +71,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     setLoading(false);
   };
+  
+  const updateUserProfile = async (data: { displayName?: string; photoURL?: string }) => {
+    if (auth.currentUser) {
+      await updateProfile(auth.currentUser, data);
+      // Manually update the user state to reflect changes immediately
+      setUser({ ...auth.currentUser }); 
+    } else {
+      throw new Error("No user is currently signed in.");
+    }
+  };
 
-  const value = { user, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut };
+
+  const value = { user, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut, updateUserProfile };
 
   if (loading) {
     return <div className="flex h-screen items-center justify-center">Loading...</div>;
