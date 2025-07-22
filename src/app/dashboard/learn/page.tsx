@@ -61,7 +61,7 @@ const initialVideos: Video[] = [
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "12:45",
-        videoId: "z43_L7xQuA4",
+        videoId: "g-v3a3jK_4s",
         hint: "tomato plant pruning"
     },
     {
@@ -69,7 +69,7 @@ const initialVideos: Video[] = [
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "08:22",
-        videoId: "x9yIM0he_gE",
+        videoId: "N8_B-g4g_a4",
         hint: "vermicompost bin"
     },
     {
@@ -77,7 +77,7 @@ const initialVideos: Video[] = [
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "15:30",
-        videoId: "3-v8-zQ_d-Q",
+        videoId: "o-rp3f_It2k",
         hint: "plant nutrient deficiency"
     }
 ];
@@ -173,6 +173,13 @@ export default function LearnPage() {
     const playVideo = (videoId: string) => {
         setPlayingVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1`);
     }
+
+    const showNoResultsMessage =
+      searchQuery &&
+      !isSummarizing &&
+      !isSearchingVideos &&
+      filteredArticles.length === 0 &&
+      (!summarizedArticle || summarizedArticle.articles.length === 0);
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -271,13 +278,7 @@ export default function LearnPage() {
                             </Card>
                         ))}
                      </div>
-                  ) : (
-                    <Alert>
-                        <SearchX className="h-4 w-4" />
-                        <AlertTitle>No Web Results</AlertTitle>
-                        <AlertDescription>Could not find any relevant articles on the web for "{searchQuery}". Try a different search term.</AlertDescription>
-                    </Alert>
-                  )
+                  ) : null
                 ) : null}
               </div>
             )}
@@ -305,11 +306,11 @@ export default function LearnPage() {
                         </CardFooter>
                     </Card>
                 ))
-            ) : searchQuery && !isSummarizing ? (
+            ) : showNoResultsMessage ? (
                 <div className="md:col-span-2 lg:col-span-3">
                    <NoArticlesFoundAlert query={searchQuery} />
                 </div>
-            ) : (
+            ) : !searchQuery ? (
                  articles.map((article, index) => (
                     <Card key={index} className="flex flex-col">
                         <CardHeader className="p-0">
@@ -330,7 +331,7 @@ export default function LearnPage() {
                         </CardFooter>
                     </Card>
                 ))
-            )}
+            ) : null}
           </div>
         </TabsContent>
         <TabsContent value="videos">
@@ -381,9 +382,9 @@ export default function LearnPage() {
 const NoArticlesFoundAlert = ({ query }: { query: string }) => (
     <Alert variant="destructive">
         <SearchX className="h-4 w-4" />
-        <AlertTitle>No Matching Guides Found</AlertTitle>
+        <AlertTitle>No Matching Guides or Web Results</AlertTitle>
         <AlertDescription className="flex flex-col gap-2">
-           <p>Your search for "{query}" did not match any of our guides. Check the web search result above or try a different term.</p>
+           <p>Your search for "{query}" did not match any of our guides or find any articles on the web. Please try a different search term.</p>
            <Button asChild variant="destructive" className="mt-2 w-fit">
               <Link href={`https://www.google.com/search?q=${encodeURIComponent(query)}`} target="_blank" rel="noopener noreferrer">
                   Search on Google <ExternalLink className="ml-2 h-4 w-4" />
@@ -429,3 +430,4 @@ const VideoSkeletonCard = () => (
     
 
     
+
