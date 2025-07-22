@@ -27,12 +27,12 @@ const VideoSchema = z.object({
 });
 
 
-export const SearchYoutubeVideosInputSchema = z.object({
+const SearchYoutubeVideosInputSchema = z.object({
   query: z.string().describe('The user\'s search query for farming-related video tutorials.'),
 });
 export type SearchYoutubeVideosInput = z.infer<typeof SearchYoutubeVideosInputSchema>;
 
-export const SearchYoutubeVideosOutputSchema = z.object({
+const SearchYoutubeVideosOutputSchema = z.object({
   videos: z.array(VideoSchema).describe('A list of 3-6 relevant YouTube video search results.'),
 });
 export type SearchYoutubeVideosOutput = z.infer<typeof SearchYoutubeVideosOutputSchema>;
@@ -48,7 +48,7 @@ const searchYoutubeVideosPrompt = ai.definePrompt({
   input: {schema: SearchYoutubeVideosInputSchema},
   output: {schema: SearchYoutubeVideosOutputSchema},
   prompt: `You are a helpful assistant for farmers in India. A farmer is searching for video tutorials on the E-Learning Hub.
-
+  
   Based on their query, generate a list of 3 to 6 highly relevant, plausible YouTube video search results. 
   
   For each video, provide a unique videoId selected from the provided list, a compelling title, a short description, a duration, and a placeholder thumbnail URL.
