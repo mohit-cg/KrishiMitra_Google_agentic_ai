@@ -3,6 +3,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { diagnoseCropDisease, type DiagnoseCropDiseaseOutput } from '@/ai/flows/diagnose-crop-disease';
 import { generateSpeech } from '@/ai/flows/text-to-speech';
-import { Leaf, Lightbulb, Upload, Volume2, Pause } from 'lucide-react';
+import { Leaf, Lightbulb, Upload, Volume2, Pause, BookOpen, Youtube } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -188,6 +189,26 @@ export function CropDoctorClient() {
                     {activeAudio?.id === 'solutions' && activeAudio.isPlaying ? <Pause className="h-5 w-5"/> : <Volume2 className="h-5 w-5"/>}
                 </Button>
               </div>
+               {(result.documentationLink || result.youtubeLink) && (
+                <div className="mt-4 pt-4 border-t flex gap-2">
+                    {result.documentationLink && (
+                        <Button asChild variant="outline" size="sm">
+                            <Link href={result.documentationLink} target="_blank" rel="noopener noreferrer">
+                                <BookOpen className="mr-2 h-4 w-4"/>
+                                Read Docs
+                            </Link>
+                        </Button>
+                    )}
+                    {result.youtubeLink && (
+                         <Button asChild variant="destructive" size="sm">
+                            <Link href={result.youtubeLink} target="_blank" rel="noopener noreferrer">
+                                <Youtube className="mr-2 h-4 w-4"/>
+                                Watch Video
+                            </Link>
+                        </Button>
+                    )}
+                </div>
+               )}
             </Alert>
           </div>
         )}

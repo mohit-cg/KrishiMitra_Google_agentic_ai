@@ -24,6 +24,8 @@ export type DiagnoseCropDiseaseInput = z.infer<typeof DiagnoseCropDiseaseInputSc
 const DiagnoseCropDiseaseOutputSchema = z.object({
   diagnosis: z.string().describe('The diagnosis of the crop disease.'),
   solutions: z.string().describe('Suggested solutions with local product links.'),
+  documentationLink: z.string().optional().describe('A link to a relevant documentation or article for more details.'),
+  youtubeLink: z.string().optional().describe('A link to a relevant YouTube video for a visual guide.'),
 });
 export type DiagnoseCropDiseaseOutput = z.infer<typeof DiagnoseCropDiseaseOutputSchema>;
 
@@ -36,6 +38,8 @@ const prompt = ai.definePrompt({
   input: {schema: DiagnoseCropDiseaseInputSchema},
   output: {schema: DiagnoseCropDiseaseOutputSchema},
   prompt: `You are an expert in diagnosing crop diseases. Analyze the provided image of the crop and provide a diagnosis of any diseases present. Also, suggest solutions with local product links that can help the farmer.
+
+In addition to the solutions, provide a link to a detailed article or documentation for further reading, and a link to a helpful YouTube video that visually explains the solution or disease.
 
 Crop Image: {{media url=photoDataUri}}`,
 });
