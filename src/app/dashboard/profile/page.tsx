@@ -147,7 +147,7 @@ export default function ProfilePage() {
                 <AvatarFallback className="text-3xl">{getInitials(displayName)}</AvatarFallback>
               </Avatar>
               <Button variant="outline" disabled>
-                Change Photo (Coming Soon)
+                Update Profile Photo (Coming Soon)
               </Button>
             </div>
 
