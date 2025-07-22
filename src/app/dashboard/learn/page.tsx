@@ -61,7 +61,7 @@ const initialVideos: Video[] = [
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "12:45",
-        videoId: "q-i4t-yMCoU",
+        videoId: "z43_L7xQuA4",
         hint: "tomato plant pruning"
     },
     {
@@ -69,7 +69,7 @@ const initialVideos: Video[] = [
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "08:22",
-        videoId: "z43_L7xQuA4",
+        videoId: "x9yIM0he_gE",
         hint: "vermicompost bin"
     },
     {
@@ -77,7 +77,7 @@ const initialVideos: Video[] = [
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "15:30",
-        videoId: "qAxqR5_p_vE",
+        videoId: "3-v8-zQ_d-Q",
         hint: "plant nutrient deficiency"
     }
 ];
@@ -241,7 +241,7 @@ export default function LearnPage() {
                   ) : (
                     <Card>
                         <div className="flex flex-col sm:flex-row gap-4 p-4">
-                            <div className="relative w-full sm:w-1/4 aspect-video sm:aspect-square shrink-0">
+                            <div className="relative w-full sm:w-1/3 aspect-video shrink-0">
                                 <Image 
                                     src={summarizedArticle.imageUrl} 
                                     alt={summarizedArticle.title} 
@@ -382,8 +382,8 @@ const NoArticlesFoundAlert = ({ query }: { query: string }) => (
 
 const SummarizeSkeletonCard = () => (
     <Card>
-      <div className="flex gap-4 p-4">
-        <Skeleton className="h-24 w-24 sm:h-32 sm:w-32 shrink-0 rounded-md" />
+      <div className="flex flex-col sm:flex-row gap-4 p-4">
+        <Skeleton className="relative w-full sm:w-1/3 aspect-video shrink-0 rounded-md" />
         <div className="flex-1 space-y-3">
             <Skeleton className="h-6 w-3/4" />
             <div className="space-y-2">
@@ -391,7 +391,7 @@ const SummarizeSkeletonCard = () => (
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-5/6" />
             </div>
-            <Skeleton className="h-10 w-full sm:w-40" />
+            <Skeleton className="h-10 w-full sm:w-40 self-end" />
         </div>
       </div>
     </Card>
@@ -412,5 +412,7 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
+
+    
 
     
