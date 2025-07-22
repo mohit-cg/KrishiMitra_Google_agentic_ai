@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Film, Mic, PlayCircle, Search, Square } from "lucide-react";
+import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 
 
@@ -58,7 +58,7 @@ const videos = [
         image: "https://placehold.co/600x400.png",
         hint: "pruning tomato",
         duration: "12:45",
-        url: "https://www.youtube.com/watch?v=qAxqR5_p_vE"
+        url: "https://www.youtube.com/embed/qAxqR5_p_vE"
     },
     {
         title: "Setting Up a Home Vermicompost Bin",
@@ -66,7 +66,7 @@ const videos = [
         image: "https://placehold.co/600x400.png",
         hint: "vermicompost bin",
         duration: "08:22",
-        url: "https://www.youtube.com/watch?v=x9yIM0he_gE"
+        url: "https://www.youtube.com/embed/x9yIM0he_gE"
     },
     {
         title: "Identifying Common Nutrient Deficiencies",
@@ -74,7 +74,7 @@ const videos = [
         image: "https://placehold.co/600x400.png",
         hint: "plant nutrient",
         duration: "15:30",
-        url: "https://www.youtube.com/watch?v=3-v8-zQ_d-Q"
+        url: "https://www.youtube.com/embed/3-v8-zQ_d-Q"
     }
 ];
 
@@ -86,6 +86,8 @@ const SpeechRecognition =
 export default function LearnPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [isRecording, setIsRecording] = useState(false);
+    const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null);
+
 
     const handleMicClick = () => {
         if (!SpeechRecognition) {
@@ -128,6 +130,29 @@ export default function LearnPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
+       {playingVideoUrl && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setPlayingVideoUrl(null)}>
+          <div className="relative aspect-video bg-black w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
+            <iframe
+              src={playingVideoUrl}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute -top-10 right-0 text-white hover:text-white"
+              onClick={() => setPlayingVideoUrl(null)}
+            >
+              <X className="h-6 w-6" />
+            </Button>
+          </div>
+        </div>
+      )}
       <h1 className="text-3xl font-bold mb-2 font-headline">E-Learning Hub</h1>
       <p className="text-muted-foreground mb-4">
         Expand your knowledge with our collection of farming guides and tutorials.
@@ -184,23 +209,21 @@ export default function LearnPage() {
             {filteredVideos.map((video, index) => (
               <Card key={index} className="flex flex-col group">
                 <CardHeader className="p-0">
-                  <Link href={video.url} target="_blank" rel="noopener noreferrer" className="block aspect-video relative overflow-hidden rounded-t-lg">
+                  <button onClick={() => setPlayingVideoUrl(video.url)} className="block aspect-video relative overflow-hidden rounded-t-lg w-full">
                     <Image src={video.image} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint} />
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <PlayCircle className="h-16 w-16 text-white/80"/>
                     </div>
                     <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-md">{video.duration}</div>
-                  </Link>
+                  </button>
                 </CardHeader>
                 <CardContent className="p-4 flex-grow">
                   <CardTitle className="text-lg font-semibold">{video.title}</CardTitle>
                   <CardDescription className="mt-2">{video.description}</CardDescription>
                 </CardContent>
                 <CardFooter className="p-4 pt-0">
-                  <Button asChild variant="destructive" className="w-full">
-                    <Link href={video.url} target="_blank" rel="noopener noreferrer">
+                  <Button onClick={() => setPlayingVideoUrl(video.url)} variant="destructive" className="w-full">
                       Watch Now <Film className="ml-2 h-4 w-4" />
-                    </Link>
                   </Button>
                 </CardFooter>
               </Card>
