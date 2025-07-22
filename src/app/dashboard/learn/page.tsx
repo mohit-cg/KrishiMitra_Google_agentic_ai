@@ -134,7 +134,7 @@ export default function LearnPage() {
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setPlayingVideoUrl(null)}>
           <div className="relative aspect-video bg-black w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
             <iframe
-              src={playingVideoUrl}
+              src={`${playingVideoUrl}?autoplay=1`}
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
