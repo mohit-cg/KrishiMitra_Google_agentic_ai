@@ -80,8 +80,6 @@ export default function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [open, setOpen] = useState(false);
   const [photoURL, setPhotoURL] = useState<string | null>(null);
-  const [newPhotoDataUrl, setNewPhotoDataUrl] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (user) {
@@ -100,25 +98,10 @@ export default function ProfilePage() {
     return name.substring(0, 2).toUpperCase();
   };
 
-  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewPhotoDataUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-
   const handleSaveChanges = async () => {
     setIsSaving(true);
     try {
-      const profileData: { displayName?: string; photoURL?: string } = { displayName };
-      if (newPhotoDataUrl) {
-        profileData.photoURL = newPhotoDataUrl;
-      }
+      const profileData: { displayName?: string } = { displayName };
       
       await updateUserProfile(profileData);
 
@@ -127,7 +110,6 @@ export default function ProfilePage() {
         title: "Profile Updated",
         description: "Your information has been successfully saved.",
       });
-      setNewPhotoDataUrl(null); // Reset after saving
     } catch (error) {
       console.error("Failed to update profile", error);
       toast({
@@ -161,19 +143,12 @@ export default function ProfilePage() {
         <CardContent className="space-y-6">
            <div className="flex flex-col items-center space-y-4">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={newPhotoDataUrl || photoURL || "https://placehold.co/100x100.png"} alt={displayName} data-ai-hint="farmer portrait" />
+                <AvatarImage src={photoURL || "https://placehold.co/100x100.png"} alt={displayName} data-ai-hint="farmer portrait" />
                 <AvatarFallback className="text-3xl">{getInitials(displayName)}</AvatarFallback>
               </Avatar>
-              <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-                Change Photo
+              <Button variant="outline" disabled>
+                Change Photo (Coming Soon)
               </Button>
-              <Input 
-                ref={fileInputRef}
-                type="file" 
-                className="hidden" 
-                accept="image/*" 
-                onChange={handlePhotoChange} 
-              />
             </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -214,7 +189,7 @@ export default function ProfilePage() {
                                 key={district.value}
                                 value={district.value}
                                 onSelect={(currentValue) => {
-                                  setLocation(currentValue);
+                                  setLocation(currentValue === location ? "" : currentValue);
                                   setOpen(false);
                                 }}
                             >
@@ -312,5 +287,3 @@ const ProfileSkeleton = () => (
     </Card>
   </div>
 );
-
-    
