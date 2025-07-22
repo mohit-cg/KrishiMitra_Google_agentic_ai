@@ -56,7 +56,7 @@ const videos = [
         title: "Video Guide to Pruning Tomato Plants",
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         image: "https://placehold.co/600x400.png",
-        hint: "tomato plant pruning",
+        hint: "pruning tomato",
         duration: "12:45"
     },
     {
@@ -70,7 +70,7 @@ const videos = [
         title: "Identifying Common Nutrient Deficiencies",
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         image: "https://placehold.co/600x400.png",
-        hint: "plant nutrient deficiency",
+        hint: "plant nutrient",
         duration: "15:30"
     }
 ];
