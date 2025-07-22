@@ -57,21 +57,24 @@ const videos = [
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         image: "https://placehold.co/600x400.png",
         hint: "pruning tomato",
-        duration: "12:45"
+        duration: "12:45",
+        url: "https://www.youtube.com/watch?v=qAxqR5_p_vE"
     },
     {
         title: "Setting Up a Home Vermicompost Bin",
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
         image: "https://placehold.co/600x400.png",
         hint: "vermicompost bin",
-        duration: "08:22"
+        duration: "08:22",
+        url: "https://www.youtube.com/watch?v=x9yIM0he_gE"
     },
     {
         title: "Identifying Common Nutrient Deficiencies",
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         image: "https://placehold.co/600x400.png",
         hint: "plant nutrient",
-        duration: "15:30"
+        duration: "15:30",
+        url: "https://www.youtube.com/watch?v=3-v8-zQ_d-Q"
     }
 ];
 
@@ -181,13 +184,13 @@ export default function LearnPage() {
             {filteredVideos.map((video, index) => (
               <Card key={index} className="flex flex-col group">
                 <CardHeader className="p-0">
-                  <div className="aspect-video relative overflow-hidden rounded-t-lg">
+                  <Link href={video.url} target="_blank" rel="noopener noreferrer" className="block aspect-video relative overflow-hidden rounded-t-lg">
                     <Image src={video.image} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint} />
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <PlayCircle className="h-16 w-16 text-white/80"/>
                     </div>
                     <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-md">{video.duration}</div>
-                  </div>
+                  </Link>
                 </CardHeader>
                 <CardContent className="p-4 flex-grow">
                   <CardTitle className="text-lg font-semibold">{video.title}</CardTitle>
@@ -195,7 +198,7 @@ export default function LearnPage() {
                 </CardContent>
                 <CardFooter className="p-4 pt-0">
                   <Button asChild variant="destructive" className="w-full">
-                    <Link href="#">
+                    <Link href={video.url} target="_blank" rel="noopener noreferrer">
                       Watch Now <Film className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
