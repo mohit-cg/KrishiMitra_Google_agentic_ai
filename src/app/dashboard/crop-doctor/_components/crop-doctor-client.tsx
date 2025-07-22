@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { diagnoseCropDisease, type DiagnoseCropDiseaseOutput } from '@/ai/flows/diagnose-crop-disease';
-import { Leaf, Lightbulb, Package, Upload } from 'lucide-react';
+import { generateSpeech } from '@/ai/flows/text-to-speech';
+import { Leaf, Lightbulb, Upload, Volume2, Pause } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -17,6 +19,20 @@ export function CropDoctorClient() {
   const [imageData, setImageData] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DiagnoseCropDiseaseOutput | null>(null);
+  const [isGeneratingSpeech, setIsGeneratingSpeech] = useState(false);
+  const [activeAudio, setActiveAudio] = useState<{ id: 'diagnosis' | 'solutions'; isPlaying: boolean } | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Cleanup audio element and its event listeners
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -31,6 +47,60 @@ export function CropDoctorClient() {
     }
   };
 
+  const playAudio = async (text: string, id: 'diagnosis' | 'solutions') => {
+    // If this audio is already playing, pause it
+    if (activeAudio?.id === id && activeAudio.isPlaying) {
+      audioRef.current?.pause();
+      setActiveAudio({ ...activeAudio, isPlaying: false });
+      return;
+    }
+    
+    // If another audio is playing, pause it before starting the new one
+    if (audioRef.current && !audioRef.current.paused) {
+        audioRef.current.pause();
+    }
+    
+    // If we're resuming a paused audio
+    if (activeAudio?.id === id && !activeAudio.isPlaying) {
+        audioRef.current?.play();
+        setActiveAudio({ ...activeAudio, isPlaying: true });
+        return;
+    }
+
+    // Otherwise, generate new audio
+    setIsGeneratingSpeech(true);
+    setActiveAudio(null);
+    try {
+      const response = await generateSpeech(text);
+      if (response.media) {
+        if (!audioRef.current) {
+          audioRef.current = new Audio();
+          audioRef.current.onended = () => {
+            setActiveAudio((current) => current ? { ...current, isPlaying: false } : null);
+          };
+          audioRef.current.onpause = () => {
+             setActiveAudio((current) => current ? { ...current, isPlaying: false } : null);
+          };
+          audioRef.current.onplay = () => {
+            setActiveAudio((current) => current ? { ...current, isPlaying: true } : null);
+          };
+        }
+        audioRef.current.src = response.media;
+        audioRef.current.play();
+        setActiveAudio({ id, isPlaying: true });
+      }
+    } catch (error) {
+      console.error("Speech generation failed", error);
+      toast({
+        title: "Speech Generation Failed",
+        description: "Could not generate audio for the diagnosis.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingSpeech(false);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!imageData) {
       toast({
@@ -42,6 +112,10 @@ export function CropDoctorClient() {
     }
     setIsLoading(true);
     setResult(null);
+    setActiveAudio(null);
+    if (audioRef.current) {
+        audioRef.current.pause();
+    }
     try {
       const diagnosisResult = await diagnoseCropDisease({ photoDataUri: imageData });
       setResult(diagnosisResult);
@@ -86,16 +160,34 @@ export function CropDoctorClient() {
         {result && !isLoading && (
           <div className="space-y-4">
             <Alert>
-              <Leaf className="h-4 w-4" />
-              <AlertTitle>Diagnosis</AlertTitle>
-              <AlertDescription>{result.diagnosis}</AlertDescription>
+              <div className="flex justify-between items-start w-full">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                     <Leaf className="h-4 w-4" />
+                     <AlertTitle>Diagnosis</AlertTitle>
+                  </div>
+                  <AlertDescription className="pl-6">{result.diagnosis}</AlertDescription>
+                </div>
+                 <Button variant="ghost" size="icon" onClick={() => playAudio(result.diagnosis, 'diagnosis')} disabled={isGeneratingSpeech}>
+                    {activeAudio?.id === 'diagnosis' && activeAudio.isPlaying ? <Pause className="h-5 w-5"/> : <Volume2 className="h-5 w-5"/>}
+                </Button>
+              </div>
             </Alert>
             <Alert>
-              <Lightbulb className="h-4 w-4" />
-              <AlertTitle>Suggested Solutions</AlertTitle>
-              <AlertDescription>
-                <div className="prose prose-sm max-w-none text-foreground" dangerouslySetInnerHTML={{ __html: result.solutions.replace(/\n/g, '<br />') }} />
-              </AlertDescription>
+               <div className="flex justify-between items-start w-full">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4" />
+                    <AlertTitle>Suggested Solutions</AlertTitle>
+                  </div>
+                  <AlertDescription className="pl-6">
+                    <div className="prose prose-sm max-w-none text-foreground" dangerouslySetInnerHTML={{ __html: result.solutions.replace(/\n/g, '<br />') }} />
+                  </AlertDescription>
+                </div>
+                 <Button variant="ghost" size="icon" onClick={() => playAudio(result.solutions.replace(/<[^>]*>?/gm, ''), 'solutions')} disabled={isGeneratingSpeech}>
+                    {activeAudio?.id === 'solutions' && activeAudio.isPlaying ? <Pause className="h-5 w-5"/> : <Volume2 className="h-5 w-5"/>}
+                </Button>
+              </div>
             </Alert>
           </div>
         )}
