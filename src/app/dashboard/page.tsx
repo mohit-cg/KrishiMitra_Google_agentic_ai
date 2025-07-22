@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -88,6 +89,26 @@ export default function DashboardPage() {
       <p className="text-muted-foreground">
         Here&apos;s a quick overview of your farm and market.
       </p>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {quickLinks.map((link) => (
+          <Card key={link.href}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <link.icon className="h-5 w-5 text-primary" />
+                {link.title}
+              </CardTitle>
+              <CardDescription>{link.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button size="sm" className="w-full" asChild>
+                <Link href={link.href}>
+                  Proceed <ArrowUpRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -161,26 +182,6 @@ export default function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {quickLinks.map((link) => (
-          <Card key={link.href}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <link.icon className="h-5 w-5 text-primary" />
-                {link.title}
-              </CardTitle>
-              <CardDescription>{link.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button size="sm" className="w-full" asChild>
-                <Link href={link.href}>
-                  Proceed <ArrowUpRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
       </div>
     </div>
   );
