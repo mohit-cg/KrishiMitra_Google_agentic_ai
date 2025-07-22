@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
-
+import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const articles = [
   {
@@ -51,32 +52,34 @@ const articles = [
   },
 ];
 
-const videos = [
+const initialVideos = [
     {
         title: "Video Guide to Pruning Tomato Plants",
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
-        image: "https://placehold.co/600x400.png",
+        thumbnailUrl: "https://placehold.co/600x400.png",
         hint: "pruning tomato",
         duration: "12:45",
-        url: "https://www.youtube.com/embed/qAxqR5_p_vE"
+        videoId: "qAxqR5_p_vE"
     },
     {
         title: "Setting Up a Home Vermicompost Bin",
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
-        image: "https://placehold.co/600x400.png",
+        thumbnailUrl: "https://placehold.co/600x400.png",
         hint: "vermicompost bin",
         duration: "08:22",
-        url: "https://www.youtube.com/embed/x9yIM0he_gE"
+        videoId: "x9yIM0he_gE"
     },
     {
         title: "Identifying Common Nutrient Deficiencies",
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
-        image: "https://placehold.co/600x400.png",
+        thumbnailUrl: "https://placehold.co/600x400.png",
         hint: "plant nutrient",
         duration: "15:30",
-        url: "https://www.youtube.com/embed/3-v8-zQ_d-Q"
+        videoId: "3-v8-zQ_d-Q"
     }
 ];
+
+type Video = SearchYoutubeVideosOutput['videos'][0];
 
 // Check for SpeechRecognition API
 const SpeechRecognition =
@@ -87,6 +90,38 @@ export default function LearnPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [isRecording, setIsRecording] = useState(false);
     const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState("articles");
+    const [videoResults, setVideoResults] = useState<Video[]>(initialVideos);
+    const [isSearchingVideos, setIsSearchingVideos] = useState(false);
+
+
+    useEffect(() => {
+        const handleSearch = async () => {
+          if (activeTab === 'videos' && searchQuery.trim() !== '') {
+            setIsSearchingVideos(true);
+            setVideoResults([]); // Clear previous results
+            try {
+              const result = await searchYoutubeVideos({ query: searchQuery });
+              setVideoResults(result.videos);
+            } catch (error) {
+              console.error("Video search failed", error);
+              toast({
+                title: "Video Search Failed",
+                description: "Could not retrieve video tutorials. Please try again.",
+                variant: "destructive",
+              });
+              setVideoResults(initialVideos); // Restore initial videos on error
+            } finally {
+              setIsSearchingVideos(false);
+            }
+          } else if (searchQuery.trim() === '') {
+            setVideoResults(initialVideos); // Reset to initial videos if search is cleared
+          }
+        };
+
+        const debounceTimer = setTimeout(handleSearch, 500);
+        return () => clearTimeout(debounceTimer);
+    }, [searchQuery, activeTab]);
 
 
     const handleMicClick = () => {
@@ -120,13 +155,9 @@ export default function LearnPage() {
         );
     }, [searchQuery]);
 
-    const filteredVideos = useMemo(() => {
-        if (!searchQuery) return videos;
-        return videos.filter(video => 
-            video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            video.description.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }, [searchQuery]);
+    const playVideo = (videoId: string) => {
+        setPlayingVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1`);
+    }
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -134,7 +165,7 @@ export default function LearnPage() {
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setPlayingVideoUrl(null)}>
           <div className="relative aspect-video bg-black w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
             <iframe
-              src={`${playingVideoUrl}?autoplay=1`}
+              src={playingVideoUrl}
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -174,7 +205,7 @@ export default function LearnPage() {
           </Button>
       </div>
 
-      <Tabs defaultValue="articles" className="w-full">
+      <Tabs defaultValue="articles" className="w-full" onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
           <TabsTrigger value="articles">Articles & Guides</TabsTrigger>
           <TabsTrigger value="videos">Video Tutorials</TabsTrigger>
@@ -206,32 +237,53 @@ export default function LearnPage() {
         </TabsContent>
         <TabsContent value="videos">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {filteredVideos.map((video, index) => (
-              <Card key={index} className="flex flex-col group">
-                <CardHeader className="p-0">
-                  <button onClick={() => setPlayingVideoUrl(video.url)} className="block aspect-video relative overflow-hidden rounded-t-lg w-full">
-                    <Image src={video.image} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint} />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <PlayCircle className="h-16 w-16 text-white/80"/>
-                    </div>
-                    <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-md">{video.duration}</div>
-                  </button>
-                </CardHeader>
-                <CardContent className="p-4 flex-grow">
-                  <CardTitle className="text-lg font-semibold">{video.title}</CardTitle>
-                  <CardDescription className="mt-2">{video.description}</CardDescription>
-                </CardContent>
-                <CardFooter className="p-4 pt-0">
-                  <Button onClick={() => setPlayingVideoUrl(video.url)} variant="destructive" className="w-full">
-                      Watch Now <Film className="ml-2 h-4 w-4" />
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-             {filteredVideos.length === 0 && <p>No videos found matching your search.</p>}
+            {isSearchingVideos ? (
+                Array.from({length: 3}).map((_, index) => <VideoSkeletonCard key={index} />)
+            ) : videoResults.length > 0 ? (
+                videoResults.map((video, index) => (
+                  <Card key={index} className="flex flex-col group">
+                    <CardHeader className="p-0">
+                      <button onClick={() => playVideo(video.videoId)} className="block aspect-video relative overflow-hidden rounded-t-lg w-full">
+                        <Image src={video.thumbnailUrl} alt={video.title} layout="fill" objectFit="cover" data-ai-hint="youtube thumbnail" />
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <PlayCircle className="h-16 w-16 text-white/80"/>
+                        </div>
+                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-md">{video.duration}</div>
+                      </button>
+                    </CardHeader>
+                    <CardContent className="p-4 flex-grow">
+                      <CardTitle className="text-lg font-semibold">{video.title}</CardTitle>
+                      <CardDescription className="mt-2 text-sm">{video.description}</CardDescription>
+                    </CardContent>
+                    <CardFooter className="p-4 pt-0">
+                      <Button onClick={() => playVideo(video.videoId)} variant="destructive" className="w-full">
+                          Watch Now <Film className="ml-2 h-4 w-4" />
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))
+            ) : (
+              <p>No videos found matching your search.</p>
+            )}
           </div>
         </TabsContent>
       </Tabs>
     </div>
   );
 }
+
+const VideoSkeletonCard = () => (
+    <Card className="flex flex-col">
+      <CardHeader className="p-0">
+        <Skeleton className="aspect-video w-full rounded-t-lg" />
+      </CardHeader>
+      <CardContent className="p-4 flex-grow space-y-2">
+        <Skeleton className="h-5 w-3/4" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-5/6" />
+      </CardContent>
+      <CardFooter className="p-4 pt-0">
+        <Skeleton className="h-10 w-full" />
+      </CardFooter>
+    </Card>
+  );
