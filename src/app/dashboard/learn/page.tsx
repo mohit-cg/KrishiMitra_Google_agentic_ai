@@ -10,9 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
-import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
+import { searchYoutubeVideos, type SearchYoutubeVideosOutput, type SearchYoutubeVideosInput } from '@/ai/flows/search-youtube-videos';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 
 
 const articles = [
@@ -60,7 +60,7 @@ const initialVideos: Video[] = [
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "12:45",
-        videoId: "qAxqR5_p_vE",
+        videoId: "iW_453i4TYc",
         hint: "tomato plant pruning"
     },
     {
@@ -68,7 +68,7 @@ const initialVideos: Video[] = [
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "08:22",
-        videoId: "x9yIM0he_gE",
+        videoId: "V8miLevRI_o",
         hint: "vermicompost bin"
     },
     {
@@ -76,7 +76,7 @@ const initialVideos: Video[] = [
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "15:30",
-        videoId: "3-v8-zQ_d-Q",
+        videoId: "In_24T23T3M",
         hint: "plant nutrient deficiency"
     }
 ];
@@ -163,6 +163,7 @@ export default function LearnPage() {
     }
 
   return (
+    <TooltipProvider>
     <div className="container mx-auto p-4 md:p-8">
        {playingVideoUrl && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setPlayingVideoUrl(null)}>
@@ -279,6 +280,7 @@ export default function LearnPage() {
         </TabsContent>
       </Tabs>
     </div>
+    </TooltipProvider>
   );
 }
 
@@ -297,5 +299,7 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
+
+    
 
     
