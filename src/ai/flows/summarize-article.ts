@@ -19,7 +19,7 @@ export type SummarizeArticleInput = z.infer<typeof SummarizeArticleInputSchema>;
 const SummarizeArticleOutputSchema = z.object({
   title: z.string().describe('The title of the summarized article.'),
   summary: z.string().describe('A concise summary of the article found on the web.'),
-  sourceUrl: z.string().url().describe('The URL of the source article.'),
+  sourceUrl: z.string().describe('The URL of the source article.'),
 });
 export type SummarizeArticleOutput = z.infer<typeof SummarizeArticleOutputSchema>;
 
