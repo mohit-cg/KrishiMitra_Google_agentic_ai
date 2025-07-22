@@ -15,7 +15,7 @@ import {
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { PanelLeft } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
@@ -65,14 +65,20 @@ export default function DashboardLayout({
                     <span className="sr-only">Toggle Menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="lg:hidden max-w-xs">
-                  <Link
-                    href="/dashboard"
-                    className="group flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                  >
-                    <Icons.logo className="h-5 w-5 transition-all group-hover:scale-110" />
-                    <span className="sr-only">KrishiMitra AI</span>
-                  </Link>
+                <SheetContent side="left" className="lg:hidden max-w-xs p-0">
+                  <SheetHeader className="p-4">
+                    <SheetTitle className="sr-only">Mobile Navigation Menu</SheetTitle>
+                    <SheetDescription className="sr-only">Main navigation links for the application.</SheetDescription>
+                  </SheetHeader>
+                  <div className="flex justify-center my-4">
+                    <Link
+                      href="/dashboard"
+                      className="group flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base px-4"
+                    >
+                      <Icons.logo className="h-5 w-5 transition-all group-hover:scale-110" />
+                      <span className="">KrishiMitra AI</span>
+                    </Link>
+                  </div>
                   <MainNav />
                 </SheetContent>
               </Sheet>
