@@ -101,9 +101,14 @@ export default function ProfilePage() {
   const handleSaveChanges = async () => {
     setIsSaving(true);
     try {
-      const profileData: { displayName?: string } = { displayName };
+      const profileData: { displayName?: string } = {};
+      if (displayName !== user?.displayName) {
+        profileData.displayName = displayName;
+      }
       
-      await updateUserProfile(profileData);
+      if (Object.keys(profileData).length > 0) {
+        await updateUserProfile(profileData);
+      }
 
       // In a real app, you would also save location, language, and crops to a database like Firestore.
       toast({
