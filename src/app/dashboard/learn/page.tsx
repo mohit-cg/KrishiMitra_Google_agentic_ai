@@ -10,8 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
-import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
+import { searchYoutubeVideos, type SearchYoutubeVideosOutput, type SearchYoutubeVideosInput } from '@/ai/flows/search-youtube-videos';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+
 
 const articles = [
   {
@@ -52,12 +54,11 @@ const articles = [
   },
 ];
 
-const initialVideos = [
+const initialVideos: Video[] = [
     {
         title: "Video Guide to Pruning Tomato Plants",
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         thumbnailUrl: "https://placehold.co/600x400.png",
-        hint: "pruning tomato",
         duration: "12:45",
         videoId: "qAxqR5_p_vE"
     },
@@ -65,7 +66,6 @@ const initialVideos = [
         title: "Setting Up a Home Vermicompost Bin",
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
         thumbnailUrl: "https://placehold.co/600x400.png",
-        hint: "vermicompost bin",
         duration: "08:22",
         videoId: "x9yIM0he_gE"
     },
@@ -73,11 +73,11 @@ const initialVideos = [
         title: "Identifying Common Nutrient Deficiencies",
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         thumbnailUrl: "https://placehold.co/600x400.png",
-        hint: "plant nutrient",
         duration: "15:30",
         videoId: "3-v8-zQ_d-Q"
     }
 ];
+
 
 type Video = SearchYoutubeVideosOutput['videos'][0];
 
@@ -224,11 +224,16 @@ export default function LearnPage() {
                   <CardDescription className="mt-2">{article.description}</CardDescription>
                 </CardContent>
                 <CardFooter className="p-4 pt-0">
-                  <Button asChild variant="outline" className="w-full">
-                    <Link href="#">
-                      Read More <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                       <Button variant="outline" className="w-full" disabled>
+                          Read More <ArrowRight className="ml-2 h-4 w-4" />
+                       </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Coming Soon!</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </CardFooter>
               </Card>
             ))}
@@ -287,3 +292,4 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
+
