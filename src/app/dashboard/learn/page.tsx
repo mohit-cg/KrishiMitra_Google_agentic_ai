@@ -12,7 +12,7 @@ import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X } from "lucide-rea
 import { toast } from '@/hooks/use-toast';
 import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 
 
 const articles = [
