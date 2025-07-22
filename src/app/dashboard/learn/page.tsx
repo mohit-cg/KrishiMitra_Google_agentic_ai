@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info, ExternalLink, AlertCircle, SearchX } from "lucide-react";
+import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info, ExternalLink, AlertCircle, SearchX, Youtube } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
 import { summarizeArticle, type SummarizeArticleOutput } from '@/ai/flows/summarize-article';
@@ -93,6 +93,7 @@ const SpeechRecognition =
 export default function LearnPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [isRecording, setIsRecording] = useState(false);
+    const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState("articles");
     const [videoResults, setVideoResults] = useState<Video[]>(initialVideos);
     const [isSearchingVideos, setIsSearchingVideos] = useState(false);
@@ -170,15 +171,52 @@ export default function LearnPage() {
     }, [searchQuery]);
 
     const playVideo = (videoId: string) => {
-        window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank', 'noopener,noreferrer');
+        setPlayingVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1`);
     }
 
     const showNoLocalResultsMessage =
       searchQuery.trim() !== '' &&
-      filteredArticles.length === 0;
+      filteredArticles.length === 0 && 
+      !summarizedArticle?.articles.length;
 
   return (
     <div className="container mx-auto p-4 md:p-8">
+      {playingVideoUrl && (
+          <div className="fixed bottom-4 right-4 z-50">
+              <Card className="w-[350px] shadow-2xl">
+                  <CardHeader className="p-2 relative">
+                      <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-2 right-2 h-6 w-6"
+                          onClick={() => setPlayingVideoUrl(null)}
+                      >
+                          <X className="h-4 w-4" />
+                          <span className="sr-only">Close Player</span>
+                      </Button>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                      <div className="aspect-video">
+                          <iframe
+                              src={playingVideoUrl}
+                              title="YouTube video player"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
+                              className="w-full h-full"
+                          ></iframe>
+                      </div>
+                  </CardContent>
+                  <CardFooter className="p-2">
+                       <Button asChild size="sm" className="w-full" variant="destructive">
+                            <Link href={playingVideoUrl.replace('/embed/', '/watch?v=').replace('?autoplay=1', '')} target="_blank" rel="noopener noreferrer">
+                                <Youtube className="mr-2 h-4 w-4" />
+                                Watch on YouTube
+                            </Link>
+                        </Button>
+                  </CardFooter>
+              </Card>
+          </div>
+      )}
       <h1 className="text-3xl font-bold mb-2 font-headline">E-Learning Hub</h1>
       <p className="text-muted-foreground mb-4">
         Expand your knowledge with our collection of farming guides and tutorials.
@@ -281,7 +319,7 @@ export default function LearnPage() {
                     </CardFooter>
                 </Card>
                 ))
-            ) : showNoLocalResultsMessage && (!summarizedArticle || summarizedArticle.articles.length === 0) && !isSummarizing ? (
+            ) : showNoLocalResultsMessage ? (
                 <div className="md:col-span-2 lg:col-span-3">
                    <NoArticlesFoundAlert query={searchQuery} isWebSearchSuccessful={!!summarizedArticle && summarizedArticle.articles.length > 0} />
                 </div>
