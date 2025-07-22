@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -19,6 +20,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useSidebar } from "@/components/ui/sidebar";
+import { SheetClose } from "@/components/ui/sheet";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
@@ -39,17 +41,8 @@ export function MainNav() {
     <nav className="flex flex-col gap-2 px-2">
       {navItems.map((item) => {
         const isActive = pathname === item.href;
-        return (
-          <Tooltip key={item.href}>
-            <TooltipTrigger asChild>
-              <Link
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                  isActive && "bg-muted text-primary",
-                  state === "collapsed" && "justify-center"
-                )}
-              >
+        const linkContent = (
+            <>
                 <item.icon className="h-5 w-5" />
                 <span
                   className={cn(
@@ -59,6 +52,34 @@ export function MainNav() {
                 >
                   {item.label}
                 </span>
+            </>
+        );
+
+        const linkClassName = cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+            isActive && "bg-muted text-primary",
+            state === "collapsed" && "justify-center"
+        );
+
+        if (state === 'expanded') { // In mobile sheet view, state is always 'expanded'
+             return (
+                 <SheetClose asChild key={item.href}>
+                     <Link href={item.href} className={linkClassName}>
+                         {linkContent}
+                     </Link>
+                 </SheetClose>
+             )
+        }
+        
+        // For desktop view with tooltips
+        return (
+          <Tooltip key={item.href}>
+            <TooltipTrigger asChild>
+              <Link
+                href={item.href}
+                className={linkClassName}
+              >
+                {linkContent}
               </Link>
             </TooltipTrigger>
             {state === "collapsed" && (
