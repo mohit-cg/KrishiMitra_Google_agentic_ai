@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { navigateGovernmentSchemes, type NavigateGovernmentSchemesOutput } from '@/ai/flows/navigate-government-schemes';
-import { Bot, CheckCircle, ExternalLink, Mic, Target } from 'lucide-react';
+import { Bot, CheckCircle, ExternalLink, Mic, Target, Search } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
@@ -44,79 +44,69 @@ export function SchemeNavigatorClient() {
   };
 
   return (
-    <div className="grid gap-8 lg:grid-cols-2">
-      <Card>
-        <CardHeader>
-          <CardTitle>Find a Government Scheme</CardTitle>
-          <CardDescription>Ask a question to find relevant schemes.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Textarea
-              placeholder="e.g., Tell me about PM-KISAN scheme"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              rows={4}
-            />
-            <div className="flex items-center gap-2">
-              <Button type="submit" disabled={isLoading} className="flex-1">
-                {isLoading ? "Searching..." : "Find Scheme"}
-              </Button>
-               <Button type="button" variant="outline" size="icon" disabled={isLoading}>
-                  <Mic className="h-4 w-4" />
-                  <span className="sr-only">Use Voice</span>
+    <Card className="shadow-lg">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+            <Search className="h-6 w-6 text-primary"/>
+            Find a Specific Scheme
+        </CardTitle>
+        <CardDescription>Use our AI assistant to get details on any government scheme by asking a question.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+          <Textarea
+            placeholder="e.g., Tell me about PM-KISAN scheme"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            rows={3}
+          />
+          <div className="flex items-center gap-2">
+            <Button type="submit" disabled={isLoading} className="flex-1">
+              {isLoading ? "Searching..." : "Find Scheme"}
+            </Button>
+            <Button type="button" variant="outline" size="icon" disabled>
+              <Mic className="h-4 w-4" />
+              <span className="sr-only">Use Voice (Coming Soon)</span>
+            </Button>
+          </div>
+        </form>
+
+        {isLoading && <LoadingSkeleton />}
+        
+        {result && !isLoading && (
+            <div className="border-t pt-4">
+                <h3 className="font-semibold mb-2">{result.schemeName}</h3>
+                <p className="text-sm text-muted-foreground mb-4">{result.answer}</p>
+                <Alert className="mb-4">
+                    <Target className="h-4 w-4" />
+                    <AlertTitle>Eligibility</AlertTitle>
+                    <AlertDescription>{result.eligibility}</AlertDescription>
+                </Alert>
+                <Button asChild className="w-full">
+                    <Link href={result.applicationLink} target="_blank" rel="noopener noreferrer">
+                    Apply Now <ExternalLink className="ml-2 h-4 w-4" />
+                    </Link>
                 </Button>
             </div>
-          </form>
-        </CardContent>
-      </Card>
-      
-      <div>
-        <h2 className="text-2xl font-bold mb-4 font-headline">Scheme Details</h2>
-        {isLoading && <LoadingSkeleton />}
-        {result && !isLoading && (
-          <Card>
-            <CardHeader>
-              <CardTitle>{result.schemeName}</CardTitle>
-              <CardDescription>{result.answer}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Alert>
-                <Target className="h-4 w-4" />
-                <AlertTitle>Eligibility</AlertTitle>
-                <AlertDescription>{result.eligibility}</AlertDescription>
-              </Alert>
-              <Button asChild className="w-full">
-                <Link href={result.applicationLink} target="_blank">
-                  Apply Now <ExternalLink className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
         )}
+
         {!result && !isLoading && (
-          <Card className="flex flex-col items-center justify-center p-8 text-center h-full">
-            <CardContent>
-              <Bot className="mx-auto h-12 w-12 text-muted-foreground" />
-              <p className="mt-4 text-muted-foreground">Scheme details will appear here.</p>
-            </CardContent>
-          </Card>
+            <div className="text-center text-sm text-muted-foreground pt-4 border-t">
+                <Bot className="mx-auto h-8 w-8 mb-2" />
+                <p>Ask a question to see scheme details here.</p>
+            </div>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
 const LoadingSkeleton = () => (
-    <Card>
-        <CardHeader>
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-full mt-2" />
-            <Skeleton className="h-4 w-5/6 mt-1" />
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <Skeleton className="h-20 w-full" />
-            <Skeleton className="h-10 w-full" />
-        </CardContent>
-    </Card>
+    <div className="border-t pt-4 space-y-4">
+        <Skeleton className="h-6 w-3/4" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-5/6" />
+        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-10 w-full" />
+    </div>
 );
