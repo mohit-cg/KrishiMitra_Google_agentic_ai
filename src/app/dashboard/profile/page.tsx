@@ -10,6 +10,63 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from '@/hooks/use-auth';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { cn } from '@/lib/utils';
+
+
+const districts = [
+    { value: "Port Blair, Andaman & Nicobar", label: "Port Blair, Andaman & Nicobar" },
+    { value: "Visakhapatnam, Andhra Pradesh", label: "Visakhapatnam, Andhra Pradesh" },
+    { value: "Itanagar, Arunachal Pradesh", label: "Itanagar, Arunachal Pradesh" },
+    { value: "Guwahati, Assam", label: "Guwahati, Assam" },
+    { value: "Patna, Bihar", label: "Patna, Bihar" },
+    { value: "Chandigarh, Chandigarh", label: "Chandigarh, Chandigarh" },
+    { value: "Raipur, Chhattisgarh", label: "Raipur, Chhattisgarh" },
+    { value: "Silvassa, Dadra & Nagar Haveli", label: "Silvassa, Dadra & Nagar Haveli" },
+    { value: "Daman, Daman & Diu", label: "Daman, Daman & Diu" },
+    { value: "New Delhi, Delhi", label: "New Delhi, Delhi" },
+    { value: "Panaji, Goa", label: "Panaji, Goa" },
+    { value: "Ahmedabad, Gujarat", label: "Ahmedabad, Gujarat" },
+    { value: "Surat, Gujarat", label: "Surat, Gujarat" },
+    { value: "Vadodara, Gujarat", label: "Vadodara, Gujarat" },
+    { value: "Faridabad, Haryana", label: "Faridabad, Haryana" },
+    { value: "Shimla, Himachal Pradesh", label: "Shimla, Himachal Pradesh" },
+    { value: "Srinagar, Jammu & Kashmir", label: "Srinagar, Jammu & Kashmir" },
+    { value: "Ranchi, Jharkhand", label: "Ranchi, Jharkhand" },
+    { value: "Bengaluru, Karnataka", label: "Bengaluru, Karnataka" },
+    { value: "Mysuru, Karnataka", label: "Mysuru, Karnataka" },
+    { value: "Thiruvananthapuram, Kerala", label: "Thiruvananthapuram, Kerala" },
+    { value: "Kavaratti, Lakshadweep", label: "Kavaratti, Lakshadweep" },
+    { value: "Bhopal, Madhya Pradesh", label: "Bhopal, Madhya Pradesh" },
+    { value: "Indore, Madhya Pradesh", label: "Indore, Madhya Pradesh" },
+    { value: "Pune, Maharashtra", label: "Pune, Maharashtra" },
+    { value: "Mumbai, Maharashtra", label: "Mumbai, Maharashtra" },
+    { value: "Nagpur, Maharashtra", label: "Nagpur, Maharashtra" },
+    { value: "Nashik, Maharashtra", label: "Nashik, Maharashtra" },
+    { value: "Aurangabad, Maharashtra", label: "Aurangabad, Maharashtra" },
+    { value: "Imphal, Manipur", label: "Imphal, Manipur" },
+    { value: "Shillong, Meghalaya", label: "Shillong, Meghalaya" },
+    { value: "Aizawl, Mizoram", label: "Aizawl, Mizoram" },
+    { value: "Kohima, Nagaland", label: "Kohima, Nagaland" },
+    { value: "Bhubaneswar, Odisha", label: "Bhubaneswar, Odisha" },
+    { value: "Puducherry, Puducherry", label: "Puducherry, Puducherry" },
+    { value: "Ludhiana, Punjab", label: "Ludhiana, Punjab" },
+    { value: "Amritsar, Punjab", label: "Amritsar, Punjab" },
+    { value: "Jaipur, Rajasthan", label: "Jaipur, Rajasthan" },
+    { value: "Jodhpur, Rajasthan", label: "Jodhpur, Rajasthan" },
+    { value: "Gangtok, Sikkim", label: "Gangtok, Sikkim" },
+    { value: "Chennai, Tamil Nadu", label: "Chennai, Tamil Nadu" },
+    { value: "Coimbatore, Tamil Nadu", label: "Coimbatore, Tamil Nadu" },
+    { value: "Hyderabad, Telangana", label: "Hyderabad, Telangana" },
+    { value: "Agartala, Tripura", label: "Agartala, Tripura" },
+    { value: "Lucknow, Uttar Pradesh", label: "Lucknow, Uttar Pradesh" },
+    { value: "Kanpur, Uttar Pradesh", label: "Kanpur, Uttar Pradesh" },
+    { value: "Dehradun, Uttarakhand", label: "Dehradun, Uttarakhand" },
+    { value: "Kolkata, West Bengal", label: "Kolkata, West Bengal" },
+]
+
 
 export default function ProfilePage() {
   const { user, updateUserProfile, loading } = useAuth();
@@ -20,6 +77,7 @@ export default function ProfilePage() {
   const [language, setLanguage] = useState('en');
   const [crops, setCrops] = useState('Tomatoes, Onions, Sugarcane');
   const [isSaving, setIsSaving] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -81,61 +139,49 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="location">Location (District)</Label>
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger id="location">
-                  <SelectValue placeholder="Select location" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Port Blair, Andaman & Nicobar">Port Blair, Andaman & Nicobar</SelectItem>
-                  <SelectItem value="Visakhapatnam, Andhra Pradesh">Visakhapatnam, Andhra Pradesh</SelectItem>
-                  <SelectItem value="Itanagar, Arunachal Pradesh">Itanagar, Arunachal Pradesh</SelectItem>
-                  <SelectItem value="Guwahati, Assam">Guwahati, Assam</SelectItem>
-                  <SelectItem value="Patna, Bihar">Patna, Bihar</SelectItem>
-                  <SelectItem value="Chandigarh, Chandigarh">Chandigarh, Chandigarh</SelectItem>
-                  <SelectItem value="Raipur, Chhattisgarh">Raipur, Chhattisgarh</SelectItem>
-                  <SelectItem value="Silvassa, Dadra & Nagar Haveli">Silvassa, Dadra & Nagar Haveli</SelectItem>
-                  <SelectItem value="Daman, Daman & Diu">Daman, Daman & Diu</SelectItem>
-                  <SelectItem value="New Delhi, Delhi">New Delhi, Delhi</SelectItem>
-                  <SelectItem value="Panaji, Goa">Panaji, Goa</SelectItem>
-                  <SelectItem value="Ahmedabad, Gujarat">Ahmedabad, Gujarat</SelectItem>
-                  <SelectItem value="Surat, Gujarat">Surat, Gujarat</SelectItem>
-                  <SelectItem value="Vadodara, Gujarat">Vadodara, Gujarat</SelectItem>
-                  <SelectItem value="Faridabad, Haryana">Faridabad, Haryana</SelectItem>
-                  <SelectItem value="Shimla, Himachal Pradesh">Shimla, Himachal Pradesh</SelectItem>
-                  <SelectItem value="Srinagar, Jammu & Kashmir">Srinagar, Jammu & Kashmir</SelectItem>
-                  <SelectItem value="Ranchi, Jharkhand">Ranchi, Jharkhand</SelectItem>
-                  <SelectItem value="Bengaluru, Karnataka">Bengaluru, Karnataka</SelectItem>
-                  <SelectItem value="Mysuru, Karnataka">Mysuru, Karnataka</SelectItem>
-                  <SelectItem value="Thiruvananthapuram, Kerala">Thiruvananthapuram, Kerala</SelectItem>
-                  <SelectItem value="Kavaratti, Lakshadweep">Kavaratti, Lakshadweep</SelectItem>
-                  <SelectItem value="Bhopal, Madhya Pradesh">Bhopal, Madhya Pradesh</SelectItem>
-                  <SelectItem value="Indore, Madhya Pradesh">Indore, Madhya Pradesh</SelectItem>
-                  <SelectItem value="Pune, Maharashtra">Pune, Maharashtra</SelectItem>
-                  <SelectItem value="Mumbai, Maharashtra">Mumbai, Maharashtra</SelectItem>
-                  <SelectItem value="Nagpur, Maharashtra">Nagpur, Maharashtra</SelectItem>
-                  <SelectItem value="Nashik, Maharashtra">Nashik, Maharashtra</SelectItem>
-                  <SelectItem value="Aurangabad, Maharashtra">Aurangabad, Maharashtra</SelectItem>
-                  <SelectItem value="Imphal, Manipur">Imphal, Manipur</SelectItem>
-                  <SelectItem value="Shillong, Meghalaya">Shillong, Meghalaya</SelectItem>
-                  <SelectItem value="Aizawl, Mizoram">Aizawl, Mizoram</SelectItem>
-                  <SelectItem value="Kohima, Nagaland">Kohima, Nagaland</SelectItem>
-                  <SelectItem value="Bhubaneswar, Odisha">Bhubaneswar, Odisha</SelectItem>
-                  <SelectItem value="Puducherry, Puducherry">Puducherry, Puducherry</SelectItem>
-                  <SelectItem value="Ludhiana, Punjab">Ludhiana, Punjab</SelectItem>
-                  <SelectItem value="Amritsar, Punjab">Amritsar, Punjab</SelectItem>
-                  <SelectItem value="Jaipur, Rajasthan">Jaipur, Rajasthan</SelectItem>
-                  <SelectItem value="Jodhpur, Rajasthan">Jodhpur, Rajasthan</SelectItem>
-                  <SelectItem value="Gangtok, Sikkim">Gangtok, Sikkim</SelectItem>
-                  <SelectItem value="Chennai, Tamil Nadu">Chennai, Tamil Nadu</SelectItem>
-                  <SelectItem value="Coimbatore, Tamil Nadu">Coimbatore, Tamil Nadu</SelectItem>
-                  <SelectItem value="Hyderabad, Telangana">Hyderabad, Telangana</SelectItem>
-                  <SelectItem value="Agartala, Tripura">Agartala, Tripura</SelectItem>
-                  <SelectItem value="Lucknow, Uttar Pradesh">Lucknow, Uttar Pradesh</SelectItem>
-                  <SelectItem value="Kanpur, Uttar Pradesh">Kanpur, Uttar Pradesh</SelectItem>
-                  <SelectItem value="Dehradun, Uttarakhand">Dehradun, Uttarakhand</SelectItem>
-                  <SelectItem value="Kolkata, West Bengal">Kolkata, West Bengal</SelectItem>
-                </SelectContent>
-              </Select>
+               <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={open}
+                      className="w-full justify-between"
+                    >
+                      {location
+                        ? districts.find((district) => district.value === location)?.label
+                        : "Select district..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search district..." />
+                      <CommandEmpty>No district found.</CommandEmpty>
+                       <CommandList>
+                        <CommandGroup>
+                            {districts.map((district) => (
+                            <CommandItem
+                                key={district.value}
+                                value={district.value}
+                                onSelect={(currentValue) => {
+                                setLocation(currentValue === location ? "" : currentValue)
+                                setOpen(false)
+                                }}
+                            >
+                                <Check
+                                className={cn(
+                                    "mr-2 h-4 w-4",
+                                    location === district.value ? "opacity-100" : "opacity-0"
+                                )}
+                                />
+                                {district.label}
+                            </CommandItem>
+                            ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
             </div>
             <div className="space-y-2">
               <Label htmlFor="language">Preferred Language</Label>
@@ -212,3 +258,5 @@ const ProfileSkeleton = () => (
     </Card>
   </div>
 );
+
+    
