@@ -214,8 +214,8 @@ export default function ProfilePage() {
                                 key={district.value}
                                 value={district.value}
                                 onSelect={(currentValue) => {
-                                setLocation(currentValue === location ? "" : currentValue)
-                                setOpen(false)
+                                  setLocation(currentValue);
+                                  setOpen(false);
                                 }}
                             >
                                 <Check
@@ -312,3 +312,5 @@ const ProfileSkeleton = () => (
     </Card>
   </div>
 );
+
+    
