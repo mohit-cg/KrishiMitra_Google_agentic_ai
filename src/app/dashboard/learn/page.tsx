@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info, ExternalLink } from "lucide-react";
+import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info, ExternalLink, AlertCircle } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
 import { summarizeArticle, type SummarizeArticleOutput } from '@/ai/flows/summarize-article';
@@ -21,7 +21,7 @@ const articles = [
     title: "Mastering Drip Irrigation",
     description: "A comprehensive guide to setting up and maintaining drip irrigation systems for maximizing water efficiency and boosting crop yields. Covers component selection, layout planning, and troubleshooting common issues.",
     image: "https://placehold.co/600x400.png",
-    hint: "drip irrigation system",
+    hint: "drip irrigation system farm",
   },
   {
     title: "Integrated Pest Management (IPM)",
@@ -33,13 +33,13 @@ const articles = [
     title: "Soil Health and Nutrition",
     description: "Unlock the secrets to rich, fertile soil. This article delves into the fundamentals of soil science, including composition, pH balance, and how to enrich your soil for healthier, more productive plants.",
     image: "https://placehold.co/600x400.png",
-    hint: "healthy soil farm",
+    hint: "healthy farm soil",
   },
   {
     title: "Advanced Composting Techniques",
     description: "Learn to transform farm waste into 'black gold'. This guide details various composting methods, including hot and cold composting, vermicomposting, and how to create balanced compost piles.",
     image: "https://placehold.co/600x400.png",
-    hint: "compost pile farm",
+    hint: "farm compost pile",
   },
   {
     title: "Understanding Crop Rotation",
@@ -137,6 +137,7 @@ export default function LearnPage() {
           }
         };
 
+        // Debounce search to avoid excessive API calls
         const debounceTimer = setTimeout(handleSearch, 800);
         return () => clearTimeout(debounceTimer);
     }, [searchQuery, activeTab]);
@@ -207,7 +208,7 @@ export default function LearnPage() {
           <div className="relative flex-grow">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input 
-                placeholder="Search for articles or videos..."
+                placeholder="Search for articles or videos on farming topics..."
                 className="pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -231,22 +232,30 @@ export default function LearnPage() {
                 {isSummarizing ? (
                   <SummarizeSkeletonCard />
                 ) : summarizedArticle ? (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>{summarizedArticle.title}</CardTitle>
-                      <CardDescription>AI-generated summary from a web source.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground">{summarizedArticle.summary}</p>
-                    </CardContent>
-                    <CardFooter>
-                       <Button asChild>
-                            <Link href={summarizedArticle.sourceUrl} target="_blank" rel="noopener noreferrer">
-                                Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
-                            </Link>
-                        </Button>
-                    </CardFooter>
-                  </Card>
+                  summarizedArticle.error ? (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Irrelevant Topic</AlertTitle>
+                      <AlertDescription>{summarizedArticle.error}</AlertDescription>
+                    </Alert>
+                  ) : (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>{summarizedArticle.title}</CardTitle>
+                        <CardDescription>AI-generated summary from a web source.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground">{summarizedArticle.summary}</p>
+                      </CardContent>
+                      <CardFooter>
+                         <Button asChild>
+                              <Link href={summarizedArticle.sourceUrl!} target="_blank" rel="noopener noreferrer">
+                                  Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
+                              </Link>
+                          </Button>
+                      </CardFooter>
+                    </Card>
+                  )
                 ) : null}
               </div>
             )}
@@ -272,32 +281,11 @@ export default function LearnPage() {
                         </CardFooter>
                     </Card>
                 ))
-            ) : !searchQuery ? (
-                 articles.map((article, index) => (
-                    <Card key={index} className="flex flex-col">
-                        <CardHeader className="p-0">
-                        <div className="aspect-video relative">
-                            <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
-                        </div>
-                        </CardHeader>
-                        <CardContent className="p-4 flex-grow">
-                        <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
-                        <CardDescription className="mt-2">{article.description}</CardDescription>
-                        </CardContent>
-                        <CardFooter className="p-4 pt-0">
-                        <Button asChild className="w-full">
-                            <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
-                                Read More <ArrowRight className="ml-2 h-4 w-4" />
-                            </Link>
-                        </Button>
-                        </CardFooter>
-                    </Card>
-                ))
-            ) : (
+            ) : searchQuery && !isSummarizing ? ( // Only show if there's a search query and we're not waiting for summary
                 <div className="md:col-span-2 lg:col-span-3">
                    <NoArticlesFoundAlert query={searchQuery} />
                 </div>
-            )}
+            ) : null}
           </div>
         </TabsContent>
         <TabsContent value="videos">
@@ -350,7 +338,7 @@ const NoArticlesFoundAlert = ({ query }: { query: string }) => (
         <Info className="h-4 w-4" />
         <AlertTitle>No Matching Guides Found</AlertTitle>
         <AlertDescription>
-            Your search for "{query}" did not match any of our existing guides. Check the Web Search Result above for a summary from the web.
+            Your search for "{query}" did not match any of our existing guides. Check the Web Search Result above for a summary from the web, or try a different search term.
         </AlertDescription>
     </Alert>
 );
@@ -387,8 +375,3 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
-
-
-    
-
-    

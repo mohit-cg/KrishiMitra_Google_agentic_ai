@@ -17,9 +17,10 @@ const SummarizeArticleInputSchema = z.object({
 export type SummarizeArticleInput = z.infer<typeof SummarizeArticleInputSchema>;
 
 const SummarizeArticleOutputSchema = z.object({
-  title: z.string().describe('The title of the summarized article.'),
-  summary: z.string().describe('A concise summary of the article found on the web.'),
-  sourceUrl: z.string().describe('The URL of the source article.'),
+  title: z.string().optional().describe('The title of the summarized article.'),
+  summary: z.string().optional().describe('A concise summary of the article found on the web.'),
+  sourceUrl: z.string().optional().describe('The URL of the source article.'),
+  error: z.string().optional().describe("An error message if the topic is not relevant, e.g., 'Please search for a topic related to agriculture.'"),
 });
 export type SummarizeArticleOutput = z.infer<typeof SummarizeArticleOutputSchema>;
 
@@ -31,11 +32,14 @@ const summarizeArticlePrompt = ai.definePrompt({
   name: 'summarizeArticlePrompt',
   input: {schema: SummarizeArticleInputSchema},
   output: {schema: SummarizeArticleOutputSchema},
-  prompt: `You are an expert research assistant for farmers. Your task is to find a relevant, high-quality article on the web about the given topic, summarize it, and provide the source URL.
+  prompt: `You are an expert research assistant for farmers. Your first task is to determine if the user's query is related to agriculture, farming, crops, livestock, or any closely related topic.
 
-  Topic: "{{query}}"
+  Query: "{{query}}"
   
-  Instructions:
+  - If the query is NOT related to these topics, set the 'error' field in your output to "Please search for a topic related to agriculture." and leave the 'title', 'summary', and 'sourceUrl' fields empty.
+  - If the query IS relevant, then proceed with the following steps and leave the 'error' field empty:
+  
+  Instructions for a relevant query:
   1.  Imagine you are searching the web for the best article on this topic.
   2.  Generate a realistic title for such an article.
   3.  Write a concise, helpful summary of the imagined article's key points.
