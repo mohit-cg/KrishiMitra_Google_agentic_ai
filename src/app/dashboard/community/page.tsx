@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Mic, Paperclip, Send } from "lucide-react";
+import { Mic, Paperclip, Send, Square } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const initialRooms = [
   { id: "general", name: "General Discussion" },
@@ -40,12 +41,17 @@ const allMessages = {
   ],
 };
 
+// Check for SpeechRecognition API
+const SpeechRecognition =
+  (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
+
 
 export default function CommunityPage() {
   const [rooms] = useState(initialRooms);
   const [activeRoom, setActiveRoom] = useState(initialRooms[0]);
   const [messages, setMessages] = useState(allMessages[activeRoom.id]);
   const [newMessage, setNewMessage] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
 
   const handleRoomChange = (room) => {
     setActiveRoom(room);
@@ -71,6 +77,25 @@ export default function CommunityPage() {
     allMessages[activeRoom.id] = updatedMessages;
     
     setNewMessage("");
+  };
+
+  const handleMicClick = () => {
+    if (!SpeechRecognition) {
+      toast({ title: "Browser Not Supported", description: "Your browser does not support voice recognition.", variant: "destructive" });
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-IN';
+
+    recognition.onstart = () => setIsRecording(true);
+    recognition.onresult = (event) => setNewMessage(event.results[0][0].transcript);
+    recognition.onerror = (event) => toast({ title: "Voice Recognition Error", description: event.error, variant: "destructive" });
+    recognition.onend = () => setIsRecording(false);
+
+    recognition.start();
   };
 
   return (
@@ -128,7 +153,10 @@ export default function CommunityPage() {
                 onChange={(e) => setNewMessage(e.target.value)}
               />
               <Button variant="ghost" size="icon" type="button"><Paperclip className="h-4 w-4" /></Button>
-              <Button variant="ghost" size="icon" type="button"><Mic className="h-4 w-4" /></Button>
+              <Button variant={isRecording ? "destructive" : "ghost"} size="icon" type="button" onClick={handleMicClick}>
+                 {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                 <span className="sr-only">{isRecording ? "Stop recording" : "Start recording"}</span>
+              </Button>
               <Button type="submit"><Send className="h-4 w-4" /></Button>
             </form>
           </CardContent>
