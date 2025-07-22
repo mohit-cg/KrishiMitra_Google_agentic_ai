@@ -2,12 +2,13 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Mic, Paperclip, Send, Square } from "lucide-react";
+import { Mic, Paperclip, Send, Square, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const initialRooms = [
@@ -52,6 +53,7 @@ export default function CommunityPage() {
   const [messages, setMessages] = useState(allMessages[activeRoom.id]);
   const [newMessage, setNewMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
   const attachmentInputRef = useRef<HTMLInputElement>(null);
 
 
@@ -62,12 +64,13 @@ export default function CommunityPage() {
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (newMessage.trim() === "") return;
+    if (newMessage.trim() === "" && !attachmentPreview) return;
 
     const messageToSend = {
       user: "You",
       avatar: "https://placehold.co/40x40.png",
       text: newMessage,
+      attachment: attachmentPreview,
       isSelf: true,
       hint: "farmer portrait"
     };
@@ -79,6 +82,10 @@ export default function CommunityPage() {
     allMessages[activeRoom.id] = updatedMessages;
     
     setNewMessage("");
+    setAttachmentPreview(null);
+    if (attachmentInputRef.current) {
+        attachmentInputRef.current.value = '';
+    }
   };
 
   const handleMicClick = () => {
@@ -107,16 +114,28 @@ export default function CommunityPage() {
   const handleAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      // In a real app, you would upload this file to a service like Firebase Storage
-      // and then post a message with the file URL.
-      toast({
-        title: "Attachment Added",
-        description: `${file.name} is ready to be sent. (Feature in development)`,
-      });
-      // Reset the input value to allow selecting the same file again
-      e.target.value = '';
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setAttachmentPreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        toast({
+          title: "Unsupported File Type",
+          description: "Please select an image file.",
+          variant: "destructive",
+        });
+      }
     }
   };
+  
+  const removeAttachment = () => {
+      setAttachmentPreview(null);
+      if (attachmentInputRef.current) {
+          attachmentInputRef.current.value = '';
+      }
+  }
 
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col">
@@ -159,6 +178,11 @@ export default function CommunityPage() {
                     {!msg.isSelf && <Avatar><AvatarImage src={msg.avatar} data-ai-hint={msg.hint} /><AvatarFallback>{msg.user.substring(0, 2)}</AvatarFallback></Avatar>}
                     <div className={`rounded-lg p-3 max-w-xs ${msg.isSelf ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
                       {!msg.isSelf && <p className="font-semibold text-sm mb-1">{msg.user}</p>}
+                      {msg.attachment && (
+                        <div className="relative aspect-video mb-2">
+                           <Image src={msg.attachment} alt="Attachment" layout="fill" objectFit="cover" className="rounded-md" />
+                        </div>
+                      )}
                       <p className="text-sm">{msg.text}</p>
                     </div>
                     {msg.isSelf && <Avatar><AvatarImage src={msg.avatar} data-ai-hint={msg.hint} /><AvatarFallback>You</AvatarFallback></Avatar>}
@@ -166,20 +190,35 @@ export default function CommunityPage() {
                 ))}
               </div>
             </ScrollArea>
+             {attachmentPreview && (
+                <div className="mt-4 p-2 border-t relative">
+                    <p className="text-xs font-semibold mb-2 text-muted-foreground">Attachment Preview:</p>
+                    <div className="relative w-24 h-24">
+                        <Image src={attachmentPreview} alt="Attachment preview" layout="fill" objectFit="cover" className="rounded-md"/>
+                    </div>
+                    <Button variant="ghost" size="icon" className="absolute top-0 right-0 h-8 w-8" onClick={removeAttachment}>
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Remove attachment</span>
+                    </Button>
+                </div>
+              )}
             <form onSubmit={handleSendMessage} className="mt-4 flex items-center gap-2">
               <Input 
                 placeholder="Type a message..." 
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
               />
-              <input type="file" ref={attachmentInputRef} onChange={handleAttachment} className="hidden" accept="image/*,video/*,.pdf" />
+              <input type="file" ref={attachmentInputRef} onChange={handleAttachment} className="hidden" accept="image/*" />
 
               <Button variant="ghost" size="icon" type="button" onClick={handleAttachmentClick}><Paperclip className="h-4 w-4" /></Button>
               <Button variant={isRecording ? "destructive" : "ghost"} size="icon" type="button" onClick={handleMicClick}>
                  {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                  <span className="sr-only">{isRecording ? "Stop recording" : "Start recording"}</span>
               </Button>
-              <Button type="submit"><Send className="h-4 w-4" /></Button>
+              <Button type="submit" disabled={!newMessage.trim() && !attachmentPreview}>
+                <Send className="h-4 w-4 mr-2" />
+                {attachmentPreview ? 'Send Photo' : 'Send'}
+              </Button>
             </form>
           </CardContent>
         </Card>
