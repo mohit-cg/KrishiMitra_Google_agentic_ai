@@ -20,37 +20,37 @@ const articles = [
     title: "Mastering Drip Irrigation",
     description: "Learn how to set up and maintain a drip irrigation system for maximum water efficiency and crop yield.",
     image: "https://placehold.co/600x400.png",
-    hint: "drip irrigation",
+    hint: "drip irrigation system",
   },
   {
     title: "Integrated Pest Management",
     description: "A comprehensive guide to managing pests in a sustainable and environmentally friendly way.",
     image: "https://placehold.co/600x400.png",
-    hint: "crop pest",
+    hint: "crop pest insect",
   },
   {
     title: "Soil Health and Nutrition",
     description: "Understand the basics of soil science and how to provide the right nutrients for your crops.",
     image: "https://placehold.co/600x400.png",
-    hint: "healthy soil",
+    hint: "healthy soil farm",
   },
   {
     title: "Advanced Composting Techniques",
     description: "Turn your farm waste into black gold with these advanced composting methods.",
     image: "https://placehold.co/600x400.png",
-    hint: "compost pile",
+    hint: "compost pile farm",
   },
   {
     title: "Understanding Crop Rotation",
     description: "Discover the benefits of crop rotation for soil fertility and disease prevention.",
     image: "https://placehold.co/600x400.png",
-    hint: "crop rotation",
+    hint: "crop rotation diagram",
   },
   {
     title: "Basics of Organic Farming",
     description: "An introductory course on the principles and practices of organic agriculture.",
     image: "https://placehold.co/600x400.png",
-    hint: "organic farm",
+    hint: "organic vegetables farm",
   },
 ];
 
@@ -238,13 +238,7 @@ export default function LearnPage() {
                 ))
             ) : (
                 <div className="md:col-span-2 lg:col-span-3">
-                    <Alert>
-                        <Info className="h-4 w-4" />
-                        <AlertTitle>No Articles Found</AlertTitle>
-                        <AlertDescription>
-                            Your search for "{searchQuery}" did not match any of our articles. Please try a different search term.
-                        </AlertDescription>
-                    </Alert>
+                   <NoArticlesFoundAlert query={searchQuery} />
                 </div>
             )}
           </div>
@@ -294,6 +288,23 @@ export default function LearnPage() {
   );
 }
 
+const NoArticlesFoundAlert = ({ query }: { query: string }) => (
+    <Alert>
+        <Info className="h-4 w-4" />
+        <AlertTitle>No Articles Found</AlertTitle>
+        <AlertDescription>
+            Your search for "{query}" did not match any of our articles. Try a different search or expand your search to the web.
+        </AlertDescription>
+        <div className="mt-4">
+            <Button asChild>
+                <Link href={`https://www.google.com/search?q=${encodeURIComponent(query)}`} target="_blank" rel="noopener noreferrer">
+                    <Search className="mr-2 h-4 w-4" /> Search on Google
+                </Link>
+            </Button>
+        </div>
+    </Alert>
+);
+
 const VideoSkeletonCard = () => (
     <Card className="flex flex-col">
       <CardHeader className="p-0">
@@ -309,4 +320,3 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
-
