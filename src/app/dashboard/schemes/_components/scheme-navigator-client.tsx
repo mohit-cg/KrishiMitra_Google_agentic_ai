@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -6,14 +7,20 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { navigateGovernmentSchemes, type NavigateGovernmentSchemesOutput } from '@/ai/flows/navigate-government-schemes';
-import { Bot, CheckCircle, ExternalLink, Mic, Target, Search } from 'lucide-react';
+import { Bot, CheckCircle, ExternalLink, Mic, Target, Search, Square } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
 
+// Check for SpeechRecognition API
+const SpeechRecognition =
+  (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
+
+
 export function SchemeNavigatorClient() {
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [result, setResult] = useState<NavigateGovernmentSchemesOutput | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -42,6 +49,46 @@ export function SchemeNavigatorClient() {
       setIsLoading(false);
     }
   };
+  
+  const handleMicClick = () => {
+    if (!SpeechRecognition) {
+      toast({
+        title: "Browser Not Supported",
+        description: "Your browser does not support voice recognition.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-IN'; // Set to Indian English for better accuracy
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setQuery(transcript);
+    };
+
+    recognition.onerror = (event) => {
+      toast({
+        title: "Voice Recognition Error",
+        description: event.error,
+        variant: "destructive",
+      });
+    };
+    
+    recognition.onend = () => {
+      setIsRecording(false);
+    };
+
+    recognition.start();
+  };
+
 
   return (
     <Card className="shadow-lg">
@@ -61,12 +108,12 @@ export function SchemeNavigatorClient() {
             rows={3}
           />
           <div className="flex items-center gap-2">
-            <Button type="submit" disabled={isLoading} className="flex-1">
+            <Button type="submit" disabled={isLoading || isRecording} className="flex-1">
               {isLoading ? "Searching..." : "Find Scheme"}
             </Button>
-            <Button type="button" variant="outline" size="icon" disabled>
-              <Mic className="h-4 w-4" />
-              <span className="sr-only">Use Voice (Coming Soon)</span>
+            <Button type="button" variant={isRecording ? "destructive" : "outline"} size="icon" onClick={handleMicClick} disabled={isLoading}>
+              {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              <span className="sr-only">{isRecording ? "Stop Recording" : "Use Voice"}</span>
             </Button>
           </div>
         </form>
