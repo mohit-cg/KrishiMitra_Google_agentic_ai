@@ -228,9 +228,12 @@ export default function LearnPage() {
         <TabsContent value="articles">
             {(isSummarizing || summarizedArticle) && (
               <div className="my-6">
-                <h3 className="text-xl font-bold mb-4 font-headline">Web Search Result</h3>
+                <h3 className="text-xl font-bold mb-4 font-headline">Web Search Results</h3>
                 {isSummarizing ? (
-                  <SummarizeSkeletonCard />
+                  <div className="space-y-4">
+                    <SummarizeSkeletonCard />
+                    <SummarizeSkeletonCard />
+                  </div>
                 ) : summarizedArticle ? (
                   summarizedArticle.relevance === 'unrelated' ? (
                     <Alert variant="destructive">
@@ -238,32 +241,42 @@ export default function LearnPage() {
                       <AlertTitle>Irrelevant Topic</AlertTitle>
                       <AlertDescription>Please search for a topic related to agriculture.</AlertDescription>
                     </Alert>
-                  ) : (
-                    <Card>
-                        <div className="flex flex-col sm:flex-row gap-4 p-4">
-                            <div className="relative w-full sm:w-1/3 aspect-video shrink-0">
-                                <Image 
-                                    src={summarizedArticle.imageUrl} 
-                                    alt={summarizedArticle.title} 
-                                    layout="fill" 
-                                    objectFit="cover" 
-                                    data-ai-hint={summarizedArticle.imageHint}
-                                    className="rounded-md"
-                                />
-                            </div>
-                            <div className="flex-1 flex flex-col justify-between">
-                                <div>
-                                    <CardTitle className="text-lg">{summarizedArticle.title}</CardTitle>
-                                    <CardDescription className="mt-2 text-sm max-h-24 overflow-y-auto">{summarizedArticle.summary}</CardDescription>
+                  ) : summarizedArticle.articles.length > 0 ? (
+                     <div className="space-y-4">
+                        {summarizedArticle.articles.map((article, index) => (
+                             <Card key={index}>
+                                <div className="flex flex-col sm:flex-row gap-4 p-4">
+                                    <div className="relative w-full sm:w-1/3 aspect-video shrink-0">
+                                        <Image 
+                                            src={article.imageUrl} 
+                                            alt={article.title} 
+                                            layout="fill" 
+                                            objectFit="cover" 
+                                            data-ai-hint={article.imageHint}
+                                            className="rounded-md"
+                                        />
+                                    </div>
+                                    <div className="flex-1 flex flex-col justify-between">
+                                        <div>
+                                            <CardTitle className="text-lg">{article.title}</CardTitle>
+                                            <CardDescription className="mt-2 text-sm max-h-24 overflow-y-auto">{article.summary}</CardDescription>
+                                        </div>
+                                        <Button asChild className="w-full mt-4 sm:w-fit self-end">
+                                            <Link href={article.sourceUrl!} target="_blank" rel="noopener noreferrer">
+                                                Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                    </div>
                                 </div>
-                                <Button asChild className="w-full mt-4 sm:w-fit self-end">
-                                    <Link href={summarizedArticle.sourceUrl!} target="_blank" rel="noopener noreferrer">
-                                        Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
-                                    </Link>
-                                </Button>
-                            </div>
-                        </div>
-                    </Card>
+                            </Card>
+                        ))}
+                     </div>
+                  ) : (
+                    <Alert>
+                        <SearchX className="h-4 w-4" />
+                        <AlertTitle>No Web Results</AlertTitle>
+                        <AlertDescription>Could not find any relevant articles on the web for "{searchQuery}". Try a different search term.</AlertDescription>
+                    </Alert>
                   )
                 ) : null}
               </div>

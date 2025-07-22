@@ -16,12 +16,17 @@ const SummarizeArticleInputSchema = z.object({
 });
 export type SummarizeArticleInput = z.infer<typeof SummarizeArticleInputSchema>;
 
-const SummarizeArticleOutputSchema = z.object({
+const ArticleSummarySchema = z.object({
   title: z.string().describe('The title of the summarized article.'),
   summary: z.string().describe('A concise summary of the article found on the web.'),
   sourceUrl: z.string().describe('The URL of the source article.'),
   imageUrl: z.string().describe("A placeholder image URL for the article, e.g., 'https://placehold.co/600x400.png'."),
   imageHint: z.string().describe("Two keywords for the image, e.g., 'crop rotation'."),
+});
+
+
+const SummarizeArticleOutputSchema = z.object({
+  articles: z.array(ArticleSummarySchema).describe('A list of 2 to 3 summarized articles. This should be an empty array if the topic is not relevant.'),
   relevance: z.enum(['related', 'unrelated']).describe("Whether the topic is related to agriculture."),
 });
 export type SummarizeArticleOutput = z.infer<typeof SummarizeArticleOutputSchema>;
@@ -39,13 +44,13 @@ const summarizeArticlePrompt = ai.definePrompt({
   Query: "{{query}}"
   
   1. First, determine if the query is related to agriculture, farming, crops, livestock, or a closely related topic. Set the 'relevance' field to 'related' or 'unrelated'.
-  2. If the topic is unrelated, set the title to "Topic Not Relevant", summary to a message indicating the topic is not relevant, sourceUrl to 'https://www.google.com/search?q=agriculture', imageUrl to 'https://placehold.co/600x400.png', and imageHint to 'farm field'.
-  3. If the topic is relevant, find the best article on the web for this topic.
-  4. Generate a realistic title for the article.
-  5. Write a concise, helpful summary.
-  6. Provide a plausible, but not necessarily real, .com, .org, or .net URL as the source. For example: 'https://www.agrifarming.org/crop-rotation-benefits'.
-  7. Provide a placeholder image URL: 'https://placehold.co/600x400.png'.
-  8. Provide a two-word hint for the image based on the article's topic. For example, for a crop rotation article, the hint could be "crop rotation".
+  2. If the topic is unrelated, return an empty array for the 'articles' field.
+  3. If the topic is relevant, find 2-3 of the best articles on the web for this topic.
+  4. For each article, generate a realistic title.
+  5. For each, write a concise, helpful summary.
+  6. For each, provide a plausible, but not necessarily real, .com, .org, or .net URL as the source. For example: 'https://www.agrifarming.org/crop-rotation-benefits'.
+  7. For each, provide a placeholder image URL: 'https://placehold.co/600x400.png'.
+  8. For each, provide a two-word hint for the image based on the article's topic. For example, for a crop rotation article, the hint could be "crop rotation".
   `,
 });
 
