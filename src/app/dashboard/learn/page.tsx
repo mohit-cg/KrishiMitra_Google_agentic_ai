@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
-import { searchYoutubeVideos, type SearchYoutubeVideosOutput, type SearchYoutubeVideosInput } from '@/ai/flows/search-youtube-videos';
+import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -60,26 +60,29 @@ const initialVideos: Video[] = [
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "12:45",
-        videoId: "qAxqR5_p_vE"
+        videoId: "qAxqR5_p_vE",
+        hint: "tomato plant pruning"
     },
     {
         title: "Setting Up a Home Vermicompost Bin",
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "08:22",
-        videoId: "x9yIM0he_gE"
+        videoId: "x9yIM0he_gE",
+        hint: "vermicompost bin"
     },
     {
         title: "Identifying Common Nutrient Deficiencies",
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "15:30",
-        videoId: "3-v8-zQ_d-Q"
+        videoId: "3-v8-zQ_d-Q",
+        hint: "plant nutrient deficiency"
     }
 ];
 
 
-type Video = SearchYoutubeVideosOutput['videos'][0];
+type Video = SearchYoutubeVideosOutput['videos'][0] & { hint?: string };
 
 // Check for SpeechRecognition API
 const SpeechRecognition =
@@ -226,9 +229,11 @@ export default function LearnPage() {
                 <CardFooter className="p-4 pt-0">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                       <Button variant="outline" className="w-full" disabled>
-                          Read More <ArrowRight className="ml-2 h-4 w-4" />
-                       </Button>
+                      <span className="w-full" tabIndex={0}>
+                        <Button variant="outline" className="w-full" disabled>
+                            Read More <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </span>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Coming Soon!</p>
@@ -249,7 +254,7 @@ export default function LearnPage() {
                   <Card key={index} className="flex flex-col group">
                     <CardHeader className="p-0">
                       <button onClick={() => playVideo(video.videoId)} className="block aspect-video relative overflow-hidden rounded-t-lg w-full">
-                        <Image src={video.thumbnailUrl} alt={video.title} layout="fill" objectFit="cover" data-ai-hint="youtube thumbnail" />
+                        <Image src={video.thumbnailUrl} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint || "youtube thumbnail"} />
                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                             <PlayCircle className="h-16 w-16 text-white/80"/>
                         </div>
@@ -293,3 +298,4 @@ const VideoSkeletonCard = () => (
     </Card>
   );
 
+    
