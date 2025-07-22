@@ -35,13 +35,13 @@ const latestNews = [
         title: "Government increases MSP for Kharif crops",
         description: "The Cabinet has approved a significant hike in the Minimum Support Price for all mandated Kharif crops for the upcoming marketing season.",
         date: "June 15, 2024",
-        link: "#"
+        link: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2025732"
     },
     {
         title: "New portal launched for farm subsidy disbursal",
         description: "A new unified portal has been launched to streamline the process of subsidy application and disbursal for various farming equipment.",
         date: "June 10, 2024",
-        link: "#"
+        link: "https://krishijagran.com/agriculture-world/central-government-launches-new-portal-for-farm-subsidies-to-ensure-transparency-and-efficiency/"
     },
 ];
 
@@ -80,10 +80,19 @@ export default function SchemeNavigatorPage() {
             <h2 className="text-2xl font-bold mt-10 mb-4 font-headline flex items-center"><Newspaper className="mr-3 h-6 w-6 text-primary"/> Latest News & Updates</h2>
              <div className="space-y-4">
                 {latestNews.map(news => (
-                     <Card key={news.title} className="p-4">
-                        <p className="font-semibold">{news.title}</p>
-                        <p className="text-sm text-muted-foreground mt-1">{news.description}</p>
-                        <p className="text-xs text-muted-foreground mt-2">{news.date}</p>
+                     <Card key={news.title} className="p-4 flex flex-col justify-between">
+                       <div>
+                          <p className="font-semibold">{news.title}</p>
+                          <p className="text-sm text-muted-foreground mt-1">{news.description}</p>
+                          <p className="text-xs text-muted-foreground mt-2">{news.date}</p>
+                       </div>
+                       <div className="mt-4">
+                           <Button asChild variant="outline" size="sm">
+                                <Link href={news.link} target="_blank" rel="noopener noreferrer">
+                                    Read More <ExternalLink className="ml-2 h-4 w-4" />
+                                </Link>
+                           </Button>
+                       </div>
                      </Card>
                 ))}
              </div>
