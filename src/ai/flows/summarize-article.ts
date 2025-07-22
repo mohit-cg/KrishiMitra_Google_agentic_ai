@@ -17,10 +17,10 @@ const SummarizeArticleInputSchema = z.object({
 export type SummarizeArticleInput = z.infer<typeof SummarizeArticleInputSchema>;
 
 const SummarizeArticleOutputSchema = z.object({
-  title: z.string().optional().describe('The title of the summarized article.'),
-  summary: z.string().optional().describe('A concise summary of the article found on the web.'),
-  sourceUrl: z.string().optional().describe('The URL of the source article.'),
-  error: z.string().optional().describe("An error message if the topic is not relevant, e.g., 'Please search for a topic related to agriculture.'"),
+  title: z.string().describe('The title of the summarized article.'),
+  summary: z.string().describe('A concise summary of the article found on the web.'),
+  sourceUrl: z.string().describe('The URL of the source article.'),
+  relevance: z.enum(['related', 'unrelated']).describe("Whether the topic is related to agriculture."),
 });
 export type SummarizeArticleOutput = z.infer<typeof SummarizeArticleOutputSchema>;
 
@@ -32,18 +32,16 @@ const summarizeArticlePrompt = ai.definePrompt({
   name: 'summarizeArticlePrompt',
   input: {schema: SummarizeArticleInputSchema},
   output: {schema: SummarizeArticleOutputSchema},
-  prompt: `You are an expert research assistant for farmers. Your first task is to determine if the user's query is related to agriculture, farming, crops, livestock, or any closely related topic.
+  prompt: `You are an expert research assistant for farmers. Your task is to process the user's query.
 
   Query: "{{query}}"
   
-  - If the query is NOT related to these topics, set the 'error' field in your output to "Please search for a topic related to agriculture." and leave the 'title', 'summary', and 'sourceUrl' fields empty.
-  - If the query IS relevant, then proceed with the following steps and leave the 'error' field empty:
-  
-  Instructions for a relevant query:
-  1.  Imagine you are searching the web for the best article on this topic.
-  2.  Generate a realistic title for such an article.
-  3.  Write a concise, helpful summary of the imagined article's key points.
-  4.  Provide a plausible, but not necessarily real, .com, .org, or .net URL as the source. For example: 'https://www.agrifarming.org/crop-rotation-benefits'.
+  1. First, determine if the query is related to agriculture, farming, crops, livestock, or a closely related topic. Set the 'relevance' field to 'related' or 'unrelated'.
+  2. If the topic is unrelated, set the title and summary to a message indicating the topic is not relevant. For the sourceUrl, use 'https://www.google.com/search?q=agriculture'.
+  3. If the topic is relevant, find the best article on the web for this topic.
+  4. Generate a realistic title for the article.
+  5. Write a concise, helpful summary.
+  6. Provide a plausible, but not necessarily real, .com, .org, or .net URL as the source. For example: 'https://www.agrifarming.org/crop-rotation-benefits'.
   `,
 });
 

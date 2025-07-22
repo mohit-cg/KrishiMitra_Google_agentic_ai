@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info, ExternalLink, AlertCircle } from "lucide-react";
+import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info, ExternalLink, AlertCircle, SearchX } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
 import { summarizeArticle, type SummarizeArticleOutput } from '@/ai/flows/summarize-article';
@@ -21,7 +21,7 @@ const articles = [
     title: "Mastering Drip Irrigation",
     description: "A comprehensive guide to setting up and maintaining drip irrigation systems for maximizing water efficiency and boosting crop yields. Covers component selection, layout planning, and troubleshooting common issues.",
     image: "https://placehold.co/600x400.png",
-    hint: "drip irrigation system farm",
+    hint: "drip irrigation farm",
   },
   {
     title: "Integrated Pest Management (IPM)",
@@ -232,11 +232,11 @@ export default function LearnPage() {
                 {isSummarizing ? (
                   <SummarizeSkeletonCard />
                 ) : summarizedArticle ? (
-                  summarizedArticle.error ? (
+                  summarizedArticle.relevance === 'unrelated' ? (
                     <Alert variant="destructive">
                       <AlertCircle className="h-4 w-4" />
                       <AlertTitle>Irrelevant Topic</AlertTitle>
-                      <AlertDescription>{summarizedArticle.error}</AlertDescription>
+                      <AlertDescription>Please search for a topic related to agriculture.</AlertDescription>
                     </Alert>
                   ) : (
                     <Card>
@@ -259,7 +259,9 @@ export default function LearnPage() {
                 ) : null}
               </div>
             )}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            
+            <h3 className="text-xl font-bold mt-8 mb-4 font-headline">Our Guides</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredArticles.length > 0 ? (
                 filteredArticles.map((article, index) => (
                     <Card key={index} className="flex flex-col">
@@ -270,7 +272,7 @@ export default function LearnPage() {
                         </CardHeader>
                         <CardContent className="p-4 flex-grow">
                         <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
-                        <CardDescription className="mt-2">{article.description}</CardDescription>
+                        <CardDescription className="mt-2 text-sm">{article.description}</CardDescription>
                         </CardContent>
                         <CardFooter className="p-4 pt-0">
                         <Button asChild className="w-full">
@@ -281,11 +283,32 @@ export default function LearnPage() {
                         </CardFooter>
                     </Card>
                 ))
-            ) : searchQuery && !isSummarizing ? ( // Only show if there's a search query and we're not waiting for summary
+            ) : searchQuery && !isSummarizing ? (
                 <div className="md:col-span-2 lg:col-span-3">
                    <NoArticlesFoundAlert query={searchQuery} />
                 </div>
-            ) : null}
+            ) : (
+                 articles.map((article, index) => (
+                    <Card key={index} className="flex flex-col">
+                        <CardHeader className="p-0">
+                        <div className="aspect-video relative">
+                            <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
+                        </div>
+                        </CardHeader>
+                        <CardContent className="p-4 flex-grow">
+                        <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
+                        <CardDescription className="mt-2 text-sm">{article.description}</CardDescription>
+                        </CardContent>
+                        <CardFooter className="p-4 pt-0">
+                        <Button asChild className="w-full">
+                            <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
+                                Read More <ArrowRight className="ml-2 h-4 w-4" />
+                            </Link>
+                        </Button>
+                        </CardFooter>
+                    </Card>
+                ))
+            )}
           </div>
         </TabsContent>
         <TabsContent value="videos">
@@ -334,11 +357,11 @@ export default function LearnPage() {
 }
 
 const NoArticlesFoundAlert = ({ query }: { query: string }) => (
-    <Alert>
-        <Info className="h-4 w-4" />
+    <Alert variant="destructive">
+        <SearchX className="h-4 w-4" />
         <AlertTitle>No Matching Guides Found</AlertTitle>
         <AlertDescription>
-            Your search for "{query}" did not match any of our existing guides. Check the Web Search Result above for a summary from the web, or try a different search term.
+           Your search for "{query}" did not match any of our guides. Check the web search result above or try a different term.
         </AlertDescription>
     </Alert>
 );
