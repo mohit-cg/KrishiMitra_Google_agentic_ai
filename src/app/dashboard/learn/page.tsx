@@ -18,37 +18,37 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 const articles = [
   {
     title: "Mastering Drip Irrigation",
-    description: "Learn how to set up and maintain a drip irrigation system for maximum water efficiency and crop yield.",
+    description: "A guide to setting up and maintaining drip irrigation systems for efficient water use and better crop yields.",
     image: "https://placehold.co/600x400.png",
     hint: "drip irrigation system",
   },
   {
-    title: "Integrated Pest Management",
-    description: "A comprehensive guide to managing pests in a sustainable and environmentally friendly way.",
+    title: "Integrated Pest Management (IPM)",
+    description: "Learn sustainable and eco-friendly strategies to manage pests and protect your crops effectively.",
     image: "https://placehold.co/600x400.png",
     hint: "crop pest insect",
   },
   {
     title: "Soil Health and Nutrition",
-    description: "Understand the basics of soil science and how to provide the right nutrients for your crops.",
+    description: "Discover the fundamentals of soil science and how to enrich your soil for healthier, more productive plants.",
     image: "https://placehold.co/600x400.png",
     hint: "healthy soil farm",
   },
   {
     title: "Advanced Composting Techniques",
-    description: "Turn your farm waste into black gold with these advanced composting methods.",
+    description: "Transform farm waste into nutrient-rich compost with these advanced and efficient methods.",
     image: "https://placehold.co/600x400.png",
     hint: "compost pile farm",
   },
   {
     title: "Understanding Crop Rotation",
-    description: "Discover the benefits of crop rotation for soil fertility and disease prevention.",
+    description: "An overview of crop rotation benefits, including improved soil fertility and reduced disease cycles.",
     image: "https://placehold.co/600x400.png",
     hint: "crop rotation diagram",
   },
   {
     title: "Basics of Organic Farming",
-    description: "An introductory course on the principles and practices of organic agriculture.",
+    description: "An introduction to the core principles and practices of organic agriculture for sustainable farming.",
     image: "https://placehold.co/600x400.png",
     hint: "organic vegetables farm",
   },
@@ -321,5 +321,7 @@ const VideoSkeletonCard = () => (
     </Card>
   );
 
+
+    
 
     
