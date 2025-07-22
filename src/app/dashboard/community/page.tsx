@@ -1,3 +1,7 @@
+
+"use client";
+
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,22 +9,70 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Mic, Paperclip, Send } from "lucide-react";
 
-const rooms = [
-  { name: "General Discussion", active: true },
-  { name: "Tomato Farming", active: false },
-  { name: "Pest Control", active: false },
-  { name: "Organic Methods", active: false },
-  { name: "Market Prices", active: false },
+const initialRooms = [
+  { id: "general", name: "General Discussion" },
+  { id: "tomato", name: "Tomato Farming" },
+  { id: "pest", name: "Pest Control" },
+  { id: "organic", name: "Organic Methods" },
+  { id: "market", name: "Market Prices" },
 ];
 
-const messages = [
-  { user: "Ramesh", avatar: "https://placehold.co/40x40.png", text: "Has anyone tried the new organic fertilizer? Seeing good results here.", isSelf: false, hint: "farmer portrait" },
-  { user: "Suresh", avatar: "https://placehold.co/40x40.png", text: "Yes, I have! My tomato yield has increased by almost 15%.", isSelf: false, hint: "farmer portrait" },
-  { user: "You", avatar: "https://placehold.co/40x40.png", text: "That's great to hear! I was thinking of buying it. Is it good for leafy greens?", isSelf: true, hint: "farmer portrait" },
-  { user: "Geeta", avatar: "https://placehold.co/40x40.png", text: "Absolutely! My spinach has never been healthier.", isSelf: false, hint: "farmer portrait" },
-];
+const allMessages = {
+  general: [
+    { user: "Ramesh", avatar: "https://placehold.co/40x40.png", text: "Has anyone tried the new organic fertilizer? Seeing good results here.", isSelf: false, hint: "farmer portrait" },
+    { user: "Suresh", avatar: "https://placehold.co/40x40.png", text: "Yes, I have! My tomato yield has increased by almost 15%.", isSelf: false, hint: "farmer portrait" },
+    { user: "You", avatar: "https://placehold.co/40x40.png", text: "That's great to hear! I was thinking of buying it. Is it good for leafy greens?", isSelf: true, hint: "farmer portrait" },
+    { user: "Geeta", avatar: "https://placehold.co/40x40.png", text: "Absolutely! My spinach has never been healthier.", isSelf: false, hint: "farmer portrait" },
+  ],
+  tomato: [
+      { user: "Suresh", avatar: "https://placehold.co/40x40.png", text: "My tomato plants are showing some yellow leaves. Any advice?", isSelf: false, hint: "farmer portrait" },
+      { user: "You", avatar: "https://placehold.co/40x40.png", text: "Could be a nitrogen deficiency. Have you tested your soil recently?", isSelf: true, hint: "farmer portrait" },
+  ],
+  pest: [
+      { user: "Ravi", avatar: "https://placehold.co/40x40.png", text: "Whiteflies are a major issue in my cotton crop. What's the best way to handle them?", isSelf: false, hint: "farmer portrait" },
+  ],
+  organic: [
+      { user: "Priya", avatar: "https://placehold.co/40x40.png", text: "I'm looking for good organic composting techniques. Any resources?", isSelf: false, hint: "farmer portrait" },
+      { user: "You", avatar: "https://placehold.co/40x40.png", text: "The E-Learning Hub has some great articles on vermicomposting!", isSelf: true, hint: "farmer portrait" },
+  ],
+  market: [
+    { user: "Amit", avatar: "https://placehold.co/40x40.png", text: "Onion prices in Pune seem to be dropping. Should I sell now or wait?", isSelf: false, hint: "farmer portrait" },
+  ],
+};
+
 
 export default function CommunityPage() {
+  const [rooms] = useState(initialRooms);
+  const [activeRoom, setActiveRoom] = useState(initialRooms[0]);
+  const [messages, setMessages] = useState(allMessages[activeRoom.id]);
+  const [newMessage, setNewMessage] = useState("");
+
+  const handleRoomChange = (room) => {
+    setActiveRoom(room);
+    setMessages(allMessages[room.id] || []);
+  };
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (newMessage.trim() === "") return;
+
+    const messageToSend = {
+      user: "You",
+      avatar: "https://placehold.co/40x40.png",
+      text: newMessage,
+      isSelf: true,
+      hint: "farmer portrait"
+    };
+
+    const updatedMessages = [...messages, messageToSend];
+    setMessages(updatedMessages);
+    
+    // This part would be a database call in a real app
+    allMessages[activeRoom.id] = updatedMessages;
+    
+    setNewMessage("");
+  };
+
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col">
       <h1 className="text-3xl font-bold mb-2 font-headline">Community Forum</h1>
@@ -36,8 +88,12 @@ export default function CommunityPage() {
           <CardContent>
             <ul className="space-y-2">
               {rooms.map((room) => (
-                <li key={room.name}>
-                  <Button variant={room.active ? "secondary" : "ghost"} className="w-full justify-start">
+                <li key={room.id}>
+                  <Button 
+                    variant={activeRoom.id === room.id ? "secondary" : "ghost"} 
+                    className="w-full justify-start"
+                    onClick={() => handleRoomChange(room)}
+                  >
                     {room.name}
                   </Button>
                 </li>
@@ -48,7 +104,7 @@ export default function CommunityPage() {
 
         <Card className="md:col-span-3 flex flex-col">
           <CardHeader>
-            <CardTitle>#General Discussion</CardTitle>
+            <CardTitle>#{activeRoom.name}</CardTitle>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col">
             <ScrollArea className="flex-grow pr-4">
@@ -65,12 +121,16 @@ export default function CommunityPage() {
                 ))}
               </div>
             </ScrollArea>
-            <div className="mt-4 flex items-center gap-2">
-              <Input placeholder="Type a message..." />
-              <Button variant="ghost" size="icon"><Paperclip className="h-4 w-4" /></Button>
-              <Button variant="ghost" size="icon"><Mic className="h-4 w-4" /></Button>
-              <Button><Send className="h-4 w-4" /></Button>
-            </div>
+            <form onSubmit={handleSendMessage} className="mt-4 flex items-center gap-2">
+              <Input 
+                placeholder="Type a message..." 
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+              />
+              <Button variant="ghost" size="icon" type="button"><Paperclip className="h-4 w-4" /></Button>
+              <Button variant="ghost" size="icon" type="button"><Mic className="h-4 w-4" /></Button>
+              <Button type="submit"><Send className="h-4 w-4" /></Button>
+            </form>
           </CardContent>
         </Card>
       </div>
