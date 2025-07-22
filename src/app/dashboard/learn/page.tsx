@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
-import { searchYoutubeVideos, type SearchYoutubeVideosOutput, type SearchYoutubeVideosInput } from '@/ai/flows/search-youtube-videos';
+import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 
@@ -60,7 +60,7 @@ const initialVideos: Video[] = [
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "12:45",
-        videoId: "iW_453i4TYc",
+        videoId: "qAxqR5_p_vE",
         hint: "tomato plant pruning"
     },
     {
@@ -68,7 +68,7 @@ const initialVideos: Video[] = [
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "08:22",
-        videoId: "V8miLevRI_o",
+        videoId: "x9yIM0he_gE",
         hint: "vermicompost bin"
     },
     {
@@ -76,7 +76,7 @@ const initialVideos: Video[] = [
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "15:30",
-        videoId: "In_24T23T3M",
+        videoId: "3-v8-zQ_d-Q",
         hint: "plant nutrient deficiency"
     }
 ];
@@ -228,18 +228,11 @@ export default function LearnPage() {
                   <CardDescription className="mt-2">{article.description}</CardDescription>
                 </CardContent>
                 <CardFooter className="p-4 pt-0">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="w-full" tabIndex={0}>
-                        <Button variant="outline" className="w-full" disabled>
-                            Read More <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Coming Soon!</p>
-                    </TooltipContent>
-                  </Tooltip>
+                  <Button asChild className="w-full">
+                      <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
+                          Read More <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                  </Button>
                 </CardFooter>
               </Card>
             ))}
@@ -299,6 +292,8 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
+
+    
 
     
 
