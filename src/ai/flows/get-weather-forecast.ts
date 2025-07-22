@@ -70,11 +70,49 @@ const mockWeatherData: Record<string, GetWeatherForecastOutput> = {
   },
 };
 
+const generateRandomForecast = (city: string): GetWeatherForecastOutput => {
+  const conditions: Array<{ condition: string; icon: 'CloudSun' | 'Sun' | 'CloudRain' | 'Cloud' }> = [
+    { condition: 'Sunny', icon: 'Sun' },
+    { condition: 'Partly Cloudy', icon: 'CloudSun' },
+    { condition: 'Cloudy', icon: 'Cloud' },
+    { condition: 'Showers', icon: 'CloudRain' },
+    { condition: 'Rainy', icon: 'CloudRain' },
+  ];
+  const days = ['Today', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  
+  const randomCondition = () => conditions[Math.floor(Math.random() * conditions.length)];
+
+  const forecast = days.map((day, index) => {
+    const { condition, icon } = randomCondition();
+    return {
+      day: day === 'Today' ? 'Today' : new Date(Date.now() + (index * 24 * 60 * 60 * 1000)).toLocaleDateString('en-US', { weekday: 'long' }),
+      temp: `${Math.floor(Math.random() * 15) + 20}°C`,
+      condition,
+      icon,
+    };
+  });
+  
+  const currentCondition = randomCondition();
+
+  return {
+    city: city.charAt(0).toUpperCase() + city.slice(1),
+    current: {
+      temperature: `${Math.floor(Math.random() * 15) + 20}°C`,
+      condition: currentCondition.condition,
+      wind: `${Math.floor(Math.random() * 15) + 5} km/h`,
+      humidity: `${Math.floor(Math.random() * 50) + 40}%`,
+      icon: currentCondition.icon,
+    },
+    forecast: forecast,
+  };
+}
+
+
 const fetchWeatherForCity = async ({ city }: GetWeatherForecastInput) => {
   // In a real app, this would call a weather API.
-  // For now, we return mock data.
+  // For now, we return mock data, with a fallback to random data for other cities.
   const cityKey = city.toLowerCase();
-  return mockWeatherData[cityKey] || mockWeatherData['pune'];
+  return mockWeatherData[cityKey] || generateRandomForecast(city);
 };
 
 const weatherTool = ai.defineTool(

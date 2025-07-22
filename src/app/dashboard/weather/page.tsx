@@ -33,11 +33,14 @@ export default function WeatherPage() {
 
   useEffect(() => {
     const fetchWeather = async () => {
+      if (!city) return;
       setIsLoading(true);
       try {
         const data = await getWeatherForecast({ city });
         setWeatherData(data);
-        setInputCity(data.city); // Sync input with loaded data city
+        if (data && data.city) {
+         setInputCity(data.city); // Sync input with loaded data city
+        }
       } catch (error) {
         toast({
           title: "Error fetching weather",
