@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ExternalLink, Newspaper, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 const keySchemes = [
@@ -34,8 +35,8 @@ const latestNews = [
     {
         title: "Government increases MSP for Kharif crops",
         description: "The Cabinet has approved a significant hike in the Minimum Support Price for all mandated Kharif crops for the upcoming marketing season.",
-        date: "June 15, 2024",
-        link: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2025732"
+        date: "June 19, 2024",
+        link: "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2025732"
     },
     {
         title: "New portal launched for farm subsidy disbursal",
@@ -43,6 +44,24 @@ const latestNews = [
         date: "June 10, 2024",
         link: "https://krishijagran.com/agriculture-world/central-government-launches-new-portal-for-farm-subsidies-to-ensure-transparency-and-efficiency/"
     },
+    {
+        title: "Guidelines issued for National Horticulture Mission",
+        description: "The Department of Agriculture has released updated guidelines for the NHM to boost the horticulture sector, with a focus on post-harvest management.",
+        date: "June 5, 2024",
+        link: "https://nhm.gov.in/Guideline/Mission-for-Integrated-Development-of-Horticulture.pdf"
+    },
+    {
+        title: "e-NAM reaches new milestone with 1,000 mandis integrated",
+        description: "The electronic National Agriculture Market (e-NAM) platform has now connected over 1,000 agricultural produce markets across the country.",
+        date: "May 28, 2024",
+        link: "https://enam.gov.in/web/"
+    },
+    {
+        title: "Solar pump scheme extended for another year",
+        description: "The PM-KUSUM scheme, aimed at providing solar-powered irrigation pumps to farmers, has been extended until March 2025.",
+        date: "May 20, 2024",
+        link: "https://mnre.gov.in/solar/pm-kusum-scheme"
+    }
 ];
 
 export default function SchemeNavigatorPage() {
@@ -78,24 +97,26 @@ export default function SchemeNavigatorPage() {
             </div>
 
             <h2 className="text-2xl font-bold mt-10 mb-4 font-headline flex items-center"><Newspaper className="mr-3 h-6 w-6 text-primary"/> Latest News & Updates</h2>
-             <div className="space-y-4">
-                {latestNews.map(news => (
-                     <Card key={news.title} className="p-4 flex flex-col justify-between">
-                       <div>
-                          <p className="font-semibold">{news.title}</p>
-                          <p className="text-sm text-muted-foreground mt-1">{news.description}</p>
-                          <p className="text-xs text-muted-foreground mt-2">{news.date}</p>
-                       </div>
-                       <div className="mt-4">
-                           <Button asChild variant="outline" size="sm">
-                                <Link href={news.link} target="_blank" rel="noopener noreferrer">
-                                    Read More <ExternalLink className="ml-2 h-4 w-4" />
-                                </Link>
-                           </Button>
-                       </div>
-                     </Card>
-                ))}
-             </div>
+             <ScrollArea className="h-[350px] w-full pr-4">
+                <div className="space-y-4">
+                    {latestNews.map(news => (
+                        <Card key={news.title} className="p-4 flex flex-col sm:flex-row justify-between sm:items-center">
+                        <div>
+                            <p className="font-semibold">{news.title}</p>
+                            <p className="text-sm text-muted-foreground mt-1">{news.description}</p>
+                            <p className="text-xs text-muted-foreground mt-2">{news.date}</p>
+                        </div>
+                        <div className="mt-4 sm:mt-0 sm:ml-4 flex-shrink-0">
+                            <Button asChild variant="outline" size="sm">
+                                    <Link href={news.link} target="_blank" rel="noopener noreferrer">
+                                        Read More <ExternalLink className="ml-2 h-4 w-4" />
+                                    </Link>
+                            </Button>
+                        </div>
+                        </Card>
+                    ))}
+                </div>
+             </ScrollArea>
         </div>
 
         <div className="lg:col-span-1">
