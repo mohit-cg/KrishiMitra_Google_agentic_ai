@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useSidebar } from "@/components/ui/sidebar";
 import { SheetClose } from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
@@ -36,6 +37,7 @@ const navItems = [
 export function MainNav() {
   const pathname = usePathname();
   const { state } = useSidebar();
+  const isMobile = useIsMobile();
 
   return (
     <nav className="flex flex-col gap-2 px-2">
@@ -47,7 +49,7 @@ export function MainNav() {
                 <span
                   className={cn(
                     "truncate",
-                    state === "collapsed" ? "hidden" : "block"
+                    state === "collapsed" && !isMobile ? "hidden" : "block"
                   )}
                 >
                   {item.label}
@@ -58,10 +60,12 @@ export function MainNav() {
         const linkClassName = cn(
             "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
             isActive && "bg-muted text-primary",
-            state === "collapsed" && "justify-center"
+            state === "collapsed" && !isMobile && "justify-center"
         );
-
-        if (state === 'expanded') { // In mobile sheet view, state is always 'expanded'
+        
+        // On mobile, the nav is in a Sheet, so we wrap links in SheetClose
+        // to close the sheet after navigation.
+        if (isMobile) {
              return (
                  <SheetClose asChild key={item.href}>
                      <Link href={item.href} className={linkClassName}>
@@ -71,7 +75,7 @@ export function MainNav() {
              )
         }
         
-        // For desktop view with tooltips
+        // On desktop, we use tooltips for collapsed sidebar state.
         return (
           <Tooltip key={item.href}>
             <TooltipTrigger asChild>
