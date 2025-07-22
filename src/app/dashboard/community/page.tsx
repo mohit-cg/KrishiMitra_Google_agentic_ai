@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -52,6 +52,8 @@ export default function CommunityPage() {
   const [messages, setMessages] = useState(allMessages[activeRoom.id]);
   const [newMessage, setNewMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const attachmentInputRef = useRef<HTMLInputElement>(null);
+
 
   const handleRoomChange = (room) => {
     setActiveRoom(room);
@@ -96,6 +98,24 @@ export default function CommunityPage() {
     recognition.onend = () => setIsRecording(false);
 
     recognition.start();
+  };
+  
+  const handleAttachmentClick = () => {
+    attachmentInputRef.current?.click();
+  };
+  
+  const handleAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      // In a real app, you would upload this file to a service like Firebase Storage
+      // and then post a message with the file URL.
+      toast({
+        title: "Attachment Added",
+        description: `${file.name} is ready to be sent. (Feature in development)`,
+      });
+      // Reset the input value to allow selecting the same file again
+      e.target.value = '';
+    }
   };
 
   return (
@@ -152,7 +172,9 @@ export default function CommunityPage() {
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
               />
-              <Button variant="ghost" size="icon" type="button"><Paperclip className="h-4 w-4" /></Button>
+              <input type="file" ref={attachmentInputRef} onChange={handleAttachment} className="hidden" accept="image/*,video/*,.pdf" />
+
+              <Button variant="ghost" size="icon" type="button" onClick={handleAttachmentClick}><Paperclip className="h-4 w-4" /></Button>
               <Button variant={isRecording ? "destructive" : "ghost"} size="icon" type="button" onClick={handleMicClick}>
                  {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                  <span className="sr-only">{isRecording ? "Stop recording" : "Start recording"}</span>
