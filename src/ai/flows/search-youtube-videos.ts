@@ -4,7 +4,6 @@
  * @fileOverview Searches for YouTube videos based on a query.
  *
  * - searchYoutubeVideos - A function that returns a list of relevant YouTube videos.
- * - SearchYoutubeVideosInput - The input type for the searchYoutubeVideos function.
  * - SearchYoutubeVideosOutput - The return type for the searchYoutubeVideos function.
  */
 
@@ -23,7 +22,7 @@ const VideoSchema = z.object({
   title: z.string().describe('A relevant and engaging title for the video.'),
   description: z.string().describe('A brief, informative description of the video content.'),
   duration: z.string().describe('The video duration in MM:SS format.'),
-  thumbnailUrl: z.string().url().describe("A URL for the video thumbnail, e.g., 'https://placehold.co/600x400.png'."),
+  thumbnailUrl: z.string().describe("A URL for the video thumbnail, e.g., 'https://placehold.co/600x400.png'."),
 });
 
 
