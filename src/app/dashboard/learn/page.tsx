@@ -61,7 +61,7 @@ const initialVideos: Video[] = [
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "12:45",
-        videoId: "g-v3a3jK_4s",
+        videoId: "q-i4t-yMCoU",
         hint: "tomato plant pruning"
     },
     {
@@ -69,7 +69,7 @@ const initialVideos: Video[] = [
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "08:22",
-        videoId: "N8_B-g4g_a4",
+        videoId: "z43_L7xQuA4",
         hint: "vermicompost bin"
     },
     {
@@ -77,7 +77,7 @@ const initialVideos: Video[] = [
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "15:30",
-        videoId: "o-rp3f_It2k",
+        videoId: "qAxqR5_p_vE",
         hint: "plant nutrient deficiency"
     }
 ];
@@ -239,16 +239,18 @@ export default function LearnPage() {
                       <AlertDescription>Please search for a topic related to agriculture.</AlertDescription>
                     </Alert>
                   ) : (
-                    <Card>
-                      <CardHeader>
+                    <Card className="overflow-hidden">
+                       <CardHeader className="p-0">
+                          <div className="aspect-video relative">
+                              <Image src={summarizedArticle.imageUrl} alt={summarizedArticle.title} layout="fill" objectFit="cover" data-ai-hint={summarizedArticle.imageHint}/>
+                          </div>
+                        </CardHeader>
+                      <CardContent className="p-4">
                         <CardTitle>{summarizedArticle.title}</CardTitle>
-                        <CardDescription>AI-generated summary from a web source.</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground">{summarizedArticle.summary}</p>
+                        <CardDescription className="mt-2 text-sm">{summarizedArticle.summary}</CardDescription>
                       </CardContent>
-                      <CardFooter>
-                         <Button asChild>
+                      <CardFooter className="p-4 pt-0">
+                         <Button asChild className="w-full">
                               <Link href={summarizedArticle.sourceUrl!} target="_blank" rel="noopener noreferrer">
                                   Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
                               </Link>
@@ -360,25 +362,28 @@ const NoArticlesFoundAlert = ({ query }: { query: string }) => (
     <Alert variant="destructive">
         <SearchX className="h-4 w-4" />
         <AlertTitle>No Matching Guides Found</AlertTitle>
-        <AlertDescription>
-           Your search for "{query}" did not match any of our guides. Check the web search result above or try a different term.
+        <AlertDescription className="flex flex-col gap-2">
+           <p>Your search for "{query}" did not match any of our guides. Check the web search result above or try a different term.</p>
+           <Button asChild variant="destructive" className="mt-2 w-fit">
+              <Link href={`https://www.google.com/search?q=${encodeURIComponent(query)}`} target="_blank" rel="noopener noreferrer">
+                  Search on Google <ExternalLink className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
         </AlertDescription>
     </Alert>
 );
 
 const SummarizeSkeletonCard = () => (
     <Card>
-      <CardHeader>
+      <Skeleton className="aspect-video w-full" />
+      <CardContent className="p-4">
         <Skeleton className="h-6 w-3/4 mb-2" />
-        <Skeleton className="h-4 w-1/2" />
-      </CardHeader>
-      <CardContent className="space-y-3">
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-5/6" />
       </CardContent>
-      <CardFooter>
-        <Skeleton className="h-10 w-40" />
+      <CardFooter className="p-4 pt-0">
+        <Skeleton className="h-10 w-full" />
       </CardFooter>
     </Card>
   );
@@ -398,3 +403,4 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
+
