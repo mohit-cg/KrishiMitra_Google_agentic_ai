@@ -81,7 +81,18 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="location">Location (District)</Label>
-              <Input id="location" value={location} onChange={(e) => setLocation(e.target.value)} />
+              <Select value={location} onValueChange={setLocation}>
+                <SelectTrigger id="location">
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Pune, Maharashtra">Pune, Maharashtra</SelectItem>
+                  <SelectItem value="Mumbai, Maharashtra">Mumbai, Maharashtra</SelectItem>
+                  <SelectItem value="Nagpur, Maharashtra">Nagpur, Maharashtra</SelectItem>
+                  <SelectItem value="Nashik, Maharashtra">Nashik, Maharashtra</SelectItem>
+                  <SelectItem value="Aurangabad, Maharashtra">Aurangabad, Maharashtra</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="language">Preferred Language</Label>
