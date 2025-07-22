@@ -70,6 +70,13 @@ const mockWeatherData: Record<string, GetWeatherForecastOutput> = {
   },
 };
 
+const fetchWeatherForCity = async ({ city }: GetWeatherForecastInput) => {
+  // In a real app, this would call a weather API.
+  // For now, we return mock data.
+  const cityKey = city.toLowerCase();
+  return mockWeatherData[cityKey] || mockWeatherData['pune'];
+};
+
 const weatherTool = ai.defineTool(
   {
     name: 'fetchWeatherForCity',
@@ -77,12 +84,7 @@ const weatherTool = ai.defineTool(
     inputSchema: GetWeatherForecastInputSchema,
     outputSchema: GetWeatherForecastOutputSchema,
   },
-  async ({ city }) => {
-    // In a real app, this would call a weather API.
-    // For now, we return mock data.
-    const cityKey = city.toLowerCase();
-    return mockWeatherData[cityKey] || mockWeatherData['pune'];
-  }
+  fetchWeatherForCity
 );
 
 
@@ -102,6 +104,6 @@ const getWeatherForecastFlow = ai.defineFlow(
   async (input) => {
     // Directly call the tool's implementation function to avoid LLM loops.
     // The LLM isn't needed here since we just want to fetch data.
-    return await weatherTool.fn(input);
+    return await fetchWeatherForCity(input);
   }
 );
