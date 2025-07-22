@@ -14,7 +14,7 @@ import {z} from 'genkit';
 // Since we cannot use a real YouTube API without keys, 
 // these are some real, relevant video IDs to make the results more realistic.
 const sampleVideoIds = [
-  "qAxqR5_p_vE", "x9yIM0he_gE", "3-v8-zQ_d-Q", "k2v_q_A-k6E", "yF4N2j-e6es", "z43_L7xQuA4"
+  "g-v3a3jK_4s", "N8_B-g4g_a4", "o-rp3f_It2k", "vs5j3gA9F78", "q-i4t-yMCoU", "z43_L7xQuA4"
 ];
 
 
