@@ -194,7 +194,7 @@ export default function ProfilePage() {
                                 key={district.value}
                                 value={district.value}
                                 onSelect={(currentValue) => {
-                                  setLocation(currentValue === location ? "" : currentValue);
+                                  setLocation(currentValue);
                                   setOpen(false);
                                 }}
                             >
