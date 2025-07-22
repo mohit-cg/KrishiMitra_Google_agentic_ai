@@ -8,11 +8,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X } from "lucide-react";
+import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Tooltip, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 
 const articles = [
@@ -60,7 +60,7 @@ const initialVideos: Video[] = [
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "12:45",
-        videoId: "qAxqR5_p_vE",
+        videoId: "g-v3a3jK_4s",
         hint: "tomato plant pruning"
     },
     {
@@ -68,7 +68,7 @@ const initialVideos: Video[] = [
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "08:22",
-        videoId: "x9yIM0he_gE",
+        videoId: "N8_B-g4g_a4",
         hint: "vermicompost bin"
     },
     {
@@ -76,7 +76,7 @@ const initialVideos: Video[] = [
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "15:30",
-        videoId: "3-v8-zQ_d-Q",
+        videoId: "o-rp3f_It2k",
         hint: "plant nutrient deficiency"
     }
 ];
@@ -163,7 +163,6 @@ export default function LearnPage() {
     }
 
   return (
-    <TooltipProvider>
     <div className="container mx-auto p-4 md:p-8">
        {playingVideoUrl && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setPlayingVideoUrl(null)}>
@@ -216,27 +215,38 @@ export default function LearnPage() {
         </TabsList>
         <TabsContent value="articles">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {filteredArticles.map((article, index) => (
-              <Card key={index} className="flex flex-col">
-                <CardHeader className="p-0">
-                  <div className="aspect-video relative">
-                    <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-4 flex-grow">
-                  <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
-                  <CardDescription className="mt-2">{article.description}</CardDescription>
-                </CardContent>
-                <CardFooter className="p-4 pt-0">
-                  <Button asChild className="w-full">
-                      <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
-                          Read More <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-             {filteredArticles.length === 0 && <p>No articles found matching your search.</p>}
+            {filteredArticles.length > 0 ? (
+                filteredArticles.map((article, index) => (
+                    <Card key={index} className="flex flex-col">
+                        <CardHeader className="p-0">
+                        <div className="aspect-video relative">
+                            <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
+                        </div>
+                        </CardHeader>
+                        <CardContent className="p-4 flex-grow">
+                        <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
+                        <CardDescription className="mt-2">{article.description}</CardDescription>
+                        </CardContent>
+                        <CardFooter className="p-4 pt-0">
+                        <Button asChild className="w-full">
+                            <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
+                                Read More <ArrowRight className="ml-2 h-4 w-4" />
+                            </Link>
+                        </Button>
+                        </CardFooter>
+                    </Card>
+                ))
+            ) : (
+                <div className="md:col-span-2 lg:col-span-3">
+                    <Alert>
+                        <Info className="h-4 w-4" />
+                        <AlertTitle>No Articles Found</AlertTitle>
+                        <AlertDescription>
+                            Your search for "{searchQuery}" did not match any of our articles. Please try a different search term.
+                        </AlertDescription>
+                    </Alert>
+                </div>
+            )}
           </div>
         </TabsContent>
         <TabsContent value="videos">
@@ -267,13 +277,20 @@ export default function LearnPage() {
                   </Card>
                 ))
             ) : (
-              <p>No videos found matching your search.</p>
+                <div className="md:col-span-2 lg:col-span-3">
+                    <Alert>
+                        <Info className="h-4 w-4" />
+                        <AlertTitle>No Videos Found</AlertTitle>
+                        <AlertDescription>
+                            Your search for "{searchQuery}" did not return any videos. Please try a different search term.
+                        </AlertDescription>
+                    </Alert>
+                </div>
             )}
           </div>
         </TabsContent>
       </Tabs>
     </div>
-    </TooltipProvider>
   );
 }
 
@@ -292,3 +309,4 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
+
