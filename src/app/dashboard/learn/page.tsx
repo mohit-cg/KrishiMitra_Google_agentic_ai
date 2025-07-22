@@ -111,7 +111,7 @@ export default function LearnPage() {
 
           if (activeTab === 'videos') {
             setIsSearchingVideos(true);
-            setVideoResults([]); // Clear previous results
+            // We don't clear videoResults here to avoid a flash of "no results"
             try {
               const result = await searchYoutubeVideos({ query: searchQuery });
               setVideoResults(result.videos);
@@ -177,7 +177,9 @@ export default function LearnPage() {
     const showNoLocalResultsMessage =
       searchQuery.trim() !== '' &&
       filteredArticles.length === 0 && 
-      !summarizedArticle?.articles.length;
+      !isSummarizing && // don't show while summarizing
+      (!summarizedArticle || summarizedArticle.articles.length === 0);
+
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -244,7 +246,7 @@ export default function LearnPage() {
           <TabsTrigger value="videos">Video Tutorials</TabsTrigger>
         </TabsList>
         <TabsContent value="articles">
-            {(isSummarizing || (summarizedArticle && summarizedArticle.articles.length > 0)) && (
+            {(isSummarizing || (summarizedArticle && summarizedArticle.articles.length > 0) || (summarizedArticle && summarizedArticle.relevance === 'unrelated')) && (
               <div className="my-6">
                 <h3 className="text-xl font-bold mb-4 font-headline">Web Search Results</h3>
                 {isSummarizing ? (
@@ -264,7 +266,7 @@ export default function LearnPage() {
                         {summarizedArticle.articles.map((article, index) => (
                              <Card key={index}>
                                 <div className="flex flex-col sm:flex-row gap-4 p-4">
-                                    <div className="relative w-full sm:w-1/3 aspect-video shrink-0">
+                                    <div className="relative w-full sm:w-48 sm:h-32 shrink-0 aspect-video sm:aspect-auto">
                                         <Image 
                                             src={article.imageUrl} 
                                             alt={article.title} 
@@ -289,8 +291,6 @@ export default function LearnPage() {
                             </Card>
                         ))}
                      </div>
-                  ) : showNoLocalResultsMessage && !isSummarizing ? (
-                      <NoArticlesFoundAlert query={searchQuery} isWebSearchSuccessful={false} />
                   ) : null
                 ) : null}
               </div>
@@ -321,7 +321,7 @@ export default function LearnPage() {
                 ))
             ) : showNoLocalResultsMessage ? (
                 <div className="md:col-span-2 lg:col-span-3">
-                   <NoArticlesFoundAlert query={searchQuery} isWebSearchSuccessful={!!summarizedArticle && summarizedArticle.articles.length > 0} />
+                   <NoArticlesFoundAlert query={searchQuery} />
                 </div>
             ) : null }
           </div>
@@ -371,9 +371,7 @@ export default function LearnPage() {
   );
 }
 
-const NoArticlesFoundAlert = ({ query, isWebSearchSuccessful }: { query: string, isWebSearchSuccessful: boolean }) => {
-    if (isWebSearchSuccessful) return null;
-
+const NoArticlesFoundAlert = ({ query }: { query: string }) => {
     return (
         <Alert variant="destructive">
             <SearchX className="h-4 w-4" />
@@ -393,7 +391,7 @@ const NoArticlesFoundAlert = ({ query, isWebSearchSuccessful }: { query: string,
 const SummarizeSkeletonCard = () => (
     <Card>
       <div className="flex flex-col sm:flex-row gap-4 p-4">
-        <Skeleton className="relative w-full sm:w-1/3 aspect-video shrink-0 rounded-md" />
+        <Skeleton className="relative w-full sm:w-48 sm:h-32 shrink-0 rounded-md" />
         <div className="flex-1 space-y-3">
             <Skeleton className="h-6 w-3/4" />
             <div className="space-y-2">
@@ -422,5 +420,7 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
+
+    
 
     
