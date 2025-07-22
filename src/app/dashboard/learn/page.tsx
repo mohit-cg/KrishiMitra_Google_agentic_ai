@@ -8,9 +8,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info } from "lucide-react";
+import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info, ExternalLink } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
+import { summarizeArticle, type SummarizeArticleOutput } from '@/ai/flows/summarize-article';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -18,37 +19,37 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 const articles = [
   {
     title: "Mastering Drip Irrigation",
-    description: "A guide to setting up and maintaining drip irrigation systems for efficient water use and better crop yields.",
+    description: "A comprehensive guide to setting up and maintaining drip irrigation systems for maximizing water efficiency and boosting crop yields. Covers component selection, layout planning, and troubleshooting common issues.",
     image: "https://placehold.co/600x400.png",
     hint: "drip irrigation system",
   },
   {
     title: "Integrated Pest Management (IPM)",
-    description: "Learn sustainable and eco-friendly strategies to manage pests and protect your crops effectively.",
+    description: "Explore sustainable, eco-friendly strategies to manage pests. This guide covers biological controls, cultural practices, and the targeted use of pesticides to protect your crops and the environment.",
     image: "https://placehold.co/600x400.png",
     hint: "crop pest insect",
   },
   {
     title: "Soil Health and Nutrition",
-    description: "Discover the fundamentals of soil science and how to enrich your soil for healthier, more productive plants.",
+    description: "Unlock the secrets to rich, fertile soil. This article delves into the fundamentals of soil science, including composition, pH balance, and how to enrich your soil for healthier, more productive plants.",
     image: "https://placehold.co/600x400.png",
     hint: "healthy soil farm",
   },
   {
     title: "Advanced Composting Techniques",
-    description: "Transform farm waste into nutrient-rich compost with these advanced and efficient methods.",
+    description: "Learn to transform farm waste into 'black gold'. This guide details various composting methods, including hot and cold composting, vermicomposting, and how to create balanced compost piles.",
     image: "https://placehold.co/600x400.png",
     hint: "compost pile farm",
   },
   {
     title: "Understanding Crop Rotation",
-    description: "An overview of crop rotation benefits, including improved soil fertility and reduced disease cycles.",
+    description: "Discover the benefits of strategic crop rotation, including improved soil fertility, pest and disease cycle disruption, and increased biodiversity. Includes sample rotation plans for common crops.",
     image: "https://placehold.co/600x400.png",
     hint: "crop rotation diagram",
   },
   {
     title: "Basics of Organic Farming",
-    description: "An introduction to the core principles and practices of organic agriculture for sustainable farming.",
+    description: "An essential introduction to the core principles and practices of organic agriculture. Covers certification, natural fertilization, weed control, and marketing organic produce for sustainable farming.",
     image: "https://placehold.co/600x400.png",
     hint: "organic vegetables farm",
   },
@@ -96,11 +97,19 @@ export default function LearnPage() {
     const [activeTab, setActiveTab] = useState("articles");
     const [videoResults, setVideoResults] = useState<Video[]>(initialVideos);
     const [isSearchingVideos, setIsSearchingVideos] = useState(false);
+    const [summarizedArticle, setSummarizedArticle] = useState<SummarizeArticleOutput | null>(null);
+    const [isSummarizing, setIsSummarizing] = useState(false);
 
 
     useEffect(() => {
         const handleSearch = async () => {
-          if (activeTab === 'videos' && searchQuery.trim() !== '') {
+          if (searchQuery.trim() === '') {
+             if (activeTab === 'videos') setVideoResults(initialVideos); // Reset to initial videos if search is cleared
+             setSummarizedArticle(null); // Clear summarized article
+             return;
+          }
+
+          if (activeTab === 'videos') {
             setIsSearchingVideos(true);
             setVideoResults([]); // Clear previous results
             try {
@@ -108,32 +117,34 @@ export default function LearnPage() {
               setVideoResults(result.videos);
             } catch (error) {
               console.error("Video search failed", error);
-              toast({
-                title: "Video Search Failed",
-                description: "Could not retrieve video tutorials. Please try again.",
-                variant: "destructive",
-              });
+              toast({ title: "Video Search Failed", description: "Could not retrieve video tutorials.", variant: "destructive" });
               setVideoResults(initialVideos); // Restore initial videos on error
             } finally {
               setIsSearchingVideos(false);
             }
-          } else if (searchQuery.trim() === '') {
-            setVideoResults(initialVideos); // Reset to initial videos if search is cleared
+          } else if (activeTab === 'articles') {
+            setIsSummarizing(true);
+            setSummarizedArticle(null);
+            try {
+                const result = await summarizeArticle({query: searchQuery});
+                setSummarizedArticle(result);
+            } catch (error) {
+                console.error("Article summarization failed", error);
+                toast({ title: "Summarization Failed", description: "Could not summarize an article from the web.", variant: "destructive" });
+            } finally {
+                setIsSummarizing(false);
+            }
           }
         };
 
-        const debounceTimer = setTimeout(handleSearch, 500);
+        const debounceTimer = setTimeout(handleSearch, 800);
         return () => clearTimeout(debounceTimer);
     }, [searchQuery, activeTab]);
 
 
     const handleMicClick = () => {
         if (!SpeechRecognition) {
-          toast({
-            title: "Browser Not Supported",
-            description: "Your browser does not support voice recognition.",
-            variant: "destructive",
-          });
+          toast({ title: "Browser Not Supported", description: "Your browser does not support voice recognition.", variant: "destructive" });
           return;
         }
     
@@ -214,9 +225,55 @@ export default function LearnPage() {
           <TabsTrigger value="videos">Video Tutorials</TabsTrigger>
         </TabsList>
         <TabsContent value="articles">
+            {(isSummarizing || summarizedArticle) && (
+              <div className="my-6">
+                <h3 className="text-xl font-bold mb-4 font-headline">Web Search Result</h3>
+                {isSummarizing ? (
+                  <SummarizeSkeletonCard />
+                ) : summarizedArticle ? (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>{summarizedArticle.title}</CardTitle>
+                      <CardDescription>AI-generated summary from a web source.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground">{summarizedArticle.summary}</p>
+                    </CardContent>
+                    <CardFooter>
+                       <Button asChild>
+                            <Link href={summarizedArticle.sourceUrl} target="_blank" rel="noopener noreferrer">
+                                Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
+                            </Link>
+                        </Button>
+                    </CardFooter>
+                  </Card>
+                ) : null}
+              </div>
+            )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
             {filteredArticles.length > 0 ? (
                 filteredArticles.map((article, index) => (
+                    <Card key={index} className="flex flex-col">
+                        <CardHeader className="p-0">
+                        <div className="aspect-video relative">
+                            <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
+                        </div>
+                        </CardHeader>
+                        <CardContent className="p-4 flex-grow">
+                        <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
+                        <CardDescription className="mt-2">{article.description}</CardDescription>
+                        </CardContent>
+                        <CardFooter className="p-4 pt-0">
+                        <Button asChild className="w-full">
+                            <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
+                                Read More <ArrowRight className="ml-2 h-4 w-4" />
+                            </Link>
+                        </Button>
+                        </CardFooter>
+                    </Card>
+                ))
+            ) : !searchQuery ? (
+                 articles.map((article, index) => (
                     <Card key={index} className="flex flex-col">
                         <CardHeader className="p-0">
                         <div className="aspect-video relative">
@@ -291,19 +348,29 @@ export default function LearnPage() {
 const NoArticlesFoundAlert = ({ query }: { query: string }) => (
     <Alert>
         <Info className="h-4 w-4" />
-        <AlertTitle>No Articles Found</AlertTitle>
+        <AlertTitle>No Matching Guides Found</AlertTitle>
         <AlertDescription>
-            Your search for "{query}" did not match any of our articles. Try a different search or expand your search to the web.
+            Your search for "{query}" did not match any of our existing guides. Check the Web Search Result above for a summary from the web.
         </AlertDescription>
-        <div className="mt-4">
-            <Button asChild>
-                <Link href={`https://www.google.com/search?q=${encodeURIComponent(query)}`} target="_blank" rel="noopener noreferrer">
-                    <Search className="mr-2 h-4 w-4" /> Search on Google
-                </Link>
-            </Button>
-        </div>
     </Alert>
 );
+
+const SummarizeSkeletonCard = () => (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-6 w-3/4 mb-2" />
+        <Skeleton className="h-4 w-1/2" />
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-5/6" />
+      </CardContent>
+      <CardFooter>
+        <Skeleton className="h-10 w-40" />
+      </CardFooter>
+    </Card>
+  );
 
 const VideoSkeletonCard = () => (
     <Card className="flex flex-col">
