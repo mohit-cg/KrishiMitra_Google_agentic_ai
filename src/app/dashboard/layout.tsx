@@ -66,6 +66,10 @@ export default function DashboardLayout({
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="lg:hidden max-w-xs p-0">
+                   <SheetHeader className="sr-only">
+                    <SheetTitle>Navigation Menu</SheetTitle>
+                    <SheetDescription>Main navigation links for the application.</SheetDescription>
+                  </SheetHeader>
                   <div className="flex justify-center my-4">
                     <Link
                       href="/dashboard"
