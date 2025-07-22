@@ -239,23 +239,30 @@ export default function LearnPage() {
                       <AlertDescription>Please search for a topic related to agriculture.</AlertDescription>
                     </Alert>
                   ) : (
-                    <Card className="overflow-hidden">
-                       <CardHeader className="p-0">
-                          <div className="aspect-video relative">
-                              <Image src={summarizedArticle.imageUrl} alt={summarizedArticle.title} layout="fill" objectFit="cover" data-ai-hint={summarizedArticle.imageHint}/>
-                          </div>
-                        </CardHeader>
-                      <CardContent className="p-4">
-                        <CardTitle>{summarizedArticle.title}</CardTitle>
-                        <CardDescription className="mt-2 text-sm">{summarizedArticle.summary}</CardDescription>
-                      </CardContent>
-                      <CardFooter className="p-4 pt-0">
-                         <Button asChild className="w-full">
-                              <Link href={summarizedArticle.sourceUrl!} target="_blank" rel="noopener noreferrer">
-                                  Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
-                              </Link>
-                          </Button>
-                      </CardFooter>
+                    <Card>
+                        <div className="flex flex-col sm:flex-row gap-4 p-4">
+                            <div className="relative w-full sm:w-1/4 aspect-video sm:aspect-square shrink-0">
+                                <Image 
+                                    src={summarizedArticle.imageUrl} 
+                                    alt={summarizedArticle.title} 
+                                    layout="fill" 
+                                    objectFit="cover" 
+                                    data-ai-hint={summarizedArticle.imageHint}
+                                    className="rounded-md"
+                                />
+                            </div>
+                            <div className="flex-1 flex flex-col justify-between">
+                                <div>
+                                    <CardTitle className="text-lg">{summarizedArticle.title}</CardTitle>
+                                    <CardDescription className="mt-2 text-sm max-h-24 overflow-y-auto">{summarizedArticle.summary}</CardDescription>
+                                </div>
+                                <Button asChild className="w-full mt-4 sm:w-fit self-end">
+                                    <Link href={summarizedArticle.sourceUrl!} target="_blank" rel="noopener noreferrer">
+                                        Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
                     </Card>
                   )
                 ) : null}
@@ -375,16 +382,18 @@ const NoArticlesFoundAlert = ({ query }: { query: string }) => (
 
 const SummarizeSkeletonCard = () => (
     <Card>
-      <Skeleton className="aspect-video w-full" />
-      <CardContent className="p-4">
-        <Skeleton className="h-6 w-3/4 mb-2" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-5/6" />
-      </CardContent>
-      <CardFooter className="p-4 pt-0">
-        <Skeleton className="h-10 w-full" />
-      </CardFooter>
+      <div className="flex gap-4 p-4">
+        <Skeleton className="h-24 w-24 sm:h-32 sm:w-32 shrink-0 rounded-md" />
+        <div className="flex-1 space-y-3">
+            <Skeleton className="h-6 w-3/4" />
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+            </div>
+            <Skeleton className="h-10 w-full sm:w-40" />
+        </div>
+      </div>
     </Card>
   );
 
@@ -404,3 +413,4 @@ const VideoSkeletonCard = () => (
     </Card>
   );
 
+    
