@@ -86,7 +86,6 @@ export default function ProfilePage() {
 
   // State for translated display values
   const [translatedDisplayName, setTranslatedDisplayName] = useState('');
-  const [translatedLocation, setTranslatedLocation] = useState('');
   const [translatedCrops, setTranslatedCrops] = useState('');
   const [isTranslating, setIsTranslating] = useState(false);
 
@@ -94,78 +93,51 @@ export default function ProfilePage() {
   const [isUploading, setIsUploading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // Memoize translated district labels
-  const [translatedDistricts, setTranslatedDistricts] = useState(districts);
-  useEffect(() => {
-    const translateDistrictLabels = async () => {
-        setIsTranslating(true);
-        try {
-            const translated = await Promise.all(districts.map(async (d) => {
-                const { translatedText } = await translateText({ text: d.label, targetLanguage: currentLanguage });
-                return { ...d, translatedLabel: translatedText };
-            }));
-            setTranslatedDistricts(translated.map(d => ({ ...d, label: d.translatedLabel || d.label })));
-        } catch (error) {
-            console.error("Failed to translate districts", error);
-            setTranslatedDistricts(districts); // fallback to original
-        } finally {
-            setIsTranslating(false);
-        }
-    };
-    if (currentLanguage !== 'en') {
-       translateDistrictLabels();
-    } else {
-       setTranslatedDistricts(districts);
-    }
-  }, [currentLanguage]);
 
-  // Effect to set initial form state from userProfile
+  // Effect to set initial form state from userProfile and translate it
   useEffect(() => {
     if (userProfile) {
-      setDisplayName(userProfile.displayName || '');
+      const untranslatedName = userProfile.displayName || '';
+      const untranslatedCrops = userProfile.crops || '';
+
+      setDisplayName(untranslatedName);
       setEmail(userProfile.email || '');
       setLocation(userProfile.location || 'Pune, Maharashtra');
       setLanguage(userProfile.language || 'en');
-      setCrops(userProfile.crops || '');
+      setCrops(untranslatedCrops);
+
+      const translateData = async () => {
+        setIsTranslating(true);
+        try {
+          if (currentLanguage === 'en') {
+            setTranslatedDisplayName(untranslatedName);
+            setTranslatedCrops(untranslatedCrops);
+          } else {
+            const [nameRes, cropsRes] = await Promise.all([
+              translateText({ text: untranslatedName, targetLanguage: currentLanguage }),
+              translateText({ text: untranslatedCrops, targetLanguage: currentLanguage }),
+            ]);
+            setTranslatedDisplayName(nameRes.translatedText);
+            setTranslatedCrops(cropsRes.translatedText);
+          }
+        } catch (error) {
+          console.error("Failed to translate user data", error);
+          // Fallback to untranslated data on error
+          setTranslatedDisplayName(untranslatedName);
+          setTranslatedCrops(untranslatedCrops);
+        } finally {
+          setIsTranslating(false);
+        }
+      };
+
+      translateData();
     } else if (user) {
         setDisplayName(user.displayName || '');
         setEmail(user.email || '');
+        setTranslatedDisplayName(user.displayName || '');
     }
-  }, [user, userProfile]);
+  }, [user, userProfile, currentLanguage]);
 
-  // Effect to translate user data for display when it changes or language changes
-  useEffect(() => {
-    const translateData = async () => {
-        setIsTranslating(true);
-        try {
-            const [nameRes, locationRes, cropsRes] = await Promise.all([
-                translateText({ text: displayName, targetLanguage: currentLanguage }),
-                translateText({ text: location, targetLanguage: currentLanguage }),
-                translateText({ text: crops, targetLanguage: currentLanguage }),
-            ]);
-            setTranslatedDisplayName(nameRes.translatedText);
-            setTranslatedLocation(locationRes.translatedText);
-            setTranslatedCrops(cropsRes.translatedText);
-        } catch (error) {
-            console.error("Failed to translate user data", error);
-            // Fallback to untranslated data on error
-            setTranslatedDisplayName(displayName);
-            setTranslatedLocation(location);
-            setTranslatedCrops(crops);
-        } finally {
-            setIsTranslating(false);
-        }
-    };
-
-    if (currentLanguage !== 'en') {
-        translateData();
-    } else {
-        // No need to translate if the language is English
-        setTranslatedDisplayName(displayName);
-        setTranslatedLocation(location);
-        setTranslatedCrops(crops);
-    }
-  }, [displayName, location, crops, currentLanguage]);
   
   const getInitials = (name: string | null | undefined) => {
     if (!name) return 'FP';
@@ -270,7 +242,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="name">{t('profile.fullName')}</Label>
-              <Input id="name" value={isTranslating && currentLanguage !== 'en' ? '...' : displayName} onChange={(e) => setDisplayName(e.target.value)} />
+              <Input id="name" value={isTranslating ? '...' : translatedDisplayName} onChange={(e) => setDisplayName(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">{t('profile.email')}</Label>
@@ -287,10 +259,9 @@ export default function ProfilePage() {
                       role="combobox"
                       aria-expanded={open}
                       className="w-full justify-between"
-                      disabled={isTranslating}
                     >
                       {location
-                        ? (translatedDistricts.find((district) => district.value === location)?.label || location)
+                        ? (districts.find((district) => district.value === location)?.label || location)
                         : t('profile.selectDistrict')}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -301,14 +272,12 @@ export default function ProfilePage() {
                       <CommandEmpty>{t('profile.noDistrictFound')}</CommandEmpty>
                        <CommandList>
                         <CommandGroup>
-                            {translatedDistricts.map((district) => (
+                            {districts.map((district) => (
                             <CommandItem
                                 key={district.value}
                                 value={district.label}
                                 onSelect={(currentValue) => {
-                                  // Find original value from translated label
-                                  const selected = translatedDistricts.find(d => d.label.toLowerCase() === currentValue.toLowerCase());
-                                  setLocation(selected ? selected.value : district.value)
+                                  setLocation(district.value)
                                   setOpen(false)
                                 }}
                             >
@@ -346,7 +315,7 @@ export default function ProfilePage() {
             <p className="text-sm text-muted-foreground">
               {t('profile.myCropsDescription')}
             </p>
-            <Input id="crops" value={isTranslating && currentLanguage !== 'en' ? '...' : crops} onChange={(e) => setCrops(e.target.value)} />
+            <Input id="crops" value={isTranslating ? '...' : translatedCrops} onChange={(e) => setCrops(e.target.value)} />
           </div>
           <div className="flex justify-end">
             <Button onClick={handleSaveChanges} disabled={isSaving || isUploading || isTranslating}>
