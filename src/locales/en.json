@@ -370,6 +370,30 @@
             "light": "Light",
             "dark": "Dark",
             "system": "System"
+        },
+        "about": {
+            "title": "About KrishiMitra",
+            "description": "KrishiMitra is an AI-powered farming assistant designed to support small-scale Indian farmers with real-time crop diagnosis, mandi prices, government schemes, and personalized farming advice in local languages."
+        },
+        "version": {
+            "title": "App Version"
+        },
+        "poweredBy": {
+            "title": "Powered By"
+        },
+        "developedBy": {
+            "title": "Developed By",
+            "teamName": "Project Kisan Team",
+            "orgName": "[Your NGO/Startup Name]"
+        },
+        "contact": {
+            "title": "Contact Us",
+            "emailLabel": "Email",
+            "whatsappLabel": "WhatsApp"
+        },
+        "legal": {
+            "privacy": "Privacy Policy",
+            "terms": "Terms of Use"
         }
     },
     "toast": {
