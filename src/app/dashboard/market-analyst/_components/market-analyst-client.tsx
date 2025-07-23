@@ -61,11 +61,19 @@ export function MarketAnalystClient() {
     };
 
     recognition.onerror = (event) => {
-      toast({
-        title: "Voice Recognition Error",
-        description: event.error,
-        variant: "destructive",
-      });
+      if (event.error === 'no-speech') {
+        toast({
+            title: "No Speech Detected",
+            description: "Please try again and speak clearly into the microphone.",
+            variant: "destructive",
+        });
+      } else {
+        toast({
+            title: "Voice Recognition Error",
+            description: event.error,
+            variant: "destructive",
+        });
+      }
     };
     
     recognition.onend = () => {

@@ -156,7 +156,21 @@ export default function LearnPage() {
     
         recognition.onstart = () => setIsRecording(true);
         recognition.onresult = (event) => setSearchQuery(event.results[0][0].transcript);
-        recognition.onerror = (event) => toast({ title: "Voice Recognition Error", description: event.error, variant: "destructive" });
+        recognition.onerror = (event) => {
+             if (event.error === 'no-speech') {
+                toast({
+                    title: "No Speech Detected",
+                    description: "Please try again and speak clearly into the microphone.",
+                    variant: "destructive",
+                });
+            } else {
+                toast({
+                    title: "Voice Recognition Error",
+                    description: event.error,
+                    variant: "destructive",
+                });
+            }
+        };
         recognition.onend = () => setIsRecording(false);
     
         recognition.start();
@@ -184,7 +198,7 @@ export default function LearnPage() {
     const getYoutubeWatchUrl = (embedUrl: string): string => {
         try {
             const url = new URL(embedUrl);
-            const videoId = url.pathname.split('/embed/')[1];
+            const videoId = url.pathname.split('/embed/')[1].split('?')[0];
             return `https://www.youtube.com/watch?v=${videoId}`;
         } catch (error) {
             console.error("Invalid embed URL", error);

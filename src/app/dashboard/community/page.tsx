@@ -101,7 +101,21 @@ export default function CommunityPage() {
 
     recognition.onstart = () => setIsRecording(true);
     recognition.onresult = (event) => setNewMessage(event.results[0][0].transcript);
-    recognition.onerror = (event) => toast({ title: "Voice Recognition Error", description: event.error, variant: "destructive" });
+    recognition.onerror = (event) => {
+       if (event.error === 'no-speech') {
+        toast({
+            title: "No Speech Detected",
+            description: "Please try again and speak clearly into the microphone.",
+            variant: "destructive",
+        });
+      } else {
+        toast({
+            title: "Voice Recognition Error",
+            description: event.error,
+            variant: "destructive",
+        });
+      }
+    };
     recognition.onend = () => setIsRecording(false);
 
     recognition.start();
