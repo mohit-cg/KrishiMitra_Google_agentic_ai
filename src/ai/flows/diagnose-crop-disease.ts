@@ -22,6 +22,7 @@ const DiagnoseCropDiseaseInputSchema = z.object({
 export type DiagnoseCropDiseaseInput = z.infer<typeof DiagnoseCropDiseaseInputSchema>;
 
 const DiagnoseCropDiseaseOutputSchema = z.object({
+  isPlant: z.boolean().describe('Whether or not the input is a plant.'),
   diagnosis: z.string().describe('The diagnosis of the crop disease.'),
   solutions: z.string().describe('Suggested solutions with local product links.'),
   documentationLink: z.string().optional().describe('A search engine link to find relevant documentation.'),
@@ -36,10 +37,11 @@ export async function diagnoseCropDisease(input: DiagnoseCropDiseaseInput): Prom
 // This is a new internal-only schema that the prompt will output.
 // We will then transform this into the final output schema.
 const InternalDiagnoseCropDiseaseOutputSchema = z.object({
-    diagnosis: z.string().describe('The diagnosis of the crop disease.'),
-    solutions: z.string().describe('Suggested solutions with local product links.'),
-    documentationSearchQuery: z.string().optional().describe('A search query to find a relevant documentation or article.'),
-    youtubeSearchQuery: z.string().optional().describe('A search query for a relevant YouTube video for a visual guide.'),
+    isPlant: z.boolean().describe('Whether or not the input is a plant.'),
+    diagnosis: z.string().describe('The diagnosis of the crop disease. If it is not a plant, explain that here.'),
+    solutions: z.string().describe('Suggested solutions with local product links. If not a plant, this can be empty.'),
+    documentationSearchQuery: z.string().optional().describe('A search query to find a relevant documentation or article. Only generate if it is a plant.'),
+    youtubeSearchQuery: z.string().optional().describe('A search query for a relevant YouTube video for a visual guide. Only generate if it is a plant.'),
 });
 
 
@@ -47,9 +49,12 @@ const prompt = ai.definePrompt({
   name: 'diagnoseCropDiseasePrompt',
   input: {schema: DiagnoseCropDiseaseInputSchema},
   output: {schema: InternalDiagnoseCropDiseaseOutputSchema},
-  prompt: `You are an expert in diagnosing crop diseases. Analyze the provided image of the crop and provide a diagnosis of any diseases present. Also, suggest solutions with local product links that can help the farmer.
+  prompt: `You are an expert in diagnosing crop diseases. Your first task is to determine if the image provided is of a plant.
 
-Instead of providing URLs, generate a concise and effective search query for both a documentation article and a YouTube video that would help the user find more information. For example, for "tomato blight", a good YouTube search query would be "how to treat tomato early blight".
+- If it is not a plant, set the 'isPlant' field to false. In the diagnosis field, explain that the image does not appear to be a plant and that you can only analyze plant images. Leave other fields empty.
+- If it is a plant, set 'isPlant' to true. Then, analyze the provided image of the crop and provide a diagnosis of any diseases present. Also, suggest solutions with local product links that can help the farmer.
+
+For solutions, instead of providing URLs, generate a concise and effective search query for both a documentation article and a YouTube video that would help the user find more information. For example, for "tomato blight", a good YouTube search query would be "how to treat tomato early blight".
 
 Crop Image: {{media url=photoDataUri}}`,
 });
@@ -66,16 +71,17 @@ const diagnoseCropDiseaseFlow = ai.defineFlow(
         throw new Error("Failed to get a diagnosis from the AI model.");
     }
     
-    // Construct search URLs from the generated queries
-    const documentationLink = internalOutput.documentationSearchQuery 
+    // Construct search URLs from the generated queries only if it's a plant
+    const documentationLink = internalOutput.isPlant && internalOutput.documentationSearchQuery 
       ? `https://www.google.com/search?q=${encodeURIComponent(internalOutput.documentationSearchQuery)}`
       : undefined;
       
-    const youtubeLink = internalOutput.youtubeSearchQuery
+    const youtubeLink = internalOutput.isPlant && internalOutput.youtubeSearchQuery
       ? `https://www.youtube.com/results?search_query=${encodeURIComponent(internalOutput.youtubeSearchQuery)}`
       : undefined;
 
     return {
+        isPlant: internalOutput.isPlant,
         diagnosis: internalOutput.diagnosis,
         solutions: internalOutput.solutions,
         documentationLink,

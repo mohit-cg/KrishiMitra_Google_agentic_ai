@@ -189,7 +189,7 @@ export function CropDoctorClient() {
                     {activeAudio?.id === 'solutions' && activeAudio.isPlaying ? <Pause className="h-5 w-5"/> : <Volume2 className="h-5 w-5"/>}
                 </Button>
               </div>
-               {(result.documentationLink || result.youtubeLink) && (
+               {result.isPlant && (result.documentationLink || result.youtubeLink) && (
                 <div className="mt-4 pt-4 border-t flex gap-2">
                     {result.documentationLink && (
                         <Button asChild variant="outline" size="sm">
