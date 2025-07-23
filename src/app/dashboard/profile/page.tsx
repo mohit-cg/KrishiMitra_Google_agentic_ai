@@ -218,7 +218,7 @@ export default function ProfilePage() {
                       className="w-full justify-between"
                     >
                       {location
-                        ? districts.find((district) => district.value.toLowerCase() === location.toLowerCase())?.label
+                        ? districts.find((district) => district.value === location)?.label
                         : t('profile.selectDistrict')}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -234,14 +234,14 @@ export default function ProfilePage() {
                                 key={district.value}
                                 value={district.value}
                                 onSelect={(currentValue) => {
-                                  setLocation(currentValue === location.toLowerCase() ? "" : district.value)
+                                  setLocation(currentValue === location ? "" : district.value)
                                   setOpen(false)
                                 }}
                             >
                                 <Check
                                 className={cn(
                                     "mr-2 h-4 w-4",
-                                    location.toLowerCase() === district.value.toLowerCase() ? "opacity-100" : "opacity-0"
+                                    location === district.value ? "opacity-100" : "opacity-0"
                                 )}
                                 />
                                 {district.label}
