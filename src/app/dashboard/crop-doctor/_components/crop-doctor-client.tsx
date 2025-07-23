@@ -14,8 +14,10 @@ import { generateSpeech } from '@/ai/flows/text-to-speech';
 import { Leaf, Lightbulb, Upload, Volume2, Pause, BookOpen, Youtube } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslation } from '@/contexts/language-context';
 
 export function CropDoctorClient() {
+  const { t } = useTranslation();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -93,8 +95,8 @@ export function CropDoctorClient() {
     } catch (error) {
       console.error("Speech generation failed", error);
       toast({
-        title: "Speech Generation Failed",
-        description: "Could not generate audio for the diagnosis.",
+        title: t('toast.speechGenerationFailed'),
+        description: t('toast.couldNotGenerateAudio'),
         variant: "destructive",
       });
     } finally {
@@ -105,8 +107,8 @@ export function CropDoctorClient() {
   const handleSubmit = async () => {
     if (!imageData) {
       toast({
-        title: "No Image Selected",
-        description: "Please select an image of your crop to diagnose.",
+        title: t('toast.noImageSelected'),
+        description: t('toast.selectImageToDiagnose'),
         variant: "destructive",
       });
       return;
@@ -123,8 +125,8 @@ export function CropDoctorClient() {
     } catch (error) {
       console.error(error);
       toast({
-        title: "Diagnosis Failed",
-        description: "An error occurred while analyzing the image. Please try again.",
+        title: t('toast.diagnosisFailed'),
+        description: t('toast.errorAnalyzingImage'),
         variant: "destructive",
       });
     } finally {
@@ -136,27 +138,27 @@ export function CropDoctorClient() {
     <div className="grid gap-8 lg:grid-cols-2">
       <Card>
         <CardHeader>
-          <CardTitle>Upload Crop Image</CardTitle>
-          <CardDescription>Select a photo of the affected plant.</CardDescription>
+          <CardTitle>{t('cropDoctor.client.uploadTitle')}</CardTitle>
+          <CardDescription>{t('cropDoctor.client.uploadDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="crop-image">Image File</Label>
+            <Label htmlFor="crop-image">{t('cropDoctor.client.imageFile')}</Label>
             <Input id="crop-image" type="file" accept="image/*" onChange={handleImageChange} />
           </div>
           {imagePreview && (
             <div className="relative aspect-video w-full overflow-hidden rounded-md border">
-              <Image src={imagePreview} alt="Crop preview" layout="fill" objectFit="cover" />
+              <Image src={imagePreview} alt={t('cropDoctor.client.cropPreview')} layout="fill" objectFit="cover" />
             </div>
           )}
           <Button onClick={handleSubmit} disabled={isLoading || !imageData} className="w-full">
-            {isLoading ? "Diagnosing..." : "Diagnose Disease"}
+            {isLoading ? t('cropDoctor.client.diagnosing') : t('cropDoctor.client.diagnoseButton')}
           </Button>
         </CardContent>
       </Card>
       
       <div>
-        <h2 className="text-2xl font-bold mb-4 font-headline">Diagnosis Result</h2>
+        <h2 className="text-2xl font-bold mb-4 font-headline">{t('cropDoctor.client.resultTitle')}</h2>
         {isLoading && <LoadingSkeleton />}
         {result && !isLoading && (
           <div className="space-y-4">
@@ -165,7 +167,7 @@ export function CropDoctorClient() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                      <Leaf className="h-4 w-4" />
-                     <AlertTitle>Diagnosis</AlertTitle>
+                     <AlertTitle>{t('cropDoctor.client.diagnosis')}</AlertTitle>
                   </div>
                   <AlertDescription className="pl-6">{result.diagnosis}</AlertDescription>
                 </div>
@@ -179,7 +181,7 @@ export function CropDoctorClient() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <Lightbulb className="h-4 w-4" />
-                    <AlertTitle>Suggested Solutions</AlertTitle>
+                    <AlertTitle>{t('cropDoctor.client.solutions')}</AlertTitle>
                   </div>
                   <AlertDescription className="pl-6">
                     <div className="prose prose-sm max-w-none text-foreground" dangerouslySetInnerHTML={{ __html: result.solutions.replace(/\n/g, '<br />') }} />
@@ -195,7 +197,7 @@ export function CropDoctorClient() {
                         <Button asChild variant="outline" size="sm">
                             <Link href={result.documentationLink} target="_blank" rel="noopener noreferrer">
                                 <BookOpen className="mr-2 h-4 w-4"/>
-                                Read Docs
+                                {t('cropDoctor.client.readDocs')}
                             </Link>
                         </Button>
                     )}
@@ -203,7 +205,7 @@ export function CropDoctorClient() {
                          <Button asChild variant="destructive" size="sm">
                             <Link href={result.youtubeLink} target="_blank" rel="noopener noreferrer">
                                 <Youtube className="mr-2 h-4 w-4"/>
-                                Watch Video
+                                {t('cropDoctor.client.watchVideo')}
                             </Link>
                         </Button>
                     )}
@@ -216,7 +218,7 @@ export function CropDoctorClient() {
           <Card className="flex flex-col items-center justify-center p-8 text-center h-full">
             <CardContent>
               <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
-              <p className="mt-4 text-muted-foreground">Your diagnosis result will appear here.</p>
+              <p className="mt-4 text-muted-foreground">{t('cropDoctor.client.resultPlaceholder')}</p>
             </CardContent>
           </Card>
         )}
@@ -231,3 +233,5 @@ const LoadingSkeleton = () => (
       <Skeleton className="h-32 w-full" />
     </div>
 );
+
+    

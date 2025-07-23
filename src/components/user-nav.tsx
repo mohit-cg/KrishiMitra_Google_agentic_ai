@@ -15,10 +15,12 @@ import {
 import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from "next/navigation";
+import { useTranslation } from "@/contexts/language-context";
 
 export function UserNav() {
   const { user, signOut } = useAuth();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const handleSignOut = async () => {
     await signOut();
@@ -51,7 +53,7 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.displayName || 'Farmer'}</p>
+            <p className="text-sm font-medium leading-none">{user.displayName || t('dashboard.farmer')}</p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>
@@ -60,17 +62,19 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/dashboard/profile">Profile</Link>
+            <Link href="/dashboard/profile">{t('userNav.profile')}</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            Settings
+            {t('userNav.settings')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>
-          Log out
+          {t('userNav.logout')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+
+    

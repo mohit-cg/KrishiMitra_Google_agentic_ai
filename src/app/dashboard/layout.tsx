@@ -21,6 +21,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Image from "next/image";
+import { useTranslation } from "@/contexts/language-context";
 
 export default function DashboardLayout({
   children,
@@ -29,6 +30,7 @@ export default function DashboardLayout({
 }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -38,7 +40,7 @@ export default function DashboardLayout({
 
   // While loading, or if there's no user (and redirecting), show a loading state.
   if (loading || !user) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+    return <div className="flex h-screen items-center justify-center">{t('common.loading')}...</div>;
   }
   
   // Only render the dashboard if not loading and a user is present.
@@ -73,13 +75,13 @@ export default function DashboardLayout({
                 <SheetTrigger asChild>
                   <Button size="icon" variant="outline" className="lg:hidden">
                     <PanelLeft className="h-5 w-5" />
-                    <span className="sr-only">Toggle Menu</span>
+                    <span className="sr-only">{t('dashboardLayout.toggleMenu')}</span>
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="lg:hidden max-w-xs p-0">
                    <SheetHeader className="sr-only">
-                    <SheetTitle>Navigation Menu</SheetTitle>
-                    <SheetDescription>Main navigation links for the application.</SheetDescription>
+                    <SheetTitle>{t('dashboardLayout.menuTitle')}</SheetTitle>
+                    <SheetDescription>{t('dashboardLayout.menuDescription')}</SheetDescription>
                   </SheetHeader>
                   <div className="flex justify-center my-4">
                     <Link
@@ -105,3 +107,5 @@ export default function DashboardLayout({
     </TooltipProvider>
   );
 }
+
+    

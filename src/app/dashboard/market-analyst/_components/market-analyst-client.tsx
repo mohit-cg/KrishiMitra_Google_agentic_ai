@@ -11,12 +11,14 @@ import { generateSpeech } from '@/ai/flows/text-to-speech';
 import { Bot, LineChart, Mic, TrendingUp, Volume2, Square, Pause } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslation } from '@/contexts/language-context';
 
 // Check for SpeechRecognition API
 const SpeechRecognition =
   (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
 
 export function MarketAnalystClient() {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -39,8 +41,8 @@ export function MarketAnalystClient() {
   const handleMicClick = () => {
     if (!SpeechRecognition) {
       toast({
-        title: "Browser Not Supported",
-        description: "Your browser does not support voice recognition.",
+        title: t('toast.browserNotSupported'),
+        description: t('toast.noVoiceSupport'),
         variant: "destructive",
       });
       return;
@@ -63,13 +65,13 @@ export function MarketAnalystClient() {
     recognition.onerror = (event) => {
       if (event.error === 'no-speech') {
         toast({
-            title: "No Speech Detected",
-            description: "Please try again and speak clearly into the microphone.",
+            title: t('toast.noSpeechDetected'),
+            description: t('toast.tryAgain'),
             variant: "destructive",
         });
       } else {
         toast({
-            title: "Voice Recognition Error",
+            title: t('toast.voiceError'),
             description: event.error,
             variant: "destructive",
         });
@@ -128,8 +130,8 @@ export function MarketAnalystClient() {
     } catch (error) {
       console.error("Speech generation failed", error);
       toast({
-        title: "Speech Generation Failed",
-        description: "Could not generate audio for the analysis.",
+        title: t('toast.speechGenerationFailed'),
+        description: t('toast.couldNotGenerateAudioAnalysis'),
         variant: "destructive",
       });
     } finally {
@@ -141,8 +143,8 @@ export function MarketAnalystClient() {
     event.preventDefault();
     if (!query.trim()) {
       toast({
-        title: "Empty Query",
-        description: "Please enter your question about market prices.",
+        title: t('toast.emptyQuery'),
+        description: t('toast.enterMarketQuestion'),
         variant: "destructive",
       });
       return;
@@ -161,8 +163,8 @@ export function MarketAnalystClient() {
     } catch (error) {
       console.error(error);
       toast({
-        title: "Analysis Failed",
-        description: "An error occurred while analyzing the market data. Please try again.",
+        title: t('toast.analysisFailed'),
+        description: t('toast.errorAnalyzingMarket'),
         variant: "destructive",
       });
     } finally {
@@ -174,23 +176,23 @@ export function MarketAnalystClient() {
     <div className="grid gap-8 lg:grid-cols-2">
       <Card>
         <CardHeader>
-          <CardTitle>Ask Your Market Question</CardTitle>
+          <CardTitle>{t('marketAnalyst.client.askTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Textarea
-              placeholder="e.g., What are the chances of tomato prices increasing in the next week in Bangalore? Or click the mic to speak."
+              placeholder={t('marketAnalyst.client.placeholder')}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               rows={4}
             />
             <div className="flex items-center gap-2">
               <Button type="submit" disabled={isLoading || isRecording} className="flex-1">
-                {isLoading ? "Analyzing..." : "Get Analysis"}
+                {isLoading ? t('marketAnalyst.client.analyzing') : t('marketAnalyst.client.getAnalysis')}
               </Button>
                <Button type="button" variant={isRecording ? "destructive" : "outline"} size="icon" onClick={handleMicClick} disabled={isLoading}>
                   {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                  <span className="sr-only">{isRecording ? "Stop Recording" : "Use Voice"}</span>
+                  <span className="sr-only">{isRecording ? t('marketAnalyst.client.stopRecording') : t('marketAnalyst.client.useVoice')}</span>
                 </Button>
             </div>
           </form>
@@ -198,14 +200,14 @@ export function MarketAnalystClient() {
       </Card>
       
       <div>
-        <h2 className="text-2xl font-bold mb-4 font-headline">Analysis Result</h2>
+        <h2 className="text-2xl font-bold mb-4 font-headline">{t('marketAnalyst.client.resultTitle')}</h2>
         {isLoading && <LoadingSkeleton />}
         {result && !isLoading && (
           <div className="space-y-4">
             <Alert className="border-accent text-accent-foreground">
               <div className="flex justify-between items-center w-full">
                 <div>
-                  <AlertTitle>Recommendation</AlertTitle>
+                  <AlertTitle>{t('marketAnalyst.client.recommendation')}</AlertTitle>
                   <AlertDescription>{result.recommendation}</AlertDescription>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => playAudio(result.recommendation, 'recommendation')} disabled={isGeneratingSpeech}>
@@ -216,7 +218,7 @@ export function MarketAnalystClient() {
             <Alert>
               <div className="flex justify-between items-center w-full">
                 <div>
-                    <AlertTitle>Market Analysis</AlertTitle>
+                    <AlertTitle>{t('marketAnalyst.client.marketAnalysis')}</AlertTitle>
                     <AlertDescription>{result.analysis}</AlertDescription>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => playAudio(result.analysis, 'analysis')} disabled={isGeneratingSpeech}>
@@ -230,7 +232,7 @@ export function MarketAnalystClient() {
           <Card className="flex flex-col items-center justify-center p-8 text-center h-full">
             <CardContent>
               <Bot className="mx-auto h-12 w-12 text-muted-foreground" />
-              <p className="mt-4 text-muted-foreground">Your market analysis will appear here.</p>
+              <p className="mt-4 text-muted-foreground">{t('marketAnalyst.client.resultPlaceholder')}</p>
             </CardContent>
           </Card>
         )}
@@ -245,3 +247,5 @@ const LoadingSkeleton = () => (
       <Skeleton className="h-32 w-full" />
     </div>
 );
+
+    

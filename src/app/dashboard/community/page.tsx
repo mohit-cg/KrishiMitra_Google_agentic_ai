@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Mic, Paperclip, Send, Square, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useTranslation } from "@/contexts/language-context";
 
 const initialRooms = [
   { id: "general", name: "General Discussion" },
@@ -48,8 +49,9 @@ const SpeechRecognition =
 
 
 export default function CommunityPage() {
-  const [rooms] = useState(initialRooms);
-  const [activeRoom, setActiveRoom] = useState(initialRooms[0]);
+  const { t } = useTranslation();
+  const [rooms] = useState(initialRooms.map(r => ({...r, name: t(`community.rooms.${r.id}`)})));
+  const [activeRoom, setActiveRoom] = useState(rooms[0]);
   const [messages, setMessages] = useState(allMessages[activeRoom.id]);
   const [newMessage, setNewMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
@@ -90,7 +92,7 @@ export default function CommunityPage() {
 
   const handleMicClick = () => {
     if (!SpeechRecognition) {
-      toast({ title: "Browser Not Supported", description: "Your browser does not support voice recognition.", variant: "destructive" });
+      toast({ title: t('toast.browserNotSupported'), description: t('toast.noVoiceSupport'), variant: "destructive" });
       return;
     }
 
@@ -104,13 +106,13 @@ export default function CommunityPage() {
     recognition.onerror = (event) => {
        if (event.error === 'no-speech') {
         toast({
-            title: "No Speech Detected",
-            description: "Please try again and speak clearly into the microphone.",
+            title: t('toast.noSpeechDetected'),
+            description: t('toast.tryAgain'),
             variant: "destructive",
         });
       } else {
         toast({
-            title: "Voice Recognition Error",
+            title: t('toast.voiceError'),
             description: event.error,
             variant: "destructive",
         });
@@ -136,8 +138,8 @@ export default function CommunityPage() {
         reader.readAsDataURL(file);
       } else {
         toast({
-          title: "Unsupported File Type",
-          description: "Please select an image file.",
+          title: t('toast.unsupportedFileType'),
+          description: t('toast.selectAnImage'),
           variant: "destructive",
         });
       }
@@ -153,15 +155,15 @@ export default function CommunityPage() {
 
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col">
-      <h1 className="text-3xl font-bold mb-2 font-headline">Community Forum</h1>
+      <h1 className="text-3xl font-bold mb-2 font-headline">{t('community.title')}</h1>
       <p className="text-muted-foreground mb-4">
-        Connect with other farmers, share knowledge, and grow together.
+        {t('community.description')}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1">
         <Card className="md:col-span-1">
           <CardHeader>
-            <CardTitle>Chat Rooms</CardTitle>
+            <CardTitle>{t('community.chatRooms')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
@@ -199,26 +201,26 @@ export default function CommunityPage() {
                       )}
                       <p className="text-sm">{msg.text}</p>
                     </div>
-                    {msg.isSelf && <Avatar><AvatarImage src={msg.avatar} data-ai-hint={msg.hint} /><AvatarFallback>You</AvatarFallback></Avatar>}
+                    {msg.isSelf && <Avatar><AvatarImage src={msg.avatar} data-ai-hint={msg.hint} /><AvatarFallback>{t('community.you')}</AvatarFallback></Avatar>}
                   </div>
                 ))}
               </div>
             </ScrollArea>
              {attachmentPreview && (
                 <div className="mt-4 p-2 border-t relative">
-                    <p className="text-xs font-semibold mb-2 text-muted-foreground">Attachment Preview:</p>
+                    <p className="text-xs font-semibold mb-2 text-muted-foreground">{t('community.attachmentPreview')}</p>
                     <div className="relative w-24 h-24">
-                        <Image src={attachmentPreview} alt="Attachment preview" layout="fill" objectFit="cover" className="rounded-md"/>
+                        <Image src={attachmentPreview} alt={t('community.attachmentPreview')} layout="fill" objectFit="cover" className="rounded-md"/>
                     </div>
                     <Button variant="ghost" size="icon" className="absolute top-0 right-0 h-8 w-8" onClick={removeAttachment}>
                         <X className="h-4 w-4" />
-                        <span className="sr-only">Remove attachment</span>
+                        <span className="sr-only">{t('community.removeAttachment')}</span>
                     </Button>
                 </div>
               )}
             <form onSubmit={handleSendMessage} className="mt-4 flex items-center gap-2">
               <Input 
-                placeholder="Type a message..." 
+                placeholder={t('community.typeMessage')}
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
               />
@@ -227,11 +229,11 @@ export default function CommunityPage() {
               <Button variant="ghost" size="icon" type="button" onClick={handleAttachmentClick}><Paperclip className="h-4 w-4" /></Button>
               <Button variant={isRecording ? "destructive" : "ghost"} size="icon" type="button" onClick={handleMicClick}>
                  {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                 <span className="sr-only">{isRecording ? "Stop recording" : "Start recording"}</span>
+                 <span className="sr-only">{isRecording ? t('community.stopRecording') : t('community.startRecording')}</span>
               </Button>
               <Button type="submit" disabled={!newMessage.trim() && !attachmentPreview}>
                 <Send className="h-4 w-4 mr-2" />
-                {attachmentPreview ? 'Send Photo' : 'Send'}
+                {attachmentPreview ? t('community.sendPhoto') : t('community.send')}
               </Button>
             </form>
           </CardContent>
@@ -240,3 +242,5 @@ export default function CommunityPage() {
     </div>
   );
 }
+
+    

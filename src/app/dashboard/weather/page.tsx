@@ -9,6 +9,7 @@ import { Cloud, Sun, CloudRain, CloudSun, Wind, Droplets, Search } from "lucide-
 import { Skeleton } from "@/components/ui/skeleton";
 import { getWeatherForecast, GetWeatherForecastOutput } from '@/ai/flows/get-weather-forecast';
 import { toast } from '@/hooks/use-toast';
+import { useTranslation } from '@/contexts/language-context';
 
 const iconMap = {
   Cloud,
@@ -26,6 +27,7 @@ const getIcon = (iconName: keyof typeof iconMap | undefined, className?: string)
 };
 
 export default function WeatherPage() {
+  const { t } = useTranslation();
   const [city, setCity] = useState("Pune");
   const [inputCity, setInputCity] = useState("Pune");
   const [weatherData, setWeatherData] = useState<GetWeatherForecastOutput | null>(null);
@@ -43,8 +45,8 @@ export default function WeatherPage() {
         }
       } catch (error) {
         toast({
-          title: "Error fetching weather",
-          description: "Could not retrieve weather data for the specified location.",
+          title: t('toast.errorFetchingWeather'),
+          description: t('toast.couldNotRetrieveWeather'),
           variant: "destructive",
         });
         setWeatherData(null);
@@ -53,7 +55,7 @@ export default function WeatherPage() {
       }
     };
     fetchWeather();
-  }, [city]);
+  }, [city, t]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,14 +68,14 @@ export default function WeatherPage() {
     <div className="container mx-auto p-4 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
-            <h1 className="text-3xl font-bold mb-2 font-headline">Live Weather Forecast</h1>
+            <h1 className="text-3xl font-bold mb-2 font-headline">{t('weather.title')}</h1>
             <p className="text-muted-foreground">
-                Plan your farming activities accordingly.
+                {t('weather.description')}
             </p>
         </div>
         <form onSubmit={handleSearch} className="flex items-center gap-2 mt-4 md:mt-0">
           <Input 
-            placeholder="Enter city name..."
+            placeholder={t('weather.enterCity')}
             value={inputCity}
             onChange={(e) => setInputCity(e.target.value)}
             className="min-w-[200px]"
@@ -91,8 +93,8 @@ export default function WeatherPage() {
         <>
           <Card className="mb-8">
             <CardHeader>
-              <CardTitle>Current Weather</CardTitle>
-              <CardDescription>Right now in {weatherData.city}</CardDescription>
+              <CardTitle>{t('weather.currentWeather')}</CardTitle>
+              <CardDescription>{t('weather.rightNowIn', { city: weatherData.city })}</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
               {getIcon(weatherData.current.icon, "h-24 w-24 text-accent")}
@@ -101,19 +103,19 @@ export default function WeatherPage() {
                 <p className="text-muted-foreground">{weatherData.current.condition}</p>
               </div>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <p className="flex items-center"><Wind className="mr-2 h-4 w-4" /> Wind: {weatherData.current.wind}</p>
-                <p className="flex items-center"><Droplets className="mr-2 h-4 w-4" /> Humidity: {weatherData.current.humidity}</p>
+                <p className="flex items-center"><Wind className="mr-2 h-4 w-4" /> {t('weather.wind')}: {weatherData.current.wind}</p>
+                <p className="flex items-center"><Droplets className="mr-2 h-4 w-4" /> {t('weather.humidity')}: {weatherData.current.humidity}</p>
               </div>
             </CardContent>
           </Card>
 
           <div>
-            <h2 className="text-2xl font-bold mb-4 font-headline">Weekly Forecast</h2>
+            <h2 className="text-2xl font-bold mb-4 font-headline">{t('weather.weeklyForecast')}</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {weatherData.forecast.map((day, index) => (
                 <Card key={index} className="text-center">
                   <CardHeader>
-                    <CardTitle className="text-lg">{day.day}</CardTitle>
+                    <CardTitle className="text-lg">{t(`dashboard.daysLong.${day.day.toLowerCase()}`, day.day)}</CardTitle>
                   </CardHeader>
                   <CardContent className="flex flex-col items-center gap-2">
                     {getIcon(day.icon, "h-10 w-10 text-accent")}
@@ -128,7 +130,7 @@ export default function WeatherPage() {
       ) : (
         <Card className="text-center p-8">
           <CardContent>
-            <p className="text-muted-foreground">No weather data available. Please try a different location.</p>
+            <p className="text-muted-foreground">{t('weather.noData')}</p>
           </CardContent>
         </Card>
       )}
@@ -175,3 +177,5 @@ const WeatherSkeleton = () => (
         </div>
     </>
 );
+
+    

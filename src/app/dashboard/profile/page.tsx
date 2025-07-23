@@ -16,6 +16,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
+import { useTranslation } from '@/contexts/language-context';
 
 
 const districts = [
@@ -72,6 +73,7 @@ const districts = [
 
 export default function ProfilePage() {
   const { user, userProfile, updateUserProfile, uploadProfileImage, loading } = useAuth();
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [displayName, setDisplayName] = useState('');
@@ -116,14 +118,14 @@ export default function ProfilePage() {
       });
 
       toast({
-        title: "Profile Updated",
-        description: "Your information has been successfully saved.",
+        title: t('toast.profileUpdated'),
+        description: t('toast.profileUpdatedDesc'),
       });
     } catch (error) {
       console.error("Failed to update profile", error);
       toast({
-        title: "Update Failed",
-        description: "Could not save your changes. Please try again.",
+        title: t('toast.updateFailed'),
+        description: t('toast.updateFailedDesc'),
         variant: "destructive",
       });
     } finally {
@@ -138,14 +140,14 @@ export default function ProfilePage() {
       try {
         await uploadProfileImage(file);
         toast({
-          title: "Photo Updated",
-          description: "Your profile picture has been changed.",
+          title: t('toast.photoUpdated'),
+          description: t('toast.photoUpdatedDesc'),
         });
       } catch (error) {
         console.error("Failed to upload image", error);
         toast({
-          title: "Upload Failed",
-          description: "Could not change your profile picture. Please try again.",
+          title: t('toast.uploadFailed'),
+          description: t('toast.uploadFailedDesc'),
           variant: "destructive",
         });
       } finally {
@@ -162,23 +164,23 @@ export default function ProfilePage() {
     <div className="container mx-auto p-4 md:p-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold mb-2 font-headline">Farmer Profile</h1>
+          <h1 className="text-3xl font-bold mb-2 font-headline">{t('profile.title')}</h1>
           <p className="text-muted-foreground">
-            Manage your personal information and preferences.
+            {t('profile.description')}
           </p>
         </div>
         <Button asChild variant="outline">
           <Link href="/dashboard">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
+            <ArrowLeft className="mr-2 h-4 w-4" /> {t('profile.backToDashboard')}
           </Link>
         </Button>
       </div>
 
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
+          <CardTitle>{t('profile.cardTitle')}</CardTitle>
           <CardDescription>
-            Keep your details up to date to receive personalized recommendations.
+            {t('profile.cardDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -190,23 +192,23 @@ export default function ProfilePage() {
               <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading}/>
               <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
                  <Upload className="mr-2 h-4 w-4" />
-                {isUploading ? 'Uploading...' : 'Change Photo'}
+                {isUploading ? t('profile.uploading') : t('profile.changePhoto')}
               </Button>
             </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">{t('profile.fullName')}</Label>
               <Input id="name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">{t('profile.email')}</Label>
               <Input id="email" type="email" value={email} disabled />
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="location">Location (District)</Label>
+              <Label htmlFor="location">{t('profile.location')}</Label>
                <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>
                     <Button
@@ -217,14 +219,14 @@ export default function ProfilePage() {
                     >
                       {location
                         ? districts.find((district) => district.value.toLowerCase() === location.toLowerCase())?.label
-                        : "Select district..."}
+                        : t('profile.selectDistrict')}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
                     <Command>
-                      <CommandInput placeholder="Search district..." />
-                      <CommandEmpty>No district found.</CommandEmpty>
+                      <CommandInput placeholder={t('profile.searchDistrict')} />
+                      <CommandEmpty>{t('profile.noDistrictFound')}</CommandEmpty>
                        <CommandList>
                         <CommandGroup>
                             {districts.map((district) => (
@@ -232,7 +234,7 @@ export default function ProfilePage() {
                                 key={district.value}
                                 value={district.value}
                                 onSelect={(currentValue) => {
-                                  setLocation(currentValue === location ? "" : currentValue)
+                                  setLocation(currentValue === location.toLowerCase() ? "" : district.value)
                                   setOpen(false)
                                 }}
                             >
@@ -252,10 +254,10 @@ export default function ProfilePage() {
                 </Popover>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="language">Preferred Language</Label>
+              <Label htmlFor="language">{t('profile.language')}</Label>
               <Select value={language} onValueChange={setLanguage}>
                 <SelectTrigger id="language">
-                  <SelectValue placeholder="Select language" />
+                  <SelectValue placeholder={t('profile.selectLanguage')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="en">English</SelectItem>
@@ -266,15 +268,15 @@ export default function ProfilePage() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="crops">My Crops</Label>
+            <Label htmlFor="crops">{t('profile.myCrops')}</Label>
             <p className="text-sm text-muted-foreground">
-              Add crops you cultivate to get relevant alerts and advice (comma-separated).
+              {t('profile.myCropsDescription')}
             </p>
             <Input id="crops" value={crops} onChange={(e) => setCrops(e.target.value)} />
           </div>
           <div className="flex justify-end">
             <Button onClick={handleSaveChanges} disabled={isSaving || isUploading}>
-              {isSaving ? "Saving..." : "Save Changes"}
+              {isSaving ? t('profile.saving') : t('profile.saveChanges')}
             </Button>
           </div>
         </CardContent>
@@ -284,49 +286,54 @@ export default function ProfilePage() {
 }
 
 
-const ProfileSkeleton = () => (
-  <div className="container mx-auto p-4 md:p-8">
-    <Skeleton className="h-10 w-1/3 mb-2" />
-    <Skeleton className="h-5 w-1/2 mb-8" />
-    <Card className="max-w-2xl mx-auto">
-      <CardHeader>
-        <Skeleton className="h-8 w-1/2" />
-        <Skeleton className="h-4 w-3/4 mt-2" />
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex flex-col items-center space-y-4">
-            <Skeleton className="h-24 w-24 rounded-full" />
+const ProfileSkeleton = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="container mx-auto p-4 md:p-8">
+      <Skeleton className="h-10 w-1/3 mb-2" />
+      <Skeleton className="h-5 w-1/2 mb-8" />
+      <Card className="max-w-2xl mx-auto">
+        <CardHeader>
+          <Skeleton className="h-8 w-1/2" />
+          <Skeleton className="h-4 w-3/4 mt-2" />
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex flex-col items-center space-y-4">
+              <Skeleton className="h-24 w-24 rounded-full" />
+              <Skeleton className="h-10 w-28" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-5 w-2/3" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="flex justify-end">
             <Skeleton className="h-10 w-28" />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-1/4" />
-            <Skeleton className="h-10 w-full" />
           </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-1/4" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-1/4" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-1/4" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-1/4" />
-          <Skeleton className="h-5 w-2/3" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-        <div className="flex justify-end">
-          <Skeleton className="h-10 w-28" />
-        </div>
-      </CardContent>
-    </Card>
-  </div>
-);
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+    

@@ -22,27 +22,33 @@ import {
 import { useSidebar } from "@/components/ui/sidebar";
 import { SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-const navItems = [
-  { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
-  { href: "/dashboard/crop-doctor", icon: HeartPulse, label: "Crop Doctor" },
-  { href: "/dashboard/market-analyst", icon: LineChart, label: "Market Analyst" },
-  { href: "/dashboard/schemes", icon: Banknote, label: "Govt Schemes" },
-  { href: "/dashboard/weather", icon: CloudSun, label: "Weather" },
-  { href: "/dashboard/community", icon: Users, label: "Community" },
-  { href: "/dashboard/shop/marketplace", icon: ShoppingCart, label: "E-Commerce" },
-  { href: "/dashboard/learn", icon: BookOpen, label: "E-Learning" },
-];
+import { useTranslation } from "@/contexts/language-context";
 
 export function MainNav() {
   const pathname = usePathname();
   const { state } = useSidebar();
   const isMobile = useIsMobile();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { href: "/dashboard", icon: LayoutGrid, label: t('nav.dashboard') },
+    { href: "/dashboard/crop-doctor", icon: HeartPulse, label: t('nav.cropDoctor') },
+    { href: "/dashboard/market-analyst", icon: LineChart, label: t('nav.marketAnalyst') },
+    { href: "/dashboard/schemes", icon: Banknote, label: t('nav.govtSchemes') },
+    { href: "/dashboard/weather", icon: CloudSun, label: t('nav.weather') },
+    { href: "/dashboard/community", icon: Users, label: t('nav.community') },
+    { href: "/dashboard/shop", icon: ShoppingCart, label: t('nav.shop') },
+    { href: "/dashboard/learn", icon: BookOpen, label: t('nav.eLearning') },
+  ];
 
   return (
     <nav className="flex flex-col gap-2 px-2">
       {navItems.map((item) => {
-        const isActive = pathname.startsWith(item.href) && (item.href !== '/dashboard' || pathname === '/dashboard');
+        const isActive = (pathname === item.href) || (pathname.startsWith(item.href) && item.href !== '/dashboard');
+        
+        // A special case for the shop parent route
+        const isShopActive = (pathname.startsWith("/dashboard/shop") && item.href === "/dashboard/shop");
+
         const linkContent = (
             <>
                 <item.icon className="h-5 w-5" />
@@ -59,7 +65,7 @@ export function MainNav() {
 
         const linkClassName = cn(
             "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-            isActive && "bg-muted text-primary",
+            (isActive || isShopActive) && "bg-muted text-primary",
             state === "collapsed" && !isMobile && "justify-center"
         );
         
@@ -97,3 +103,5 @@ export function MainNav() {
     </nav>
   );
 }
+
+    

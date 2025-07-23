@@ -1,38 +1,49 @@
 
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { useTranslation } from "@/contexts/language-context";
+import { useMemo } from "react";
 
-const products = [
-  { name: "Organic Fertilizer", price: "₹450", image: "https://placehold.co/400x400.png", hint: "fertilizer bag" },
-  { name: "Pesticide Spray", price: "₹700", image: "https://placehold.co/400x400.png", hint: "pesticide bottle" },
-  { name: "High-Yield Seeds", price: "₹1200", image: "https://placehold.co/400x400.png", hint: "seed packet" },
-  { name: "Gardening Tools Set", price: "₹1500", image: "https://placehold.co/400x400.png", hint: "gardening tools" },
-  { name: "Drip Irrigation Kit", price: "₹2500", image: "https://placehold.co/400x400.png", hint: "irrigation kit" },
-  { name: "Soil Test Kit", price: "₹900", image: "https://placehold.co/400x400.png", hint: "soil test" },
-  { name: "Protective Gloves", price: "₹250", image: "https://placehold.co/400x400.png", hint: "gloves" },
-  { name: "Power Sprayer", price: "₹3500", image: "https://placehold.co/400x400.png", hint: "power sprayer" },
-  { name: "Greenhouse Polythene", price: "₹4200", image: "https://placehold.co/400x400.png", hint: "greenhouse sheet" },
-  { name: "Water Pump (1HP)", price: "₹5500", image: "https://placehold.co/400x400.png", hint: "water pump" },
-  { name: "Cow Manure (50kg)", price: "₹300", image: "https://placehold.co/400x400.png", hint: "manure bag" },
-  { name: "Neem Oil Pesticide", price: "₹850", image: "https://placehold.co/400x400.png", hint: "neem oil" },
+const productsData = [
+  { key: "organicFertilizer", price: "₹450", image: "https://placehold.co/400x400.png", hint: "fertilizer bag" },
+  { key: "pesticideSpray", price: "₹700", image: "https://placehold.co/400x400.png", hint: "pesticide bottle" },
+  { key: "highYieldSeeds", price: "₹1200", image: "https://placehold.co/400x400.png", hint: "seed packet" },
+  { key: "gardeningToolsSet", price: "₹1500", image: "https://placehold.co/400x400.png", hint: "gardening tools" },
+  { key: "dripIrrigationKit", price: "₹2500", image: "https://placehold.co/400x400.png", hint: "irrigation kit" },
+  { key: "soilTestKit", price: "₹900", image: "https://placehold.co/400x400.png", hint: "soil test" },
+  { key: "protectiveGloves", price: "₹250", image: "https://placehold.co/400x400.png", hint: "gloves" },
+  { key: "powerSprayer", price: "₹3500", image: "https://placehold.co/400x400.png", hint: "power sprayer" },
+  { key: "greenhousePolythene", price: "₹4200", image: "https://placehold.co/400x400.png", hint: "greenhouse sheet" },
+  { key: "waterPump", price: "₹5500", image: "https://placehold.co/400x400.png", hint: "water pump" },
+  { key: "cowManure", price: "₹300", image: "https://placehold.co/400x400.png", hint: "manure bag" },
+  { key: "neemOil", price: "₹850", image: "https://placehold.co/400x400.png", hint: "neem oil" },
 ];
 
 export default function MarketplacePage() {
+  const { t } = useTranslation();
+
+  const products = useMemo(() => productsData.map(product => ({
+    ...product,
+    name: t(`shop.marketplace.products.${product.key}`)
+  })), [t]);
+  
   return (
     <div className="container mx-auto p-4 md:p-8">
        <div className="flex justify-between items-center mb-4">
         <div>
-            <h1 className="text-3xl font-bold font-headline">Private Marketplace</h1>
+            <h1 className="text-3xl font-bold font-headline">{t('shop.marketplace.title')}</h1>
             <p className="text-muted-foreground">
-                Quality products for all your farming needs from various sellers.
+                {t('shop.marketplace.description')}
             </p>
         </div>
         <Button asChild variant="outline">
             <Link href="/dashboard/shop">
-                <ArrowLeft className="mr-2 h-4 w-4"/> Back to Store
+                <ArrowLeft className="mr-2 h-4 w-4"/> {t('shop.marketplace.backToStore')}
             </Link>
         </Button>
       </div>
@@ -52,7 +63,7 @@ export default function MarketplacePage() {
             </CardContent>
             <CardFooter className="p-4 pt-0">
               <Button className="w-full">
-                <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+                <ShoppingCart className="mr-2 h-4 w-4" /> {t('shop.marketplace.addToCart')}
               </Button>
             </CardFooter>
           </Card>
@@ -61,3 +72,5 @@ export default function MarketplacePage() {
     </div>
   );
 }
+
+    
