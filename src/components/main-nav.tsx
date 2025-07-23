@@ -30,7 +30,7 @@ const navItems = [
   { href: "/dashboard/schemes", icon: Banknote, label: "Govt Schemes" },
   { href: "/dashboard/weather", icon: CloudSun, label: "Weather" },
   { href: "/dashboard/community", icon: Users, label: "Community" },
-  { href: "/dashboard/shop", icon: ShoppingCart, label: "E-Commerce" },
+  { href: "/dashboard/shop/marketplace", icon: ShoppingCart, label: "E-Commerce" },
   { href: "/dashboard/learn", icon: BookOpen, label: "E-Learning" },
 ];
 
@@ -42,7 +42,7 @@ export function MainNav() {
   return (
     <nav className="flex flex-col gap-2 px-2">
       {navItems.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive = pathname.startsWith(item.href) && (item.href !== '/dashboard' || pathname === '/dashboard');
         const linkContent = (
             <>
                 <item.icon className="h-5 w-5" />
