@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { useTranslation } from '@/contexts/language-context';
-import { translateText } from '@/ai/flows/translate-text';
+import { translateText, TranslateTextInput } from '@/ai/flows/translate-text';
 
 
 const districts = [
@@ -81,7 +81,7 @@ export default function ProfilePage() {
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [location, setLocation] = useState('');
-  const [language, setLanguage] = useState('');
+  const [language, setLanguage] = useState('en');
   const [crops, setCrops] = useState('');
 
   // State for translated display values
@@ -105,17 +105,29 @@ export default function ProfilePage() {
       setLocation(userProfile.location || 'Pune, Maharashtra');
       setLanguage(userProfile.language || 'en');
       setCrops(untranslatedCrops);
+      setAppLanguage(userProfile.language || 'en');
+    } else if (user) {
+        setDisplayName(user.displayName || '');
+        setEmail(user.email || '');
+        setTranslatedDisplayName(user.displayName || '');
+    }
+  }, [user, userProfile, setAppLanguage]);
 
-      const translateData = async () => {
+  useEffect(() => {
+    const translateData = async () => {
         setIsTranslating(true);
         try {
           if (currentLanguage === 'en') {
-            setTranslatedDisplayName(untranslatedName);
-            setTranslatedCrops(untranslatedCrops);
+            setTranslatedDisplayName(displayName);
+            setTranslatedCrops(crops);
           } else {
+             // Only translate if there is text to translate
+            const nameToTranslate = displayName || '';
+            const cropsToTranslate = crops || '';
+
             const [nameRes, cropsRes] = await Promise.all([
-              translateText({ text: untranslatedName, targetLanguage: currentLanguage }),
-              translateText({ text: untranslatedCrops, targetLanguage: currentLanguage }),
+              nameToTranslate ? translateText({ text: nameToTranslate, targetLanguage: currentLanguage as 'hi' | 'kn' }) : Promise.resolve({ translatedText: '' }),
+              cropsToTranslate ? translateText({ text: cropsToTranslate, targetLanguage: currentLanguage as 'hi' | 'kn' }) : Promise.resolve({ translatedText: '' }),
             ]);
             setTranslatedDisplayName(nameRes.translatedText);
             setTranslatedCrops(cropsRes.translatedText);
@@ -123,20 +135,15 @@ export default function ProfilePage() {
         } catch (error) {
           console.error("Failed to translate user data", error);
           // Fallback to untranslated data on error
-          setTranslatedDisplayName(untranslatedName);
-          setTranslatedCrops(untranslatedCrops);
+          setTranslatedDisplayName(displayName);
+          setTranslatedCrops(crops);
         } finally {
           setIsTranslating(false);
         }
       };
 
       translateData();
-    } else if (user) {
-        setDisplayName(user.displayName || '');
-        setEmail(user.email || '');
-        setTranslatedDisplayName(user.displayName || '');
-    }
-  }, [user, userProfile, currentLanguage]);
+  }, [displayName, crops, currentLanguage]);
 
   
   const getInitials = (name: string | null | undefined) => {
@@ -277,9 +284,11 @@ export default function ProfilePage() {
                                 key={district.value}
                                 value={district.label}
                                 onSelect={(currentValue) => {
-                                  setLocation(districts.find(d => d.label.toLowerCase() === currentValue)?.value || '');
+                                  const selectedDistrict = districts.find(d => d.label.toLowerCase() === currentValue.toLowerCase());
+                                  setLocation(selectedDistrict?.value || '');
                                   setOpen(false);
                                 }}
+                                className="transition-all duration-200 ease-in-out hover:scale-105 hover:bg-accent"
                             >
                                 <Check
                                 className={cn(
@@ -298,7 +307,7 @@ export default function ProfilePage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="language">{t('profile.language')}</Label>
-              <Select value={language} onValueChange={setLanguage}>
+              <Select value={language} onValueChange={(value) => setLanguage(value as 'en' | 'hi' | 'kn')}>
                 <SelectTrigger id="language">
                   <SelectValue placeholder={t('profile.selectLanguage')} />
                 </SelectTrigger>
@@ -378,5 +387,3 @@ const ProfileSkeleton = () => {
     </div>
   );
 }
-
-    
