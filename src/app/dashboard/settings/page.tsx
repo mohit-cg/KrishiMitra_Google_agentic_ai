@@ -101,7 +101,6 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                     <p className="font-semibold">{t('settings.developedBy.teamName')}</p>
-                    <p className="text-sm text-muted-foreground">{t('settings.developedBy.orgName')}</p>
                 </CardContent>
             </Card>
             <Card>
