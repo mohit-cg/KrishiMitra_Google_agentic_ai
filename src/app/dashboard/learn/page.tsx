@@ -212,7 +212,7 @@ export default function LearnPage() {
     const getYoutubeEmbedUrl = (videoId: string | null): string => {
         if (!videoId) return "";
         const origin = typeof window !== 'undefined' ? window.location.origin : "";
-        return `https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${origin}`;
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${origin}&enablejsapi=1`;
     }
 
 
