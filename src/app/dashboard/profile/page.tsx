@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -277,8 +277,8 @@ export default function ProfilePage() {
                                 key={district.value}
                                 value={district.label}
                                 onSelect={(currentValue) => {
-                                  setLocation(district.value)
-                                  setOpen(false)
+                                  setLocation(districts.find(d => d.label.toLowerCase() === currentValue)?.value || '');
+                                  setOpen(false);
                                 }}
                             >
                                 <Check
@@ -378,3 +378,5 @@ const ProfileSkeleton = () => {
     </div>
   );
 }
+
+    
