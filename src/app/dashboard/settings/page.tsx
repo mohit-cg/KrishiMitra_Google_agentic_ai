@@ -116,12 +116,12 @@ export default function SettingsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Button asChild variant="outline">
-                <Link href="#">
+                <Link href="/dashboard/privacy">
                     <Shield className="mr-2 h-4 w-4"/> {t('settings.legal.privacy')}
                 </Link>
             </Button>
             <Button asChild variant="outline">
-                <Link href="#">
+                <Link href="/dashboard/terms">
                      <FileText className="mr-2 h-4 w-4"/> {t('settings.legal.terms')}
                 </Link>
             </Button>

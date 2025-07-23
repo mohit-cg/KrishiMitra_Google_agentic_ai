@@ -395,6 +395,96 @@
             "terms": "Terms of Use"
         }
     },
+    "privacy": {
+        "description": "Our commitment to your privacy.",
+        "backToSettings": "Back to Settings",
+        "lastUpdated": {
+            "title": "Last Updated",
+            "date": "July 26, 2024"
+        },
+        "introduction": {
+            "title": "Introduction",
+            "content": "Welcome to KrishiMitra AI. We are committed to protecting your privacy and handling your data in an open and transparent manner. This privacy policy sets out how we collect, use, and protect your information."
+        },
+        "information": {
+            "title": "Information We Collect",
+            "personal": {
+                "title": "Personal Information",
+                "content": "When you register, we collect your name, email, and location to create and manage your account."
+            },
+            "usage": {
+                "title": "Usage Data",
+                "content": "We collect information on how you interact with our services, such as features used and frequency of access."
+            },
+            "image": {
+                "title": "Image Data",
+                "content": "For our Crop Doctor feature, we collect images you upload. These are used solely for diagnosis and are not shared with third parties."
+            }
+        },
+        "useOfInfo": {
+            "title": "How We Use Your Information",
+            "content": "We use your information to provide and improve our services, personalize your experience, and communicate with you."
+        },
+        "dataSharing": {
+            "title": "Data Sharing",
+            "content": "We do not sell your personal data. We may share anonymized data with partners for research purposes, but never your personal identifiable information without your consent."
+        },
+        "dataSecurity": {
+            "title": "Data Security",
+            "content": "We implement a variety of security measures to maintain the safety of your personal information."
+        },
+        "yourRights": {
+            "title": "Your Rights",
+            "content": "You have the right to access, correct, or delete your personal data at any time through your profile settings or by contacting us."
+        },
+        "changes": {
+            "title": "Changes to This Policy",
+            "content": "We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page."
+        },
+        "contact": {
+            "title": "Contact Us",
+            "content": "If you have any questions about this Privacy Policy, please contact us at support@krishimitra.in."
+        }
+    },
+    "terms": {
+        "description": "Rules for using our service.",
+        "backToSettings": "Back to Settings",
+        "lastUpdated": {
+            "title": "Last Updated",
+            "date": "July 26, 2024"
+        },
+        "acceptance": {
+            "title": "Acceptance of Terms",
+            "content": "By accessing and using KrishiMitra AI, you accept and agree to be bound by the terms and provision of this agreement."
+        },
+        "useOfService": {
+            "title": "Use of Service",
+            "content": "You agree to use our services for lawful purposes only and in a way that does not infringe the rights of, restrict or inhibit anyone else's use and enjoyment of the service.",
+            "item1": "You are responsible for maintaining the confidentiality of your account and password.",
+            "item2": "The advice provided by the AI is for informational purposes only and should not be considered a substitute for professional agricultural advice.",
+            "item3": "You must not misuse our services by knowingly introducing viruses or other material that is malicious or technologically harmful."
+        },
+        "disclaimer": {
+            "title": "Disclaimer of Warranties",
+            "content": "The service is provided on an 'as is' and 'as available' basis without any warranties of any kind, either express or implied."
+        },
+        "limitation": {
+            "title": "Limitation of Liability",
+            "content": "In no event shall KrishiMitra AI or its developers be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+        },
+        "termination": {
+            "title": "Termination",
+            "content": "We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms."
+        },
+        "governingLaw": {
+            "title": "Governing Law",
+            "content": "These Terms shall be governed and construed in accordance with the laws of India, without regard to its conflict of law provisions."
+        },
+        "changes": {
+            "title": "Changes",
+            "content": "We reserve the right, at our sole discretion, to modify or replace these Terms at any time."
+        }
+    },
     "toast": {
         "browserNotSupported": "Browser Not Supported",
         "noVoiceSupport": "Your browser does not support voice recognition.",
