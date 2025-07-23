@@ -3,12 +3,13 @@
 
 import { useState, useRef, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Mic, Paperclip, Send, Square, X } from "lucide-react";
+import { Mic, Paperclip, Send, Square, X, ArrowLeft } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useTranslation } from "@/contexts/language-context";
 
@@ -160,10 +161,19 @@ export default function CommunityPage() {
 
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col">
-      <h1 className="text-3xl font-bold mb-2 font-headline">{t('community.title')}</h1>
-      <p className="text-muted-foreground mb-4">
-        {t('community.description')}
-      </p>
+       <div className="flex justify-between items-center mb-4">
+        <div>
+          <h1 className="text-3xl font-bold mb-2 font-headline">{t('community.title')}</h1>
+          <p className="text-muted-foreground">
+            {t('community.description')}
+          </p>
+        </div>
+        <Button asChild variant="outline">
+            <Link href="/dashboard">
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t('profile.backToDashboard')}
+            </Link>
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1">
         <Card className="md:col-span-1">
@@ -247,5 +257,3 @@ export default function CommunityPage() {
     </div>
   );
 }
-
-    
