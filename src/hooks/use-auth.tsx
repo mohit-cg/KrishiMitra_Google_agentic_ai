@@ -27,7 +27,7 @@ interface AuthContextType {
   signUpWithEmail: (email: string, pass: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
-  uploadProfileImage: (file: File) => Promise<string>;
+  uploadProfileImage: (file: File) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -136,6 +136,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
        throw new Error("No user is currently signed in.");
     }
     
+    // Data to update in Firestore
+    const firestoreData: Partial<UserProfile> = { ...data };
+
+    // Data to update in Firebase Auth
     const authUpdateData: { displayName?: string; photoURL?: string } = {};
     if (data.displayName && data.displayName !== currentUser.displayName) {
         authUpdateData.displayName = data.displayName;
@@ -144,31 +148,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         authUpdateData.photoURL = data.photoURL;
     }
 
+    // Update Firebase Auth profile if there's anything to update
     if (Object.keys(authUpdateData).length > 0) {
         await updateProfile(currentUser, authUpdateData);
     }
 
+    // Update Firestore document
     const docRef = doc(db, "users", currentUser.uid);
-    await setDoc(docRef, data, { merge: true });
+    await setDoc(docRef, firestoreData, { merge: true });
 
     // We must re-fetch the user and profile to ensure UI consistency
+    // This ensures the local state (user, userProfile) is updated
     setUser(auth.currentUser); 
     await getUserProfile(auth.currentUser!);
   };
 
-  const uploadProfileImage = async (file: File): Promise<string> => {
+  const uploadProfileImage = async (file: File): Promise<void> => {
     const currentUser = auth.currentUser;
     if (!currentUser) {
       throw new Error("No user is currently signed in.");
     }
     const filePath = `profile-images/${currentUser.uid}/${file.name}`;
     const storageRef = ref(storage, filePath);
+    
     await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(storageRef);
     
+    // This will update the photoURL in both Firebase Auth and Firestore,
+    // and then refresh the local state to update the UI.
     await updateUserProfile({ photoURL: downloadURL });
-    
-    return downloadURL;
   };
 
 
