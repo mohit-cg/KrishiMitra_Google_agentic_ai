@@ -183,7 +183,7 @@ export default function LearnPage() {
 
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
+    <>
       {playingVideoUrl && (
           <div className="fixed bottom-4 right-4 z-50">
               <Card className="w-[350px] shadow-2xl">
@@ -209,7 +209,7 @@ export default function LearnPage() {
                   </div>
                   <CardFooter className="p-2">
                        <Button asChild size="sm" className="w-full" variant="destructive">
-                            <Link href={playingVideoUrl.replace('/embed/', '/watch?v=').replace('?autoplay=1', '')} target="_blank" rel="noopener noreferrer">
+                            <Link href={playingVideoUrl.replace('/embed/', '/watch?v=').replace('?autoplay=1&origin=' + window.location.origin, '')} target="_blank" rel="noopener noreferrer">
                                 <Youtube className="mr-2 h-4 w-4" />
                                 Watch on YouTube
                             </Link>
@@ -218,155 +218,157 @@ export default function LearnPage() {
               </Card>
           </div>
       )}
-      <h1 className="text-3xl font-bold mb-2 font-headline">E-Learning Hub</h1>
-      <p className="text-muted-foreground mb-4">
-        Expand your knowledge with our collection of farming guides and tutorials.
-      </p>
+      <div className="container mx-auto p-4 md:p-8">
+        <h1 className="text-3xl font-bold mb-2 font-headline">E-Learning Hub</h1>
+        <p className="text-muted-foreground mb-4">
+            Expand your knowledge with our collection of farming guides and tutorials.
+        </p>
 
-      <div className="mb-8 flex items-center gap-2">
-          <div className="relative flex-grow">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input 
-                placeholder="Search for articles or videos on farming topics..."
-                className="pl-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button type="button" variant={isRecording ? "destructive" : "outline"} size="icon" onClick={handleMicClick}>
-            {isRecording ? <Square className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
-            <span className="sr-only">{isRecording ? "Stop Recording" : "Start Voice Search"}</span>
-          </Button>
-      </div>
+        <div className="mb-8 flex items-center gap-2">
+            <div className="relative flex-grow">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input 
+                    placeholder="Search for articles or videos on farming topics..."
+                    className="pl-10"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+            </div>
+            <Button type="button" variant={isRecording ? "destructive" : "outline"} size="icon" onClick={handleMicClick}>
+                {isRecording ? <Square className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                <span className="sr-only">{isRecording ? "Stop Recording" : "Start Voice Search"}</span>
+            </Button>
+        </div>
 
-      <Tabs defaultValue="articles" className="w-full" onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
-          <TabsTrigger value="articles">Articles & Guides</TabsTrigger>
-          <TabsTrigger value="videos">Video Tutorials</TabsTrigger>
-        </TabsList>
-        <TabsContent value="articles">
-            {(isSummarizing || (summarizedArticle && summarizedArticle.articles.length > 0) || (summarizedArticle && summarizedArticle.relevance === 'unrelated')) && (
-              <div className="my-6">
-                <h3 className="text-xl font-bold mb-4 font-headline">Web Search Results</h3>
-                {isSummarizing ? (
-                  <div className="space-y-4">
-                    <SummarizeSkeletonCard />
-                    <SummarizeSkeletonCard />
-                  </div>
-                ) : summarizedArticle ? (
-                  summarizedArticle.relevance === 'unrelated' ? (
-                    <Alert variant="destructive">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertTitle>Irrelevant Topic</AlertTitle>
-                      <AlertDescription>Please search for a topic related to agriculture.</AlertDescription>
-                    </Alert>
-                  ) : summarizedArticle.articles.length > 0 ? (
-                     <div className="space-y-4">
-                        {summarizedArticle.articles.map((article, index) => (
-                             <Card key={index}>
-                                <div className="flex flex-col sm:flex-row gap-4 p-4">
-                                    <div className="relative w-full sm:w-48 sm:h-32 shrink-0 aspect-video sm:aspect-auto">
-                                        <Image 
-                                            src={article.imageUrl} 
-                                            alt={article.title} 
-                                            layout="fill" 
-                                            objectFit="cover" 
-                                            data-ai-hint={article.imageHint}
-                                            className="rounded-md"
-                                        />
-                                    </div>
-                                    <div className="flex-1 flex flex-col justify-between">
-                                        <div>
-                                            <CardTitle className="text-lg">{article.title}</CardTitle>
-                                            <CardDescription className="mt-2 text-sm max-h-24 overflow-y-auto">{article.summary}</CardDescription>
-                                        </div>
-                                        <Button asChild className="w-full mt-4 sm:w-fit self-end">
-                                            <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
-                                                Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
-                                            </Link>
-                                        </Button>
-                                    </div>
-                                </div>
-                            </Card>
-                        ))}
-                     </div>
-                  ) : null
-                ) : null}
-              </div>
-            )}
-            
-            <h3 className="text-xl font-bold mt-8 mb-4 font-headline">Our Guides</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredArticles.length > 0 ? (
-                filteredArticles.map((article, index) => (
-                <Card key={index} className="flex flex-col">
-                    <CardHeader className="p-0">
-                    <div className="aspect-video relative">
-                        <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
+        <Tabs defaultValue="articles" className="w-full" onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
+            <TabsTrigger value="articles">Articles & Guides</TabsTrigger>
+            <TabsTrigger value="videos">Video Tutorials</TabsTrigger>
+            </TabsList>
+            <TabsContent value="articles">
+                {(isSummarizing || (summarizedArticle && summarizedArticle.articles.length > 0) || (summarizedArticle && summarizedArticle.relevance === 'unrelated')) && (
+                <div className="my-6">
+                    <h3 className="text-xl font-bold mb-4 font-headline">Web Search Results</h3>
+                    {isSummarizing ? (
+                    <div className="space-y-4">
+                        <SummarizeSkeletonCard />
+                        <SummarizeSkeletonCard />
                     </div>
-                    </CardHeader>
-                    <CardContent className="p-4 flex-grow">
-                    <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
-                    <CardDescription className="mt-2 text-sm">{article.description}</CardDescription>
-                    </CardContent>
-                    <CardFooter className="p-4 pt-0">
-                    <Button asChild className="w-full">
-                        <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
-                            Read More <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
-                    </Button>
-                    </CardFooter>
-                </Card>
-                ))
-            ) : showNoLocalResultsMessage ? (
-                <div className="md:col-span-2 lg:col-span-3">
-                   <NoArticlesFoundAlert query={searchQuery} />
-                </div>
-            ) : null }
-          </div>
-        </TabsContent>
-        <TabsContent value="videos">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {isSearchingVideos ? (
-                Array.from({length: 3}).map((_, index) => <VideoSkeletonCard key={index} />)
-            ) : videoResults.length > 0 ? (
-                videoResults.map((video, index) => (
-                  <Card key={index} className="flex flex-col group">
-                    <CardHeader className="p-0">
-                      <button onClick={() => playVideo(video.videoId)} className="block aspect-video relative overflow-hidden rounded-t-lg w-full">
-                        <Image src={video.thumbnailUrl} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint || "youtube thumbnail"} />
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <PlayCircle className="h-16 w-16 text-white/80"/>
+                    ) : summarizedArticle ? (
+                    summarizedArticle.relevance === 'unrelated' ? (
+                        <Alert variant="destructive">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Irrelevant Topic</AlertTitle>
+                        <AlertDescription>Please search for a topic related to agriculture.</AlertDescription>
+                        </Alert>
+                    ) : summarizedArticle.articles.length > 0 ? (
+                        <div className="space-y-4">
+                            {summarizedArticle.articles.map((article, index) => (
+                                <Card key={index}>
+                                    <div className="flex flex-col sm:flex-row gap-4 p-4">
+                                        <div className="relative w-full sm:w-48 sm:h-32 shrink-0 aspect-video sm:aspect-auto">
+                                            <Image 
+                                                src={article.imageUrl} 
+                                                alt={article.title} 
+                                                layout="fill" 
+                                                objectFit="cover" 
+                                                data-ai-hint={article.imageHint}
+                                                className="rounded-md"
+                                            />
+                                        </div>
+                                        <div className="flex-1 flex flex-col justify-between">
+                                            <div>
+                                                <CardTitle className="text-lg">{article.title}</CardTitle>
+                                                <CardDescription className="mt-2 text-sm max-h-24 overflow-y-auto">{article.summary}</CardDescription>
+                                            </div>
+                                            <Button asChild className="w-full mt-4 sm:w-fit self-end">
+                                                <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
+                                                    Read Full Article <ExternalLink className="ml-2 h-4 w-4" />
+                                                </Link>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </Card>
+                            ))}
                         </div>
-                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-md">{video.duration}</div>
-                      </button>
-                    </CardHeader>
-                    <CardContent className="p-4 flex-grow">
-                      <CardTitle className="text-lg font-semibold">{video.title}</CardTitle>
-                      <CardDescription className="mt-2 text-sm">{video.description}</CardDescription>
-                    </CardContent>
-                    <CardFooter className="p-4 pt-0">
-                      <Button onClick={() => playVideo(video.videoId)} variant="destructive" className="w-full">
-                          Watch Now <Film className="ml-2 h-4 w-4" />
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))
-            ) : (
-                <div className="md:col-span-2 lg:col-span-3">
-                    <Alert>
-                        <Info className="h-4 w-4" />
-                        <AlertTitle>No Videos Found</AlertTitle>
-                        <AlertDescription>
-                            Your search for "{searchQuery}" did not return any videos. Please try a different search term.
-                        </AlertDescription>
-                    </Alert>
+                    ) : null
+                    ) : null}
                 </div>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+                )}
+                
+                <h3 className="text-xl font-bold mt-8 mb-4 font-headline">Our Guides</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredArticles.length > 0 ? (
+                    filteredArticles.map((article, index) => (
+                    <Card key={index} className="flex flex-col">
+                        <CardHeader className="p-0">
+                        <div className="aspect-video relative">
+                            <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
+                        </div>
+                        </CardHeader>
+                        <CardContent className="p-4 flex-grow">
+                        <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
+                        <CardDescription className="mt-2 text-sm">{article.description}</CardDescription>
+                        </CardContent>
+                        <CardFooter className="p-4 pt-0">
+                        <Button asChild className="w-full">
+                            <Link href={`https://www.google.com/search?q=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer">
+                                Read More <ArrowRight className="ml-2 h-4 w-4" />
+                            </Link>
+                        </Button>
+                        </CardFooter>
+                    </Card>
+                    ))
+                ) : showNoLocalResultsMessage ? (
+                    <div className="md:col-span-2 lg:col-span-3">
+                    <NoArticlesFoundAlert query={searchQuery} />
+                    </div>
+                ) : null }
+            </div>
+            </TabsContent>
+            <TabsContent value="videos">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                {isSearchingVideos ? (
+                    Array.from({length: 3}).map((_, index) => <VideoSkeletonCard key={index} />)
+                ) : videoResults.length > 0 ? (
+                    videoResults.map((video, index) => (
+                    <Card key={index} className="flex flex-col group">
+                        <CardHeader className="p-0">
+                        <button onClick={() => playVideo(video.videoId)} className="block aspect-video relative overflow-hidden rounded-t-lg w-full">
+                            <Image src={video.thumbnailUrl} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint || "youtube thumbnail"} />
+                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <PlayCircle className="h-16 w-16 text-white/80"/>
+                            </div>
+                            <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-md">{video.duration}</div>
+                        </button>
+                        </CardHeader>
+                        <CardContent className="p-4 flex-grow">
+                        <CardTitle className="text-lg font-semibold">{video.title}</CardTitle>
+                        <CardDescription className="mt-2 text-sm">{video.description}</CardDescription>
+                        </CardContent>
+                        <CardFooter className="p-4 pt-0">
+                        <Button onClick={() => playVideo(video.videoId)} variant="destructive" className="w-full">
+                            Watch Now <Film className="ml-2 h-4 w-4" />
+                        </Button>
+                        </CardFooter>
+                    </Card>
+                    ))
+                ) : (
+                    <div className="md:col-span-2 lg:col-span-3">
+                        <Alert>
+                            <Info className="h-4 w-4" />
+                            <AlertTitle>No Videos Found</AlertTitle>
+                            <AlertDescription>
+                                Your search for "{searchQuery}" did not return any videos. Please try a different search term.
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+                )}
+            </div>
+            </TabsContent>
+        </Tabs>
+      </div>
+    </>
   );
 }
 
