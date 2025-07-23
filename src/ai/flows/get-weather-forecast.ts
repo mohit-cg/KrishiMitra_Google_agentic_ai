@@ -84,22 +84,31 @@ const mockWeatherData: Record<string, GetWeatherForecastOutput> = {
 
 const generateRandomForecast = (city: string): GetWeatherForecastOutput => {
   const conditions = Object.keys(conditionMap);
-  const days = ['Today', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  
   const randomConditionKey = () => conditions[Math.floor(Math.random() * conditions.length)];
+  
+  const forecast: z.infer<typeof DailyForecastSchema>[] = [];
+  const today = new Date();
 
-  const forecast = days.map((day, index) => {
+  for (let i = 0; i < 7; i++) {
+    const futureDate = new Date(today);
+    futureDate.setDate(today.getDate() + i);
+    
+    const dayName = i === 0 
+      ? 'Today' 
+      : futureDate.toLocaleDateString('en-US', { weekday: 'long' });
+
     const condition = randomConditionKey();
     const icon = conditionMap[condition];
-    return {
-      day: day === 'Today' ? 'Today' : new Date(Date.now() + (index * 24 * 60 * 60 * 1000)).toLocaleDateString('en-US', { weekday: 'long' }),
+    
+    forecast.push({
+      day: dayName,
       temp: `${Math.floor(Math.random() * 15) + 20}°C`,
       condition,
       icon,
-    };
-  });
+    });
+  }
   
-  const currentConditionKey = randomConditionKey();
+  const currentConditionKey = forecast[0].condition;
   const currentIcon = conditionMap[currentConditionKey];
 
   return {
@@ -111,8 +120,7 @@ const generateRandomForecast = (city: string): GetWeatherForecastOutput => {
       humidity: `${Math.floor(Math.random() * 50) + 40}%`,
       icon: currentIcon,
     },
-    // Ensure the forecast array has exactly 7 items
-    forecast: forecast.slice(0, 7) as z.infer<typeof GetWeatherForecastOutputSchema>['forecast'],
+    forecast: forecast as z.infer<typeof GetWeatherForecastOutputSchema>['forecast'],
   };
 }
 
