@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 const GOV_PORTAL_URL = "https://agricoop.gov.in/";
@@ -15,11 +15,18 @@ export default function GovernmentPortalPage() {
                 Showing content from <Link href={GOV_PORTAL_URL} target="_blank" rel="noopener noreferrer" className="underline">{GOV_PORTAL_URL}</Link>
             </p>
           </div>
-          <Button asChild variant="outline">
-              <Link href={GOV_PORTAL_URL} target="_blank" rel="noopener noreferrer">
-                  Open in New Tab <ExternalLink className="ml-2 h-4 w-4"/>
-              </Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button asChild variant="outline">
+                <Link href="/dashboard/shop">
+                    <ArrowLeft className="mr-2 h-4 w-4"/> Back to Store
+                </Link>
+            </Button>
+            <Button asChild variant="outline">
+                <Link href={GOV_PORTAL_URL} target="_blank" rel="noopener noreferrer">
+                    Open in New Tab <ExternalLink className="ml-2 h-4 w-4"/>
+                </Link>
+            </Button>
+          </div>
       </div>
       <p className="text-xs text-muted-foreground mb-4">Note: Some government websites may not work correctly when embedded. If you experience issues, please use the "Open in New Tab" button.</p>
       <div className="flex-1 border rounded-md overflow-hidden">
