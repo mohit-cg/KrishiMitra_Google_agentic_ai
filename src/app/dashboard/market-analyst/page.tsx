@@ -8,9 +8,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, ArrowLeft } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "@/contexts/language-context";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function MarketAnalystPage() {
   const { t } = useTranslation();
@@ -36,10 +38,20 @@ export default function MarketAnalystPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-2 font-headline">{t('marketAnalyst.title')}</h1>
-      <p className="text-muted-foreground mb-8">
-        {t('marketAnalyst.description')}
-      </p>
+      <div className="flex justify-between items-center mb-4">
+        <div>
+            <h1 className="text-3xl font-bold mb-2 font-headline">{t('marketAnalyst.title')}</h1>
+            <p className="text-muted-foreground">
+                {t('marketAnalyst.description')}
+            </p>
+        </div>
+        <Button asChild variant="outline">
+            <Link href="/dashboard">
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t('profile.backToDashboard')}
+            </Link>
+        </Button>
+      </div>
+      
       <MarketAnalystClient />
       
       <div className="mt-12">
@@ -61,5 +73,3 @@ export default function MarketAnalystPage() {
     </div>
   );
 }
-
-    
