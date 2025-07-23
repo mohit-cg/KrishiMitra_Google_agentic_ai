@@ -27,7 +27,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [isSignUp, setIsSignUp] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<AuthFormValues>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<AuthFormValues>({
     resolver: zodResolver(authSchema),
   });
 
@@ -41,7 +41,7 @@ export default function LoginPage() {
     try {
       if (isSignUp) {
         await signUpWithEmail(data.email, data.password);
-        toast({ title: "Sign Up Successful", description: "You can now log in." });
+        toast({ title: "Sign Up Successful", description: "Welcome! Please log in to continue." });
         setIsSignUp(false); // Switch to login view after successful signup
       } else {
         await signInWithEmail(data.email, data.password);
@@ -72,59 +72,56 @@ export default function LoginPage() {
 
   return (
     <div className="w-full h-screen lg:grid lg:grid-cols-2">
-      <div className="flex items-center justify-center py-12 bg-background">
-        <div className="mx-auto grid w-[350px] gap-6">
-          <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold font-headline flex items-center justify-center gap-2">
-              <Icons.logo className="h-8 w-8 text-primary" />
-              KrishiMitra AI
-            </h1>
-            <p className="text-balance text-muted-foreground">
-              Your AI-powered farming companion
-            </p>
-          </div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl font-headline">{isSignUp ? 'Create an Account' : 'Welcome Back'}</CardTitle>
-              <CardDescription>
-                {isSignUp ? 'Enter your email and password to sign up.' : 'Sign in to access your dashboard.'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="m@example.com" {...register('email')} />
-                  {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input id="password" type="password" {...register('password')} />
-                  {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
-                </div>
-                <Button type="submit" disabled={loading} className="w-full">
-                  {loading ? 'Processing...' : (isSignUp ? 'Sign Up' : 'Sign In')}
-                </Button>
-              </form>
-              <div className="mt-4 text-center text-sm">
-                {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-                <Button variant="link" onClick={() => setIsSignUp(!isSignUp)} className="pl-1">
-                  {isSignUp ? 'Sign In' : 'Sign Up'}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-      <div className="hidden bg-muted lg:block">
+       <div className="hidden bg-muted lg:block relative">
         <Image
           src="https://placehold.co/1200x900.png"
           alt="Image of a lush farm"
-          data-ai-hint="lush farm"
+          data-ai-hint="lush farm sunset"
           width="1200"
           height="900"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className="h-full w-full object-cover"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <div className="absolute bottom-10 left-10 text-white">
+            <h2 className="text-4xl font-bold font-headline">Empowering Agriculture Through Technology</h2>
+            <p className="text-lg mt-2 max-w-lg">Join a community of modern farmers leveraging AI for better yields and sustainable practices.</p>
+        </div>
+      </div>
+      <div className="flex items-center justify-center py-12 bg-background">
+        <div className="mx-auto grid w-[380px] gap-8">
+          <div className="grid gap-2 text-center">
+            <Link href="/" className="flex items-center justify-center gap-2 font-semibold font-headline text-2xl text-primary">
+                <Icons.logo className="h-7 w-7" />
+                <span>KrishiMitra AI</span>
+            </Link>
+            <p className="text-balance text-muted-foreground">
+              {isSignUp ? 'Create your account to get started.' : 'Welcome back! Sign in to your dashboard.'}
+            </p>
+          </div>
+          
+          <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" placeholder="name@example.com" {...register('email')} />
+              {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" placeholder="••••••••" {...register('password')} />
+              {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+            </div>
+            <Button type="submit" disabled={isSubmitting} className="w-full mt-2 py-3 text-base">
+              {isSubmitting ? 'Processing...' : (isSignUp ? 'Create Account' : 'Sign In')}
+            </Button>
+          </form>
+
+          <div className="mt-2 text-center text-sm">
+            {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+            <Button variant="link" onClick={() => setIsSignUp(!isSignUp)} className="pl-1 text-primary">
+              {isSignUp ? 'Sign In' : 'Sign Up'}
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
