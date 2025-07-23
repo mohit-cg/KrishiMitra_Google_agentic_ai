@@ -5,11 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Mic, Search, ShoppingCart, Square } from "lucide-react";
+import { ArrowLeft, Mic, PackageSearch, Search, ShoppingCart, Square } from "lucide-react";
 import { useTranslation } from "@/contexts/language-context";
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const productsData = [
   { key: "organicFertilizer", price: "₹450", image: "https://placehold.co/400x400.png", hint: "fertilizer bag" },
@@ -105,25 +106,44 @@ export default function MarketplacePage() {
 
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.map((product, index) => (
-          <Card key={index} className="overflow-hidden">
-            <CardHeader className="p-0">
-              <div className="aspect-square relative">
-                <Image src={product.image} alt={product.name} layout="fill" objectFit="cover" data-ai-hint={product.hint} />
-              </div>
-            </CardHeader>
-            <CardContent className="p-4">
-              <CardTitle className="text-lg font-semibold">{product.name}</CardTitle>
-              <p className="text-2xl font-bold text-primary mt-2">{product.price}</p>
-            </CardContent>
-            <CardFooter className="p-4 pt-0">
-              <Button className="w-full">
-                <ShoppingCart className="mr-2 h-4 w-4" /> {t('shop.marketplace.addToCart')}
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product, index) => (
+            <Card key={index} className="overflow-hidden">
+              <CardHeader className="p-0">
+                <div className="aspect-square relative">
+                  <Image src={product.image} alt={product.name} layout="fill" objectFit="cover" data-ai-hint={product.hint} />
+                </div>
+              </CardHeader>
+              <CardContent className="p-4">
+                <CardTitle className="text-lg font-semibold">{product.name}</CardTitle>
+                <p className="text-2xl font-bold text-primary mt-2">{product.price}</p>
+              </CardContent>
+              <CardFooter className="p-4 pt-0">
+                <Button className="w-full">
+                  <ShoppingCart className="mr-2 h-4 w-4" /> {t('shop.marketplace.addToCart')}
+                </Button>
+              </CardFooter>
+            </Card>
+          ))
+        ) : (
+          <div className="sm:col-span-2 md:col-span-3 lg:col-span-4">
+            <NoProductsFoundAlert query={searchQuery} />
+          </div>
+        )}
       </div>
     </div>
   );
 }
+
+const NoProductsFoundAlert = ({ query }: { query: string }) => {
+    const { t } = useTranslation();
+    return (
+        <Alert>
+            <PackageSearch className="h-4 w-4" />
+            <AlertTitle>{t('shop.marketplace.comingSoonTitle')}</AlertTitle>
+            <AlertDescription>
+                {t('shop.marketplace.comingSoonMessage', { query })}
+            </AlertDescription>
+        </Alert>
+    );
+};

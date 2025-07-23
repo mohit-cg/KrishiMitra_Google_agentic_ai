@@ -61,15 +61,6 @@
             "fri": "FRI",
             "sat": "SAT",
             "sun": "SUN"
-        },
-        "daysLong": {
-            "today": "Today",
-            "tuesday": "Tuesday",
-            "wednesday": "Wednesday",
-            "thursday": "Thursday",
-            "friday": "Friday",
-            "saturday": "Saturday",
-            "sunday": "Sunday"
         }
     },
     "cropDoctor": {
@@ -232,26 +223,26 @@
             "amit": "Amit"
         },
         "messages": {
-            "general": [
-                "Has anyone tried the new organic fertilizer? Seeing good results here.",
-                "Yes, I have! My tomato yield has increased by almost 15%.",
-                "That's great to hear! I was thinking of buying it. Is it good for leafy greens?",
-                "Absolutely! My spinach has never been healthier."
-            ],
-            "tomato": [
-                "My tomato plants are showing some yellow leaves. Any advice?",
-                "Could be a nitrogen deficiency. Have you tested your soil recently?"
-            ],
-            "pest": [
-                "Whiteflies are a major issue in my cotton crop. What's the best way to handle them?"
-            ],
-            "organic": [
-                "I'm looking for good organic composting techniques. Any resources?",
-                "The E-Learning Hub has some great articles on vermicomposting!"
-            ],
-            "market": [
-                "Onion prices in Pune seem to be dropping. Should I sell now or wait?"
-            ]
+            "general": {
+                "0": "Has anyone tried the new organic fertilizer? Seeing good results here.",
+                "1": "Yes, I have! My tomato yield has increased by almost 15%.",
+                "2": "That's great to hear! I was thinking of buying it. Is it good for leafy greens?",
+                "3": "Absolutely! My spinach has never been healthier."
+            },
+            "tomato": {
+                "0": "My tomato plants are showing some yellow leaves. Any advice?",
+                "1": "Could be a nitrogen deficiency. Have you tested your soil recently?"
+            },
+            "pest": {
+                "0": "Whiteflies are a major issue in my cotton crop. What's the best way to handle them?"
+            },
+            "organic": {
+                "0": "I'm looking for good organic composting techniques. Any resources?",
+                "1": "The E-Learning Hub has some great articles on vermicomposting!"
+            },
+            "market": {
+                "0": "Onion prices in Pune seem to be dropping. Should I sell now or wait?"
+            }
         }
     },
     "shop": {
@@ -278,6 +269,8 @@
             "description": "Quality products for all your farming needs from various sellers.",
             "backToStore": "Back to Store",
             "addToCart": "Add to Cart",
+            "comingSoonTitle": "Coming Soon!",
+            "comingSoonMessage": "We couldn't find a product matching '{{query}}'. We are constantly expanding our inventory, so please check back later!",
             "products": {
                 "organicFertilizer": "Organic Fertilizer",
                 "pesticideSpray": "Pesticide Spray",
@@ -297,7 +290,7 @@
     "learn": {
         "title": "E-Learning Hub",
         "description": "Expand your knowledge with our collection of farming guides and tutorials.",
-        "searchPlaceholder": "Search for articles or videos on farming topics...",
+        "searchPlaceholder": "Search for articles, videos, or products...",
         "stopRecording": "Stop Recording",
         "startVoiceSearch": "Start Voice Search",
         "closePlayer": "Close Player",
@@ -411,5 +404,3 @@
         "uploadFailedDesc": "Could not change your profile picture. Please try again."
     }
 }
-
-    
