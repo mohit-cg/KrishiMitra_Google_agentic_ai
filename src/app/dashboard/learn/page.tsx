@@ -197,9 +197,9 @@ export default function LearnPage() {
       
     const getYoutubeWatchUrl = (embedUrl: string): string => {
         try {
-            const videoIdMatch = embedUrl.match(/embed\/([^?]+)/);
-            if (videoIdMatch && videoIdMatch[1]) {
-                const videoId = videoIdMatch[1];
+            const url = new URL(embedUrl);
+            const videoId = url.pathname.split('/').pop();
+            if (videoId) {
                 return `https://www.youtube.com/watch?v=${videoId}`;
             }
         } catch (error) {
@@ -448,6 +448,3 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
-
-
-    
