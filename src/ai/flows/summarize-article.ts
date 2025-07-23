@@ -13,6 +13,7 @@ import {z} from 'genkit';
 
 const SummarizeArticleInputSchema = z.object({
   query: z.string().describe('The topic to search for and summarize.'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
 });
 export type SummarizeArticleInput = z.infer<typeof SummarizeArticleInputSchema>;
 
@@ -40,6 +41,8 @@ const summarizeArticlePrompt = ai.definePrompt({
   input: {schema: SummarizeArticleInputSchema},
   output: {schema: SummarizeArticleOutputSchema},
   prompt: `You are an expert research assistant for farmers. Your task is to process the user's query.
+  
+  The farmer's preferred language is {{language}}. All of your text output (title, summary) MUST be in this language.
 
   Query: "{{query}}"
   

@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info, ExternalLink, AlertCircle, SearchX, Youtube } from "lucide-react";
+import { ArrowRight, Film, Mic, PlayCircle, Search, Square, X, Info, ExternalLink, AlertCircle, SearchX, Youtube, ArrowLeft } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 import { searchYoutubeVideos, type SearchYoutubeVideosOutput } from '@/ai/flows/search-youtube-videos';
 import { summarizeArticle, type SummarizeArticleOutput } from '@/ai/flows/summarize-article';
@@ -86,7 +86,7 @@ const SpeechRecognition =
 
 
 export default function LearnPage() {
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
 
     const articles = useMemo(() => initialArticlesData.map(article => ({
         ...article,
@@ -136,7 +136,7 @@ export default function LearnPage() {
             setIsSummarizing(true);
             setSummarizedArticle(null);
             try {
-                const result = await summarizeArticle({query: searchQuery});
+                const result = await summarizeArticle({query: searchQuery, language});
                 setSummarizedArticle(result);
             } catch (error) {
                 console.error("Article summarization failed", error);
@@ -150,7 +150,7 @@ export default function LearnPage() {
         // Debounce search to avoid excessive API calls
         const debounceTimer = setTimeout(handleSearch, 800);
         return () => clearTimeout(debounceTimer);
-    }, [searchQuery, activeTab, initialVideos, t]);
+    }, [searchQuery, activeTab, initialVideos, t, language]);
 
 
     const handleMicClick = () => {
@@ -162,7 +162,8 @@ export default function LearnPage() {
         const recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = false;
-        recognition.lang = 'en-IN';
+        const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
+        recognition.lang = langMap[language] || 'en-IN';
     
         recognition.onstart = () => setIsRecording(true);
         recognition.onresult = (event) => setSearchQuery(event.results[0][0].transcript);
@@ -256,10 +257,20 @@ export default function LearnPage() {
           </div>
       )}
       <div className="container mx-auto p-4 md:p-8">
-        <h1 className="text-3xl font-bold mb-2 font-headline">{t('learn.title')}</h1>
-        <p className="text-muted-foreground mb-4">
-            {t('learn.description')}
-        </p>
+        <div className="flex justify-between items-center mb-4">
+            <div>
+                <h1 className="text-3xl font-bold mb-2 font-headline">{t('learn.title')}</h1>
+                <p className="text-muted-foreground">
+                    {t('learn.description')}
+                </p>
+            </div>
+            <Button asChild variant="outline">
+                <Link href="/dashboard">
+                    <ArrowLeft className="mr-2 h-4 w-4" /> {t('profile.backToDashboard')}
+                </Link>
+            </Button>
+        </div>
+
 
         <div className="mb-8 flex items-center gap-2">
             <div className="relative flex-grow">
@@ -459,5 +470,3 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
-
-    
