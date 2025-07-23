@@ -13,8 +13,8 @@ import wav from 'wav';
 // Define language-to-voice mapping
 const voiceMap = {
   en: 'Achernar', // Female
-  hi: 'Miaplacidus', // Female
-  kn: 'Miaplacidus', // Female, as there isn't a specific Kannada voice, Hindi is a fallback
+  hi: 'Algenib', // Female - Changed from Miaplacidus
+  kn: 'Schedar', // Female - Changed from Miaplacidus
 };
 type Language = keyof typeof voiceMap;
 
