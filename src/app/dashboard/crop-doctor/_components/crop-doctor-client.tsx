@@ -76,7 +76,7 @@ export function CropDoctorClient() {
     setIsGeneratingSpeech(true);
     setActiveAudio(null);
     try {
-      const response = await generateSpeech(text);
+      const response = await generateSpeech({ text, language });
       if (response.media) {
         if (!audioRef.current) {
           audioRef.current = new Audio();
