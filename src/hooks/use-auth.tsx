@@ -136,36 +136,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
        throw new Error("No user is currently signed in.");
     }
     
-    try {
-        // Data to update in Firestore
-        const firestoreData: Partial<UserProfile> = { ...data };
+    // Data to update in Firestore
+    const firestoreData: Partial<UserProfile> = { ...data };
 
-        // Data to update in Firebase Auth
-        const authUpdateData: { displayName?: string; photoURL?: string } = {};
-        if (data.displayName && data.displayName !== currentUser.displayName) {
-            authUpdateData.displayName = data.displayName;
-        }
-        if (data.photoURL && data.photoURL !== currentUser.photoURL) {
-            authUpdateData.photoURL = data.photoURL;
-        }
-
-        // Update Firebase Auth profile if there's anything to update
-        if (Object.keys(authUpdateData).length > 0) {
-            await updateProfile(currentUser, authUpdateData);
-        }
-
-        // Update Firestore document
-        const docRef = doc(db, "users", currentUser.uid);
-        await setDoc(docRef, firestoreData, { merge: true });
-
-        // We must re-fetch the user and profile to ensure UI consistency
-        // This ensures the local state (user, userProfile) is updated
-        setUser(auth.currentUser); 
-        await getUserProfile(auth.currentUser!);
-    } catch (error) {
-        console.error("Error updating profile:", error);
-        throw error; // Re-throw to be handled by the caller
+    // Data to update in Firebase Auth
+    const authUpdateData: { displayName?: string; photoURL?: string } = {};
+    if (data.displayName && data.displayName !== currentUser.displayName) {
+        authUpdateData.displayName = data.displayName;
     }
+    if (data.photoURL && data.photoURL !== currentUser.photoURL) {
+        authUpdateData.photoURL = data.photoURL;
+    }
+
+    // Update Firebase Auth profile if there's anything to update
+    if (Object.keys(authUpdateData).length > 0) {
+        await updateProfile(currentUser, authUpdateData);
+    }
+
+    // Update Firestore document
+    const docRef = doc(db, "users", currentUser.uid);
+    await setDoc(docRef, firestoreData, { merge: true });
+
+    // We must re-fetch the user and profile to ensure UI consistency
+    // This ensures the local state (user, userProfile) is updated
+    setUser(auth.currentUser); 
+    await getUserProfile(auth.currentUser!);
   };
 
   const uploadProfileImage = async (file: File): Promise<void> => {
@@ -174,20 +169,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw new Error("No user is currently signed in.");
     }
 
-    try {
-        const filePath = `profile-images/${currentUser.uid}/${file.name}`;
-        const storageRef = ref(storage, filePath);
-        
-        await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(storageRef);
-        
-        // This will update the photoURL in both Firebase Auth and Firestore,
-        // and then refresh the local state to update the UI.
-        await updateUserProfile({ photoURL: downloadURL });
-    } catch (error) {
-        console.error("Error uploading profile image:", error);
-        throw error; // Re-throw to be handled by the caller's catch/finally blocks
-    }
+    const filePath = `profile-images/${currentUser.uid}/${file.name}`;
+    const storageRef = ref(storage, filePath);
+    
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
+    
+    // This will update the photoURL in both Firebase Auth and Firestore,
+    // and then refresh the local state to update the UI.
+    await updateUserProfile({ photoURL: downloadURL });
   };
 
 
