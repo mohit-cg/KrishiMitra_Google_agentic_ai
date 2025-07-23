@@ -2,10 +2,11 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Cloud, Sun, CloudRain, CloudSun, Wind, Droplets, Search } from "lucide-react";
+import { Cloud, Sun, CloudRain, CloudSun, Wind, Droplets, Search, ArrowLeft } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getWeatherForecast, GetWeatherForecastOutput } from '@/ai/flows/get-weather-forecast';
 import { toast } from '@/hooks/use-toast';
@@ -67,23 +68,30 @@ export default function WeatherPage() {
   return (
     <div className="container mx-auto p-4 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-        <div>
+        <div className="flex-1">
             <h1 className="text-3xl font-bold mb-2 font-headline">{t('weather.title')}</h1>
             <p className="text-muted-foreground">
                 {t('weather.description')}
             </p>
         </div>
-        <form onSubmit={handleSearch} className="flex items-center gap-2 mt-4 md:mt-0">
-          <Input 
-            placeholder={t('weather.enterCity')}
-            value={inputCity}
-            onChange={(e) => setInputCity(e.target.value)}
-            className="min-w-[200px]"
-          />
-          <Button type="submit" size="icon" disabled={isLoading}>
-            <Search className="h-4 w-4"/>
-          </Button>
-        </form>
+        <div className="flex items-center gap-2 mt-4 md:mt-0">
+          <form onSubmit={handleSearch} className="flex items-center gap-2">
+            <Input 
+              placeholder={t('weather.enterCity')}
+              value={inputCity}
+              onChange={(e) => setInputCity(e.target.value)}
+              className="min-w-[200px]"
+            />
+            <Button type="submit" size="icon" disabled={isLoading}>
+              <Search className="h-4 w-4"/>
+            </Button>
+          </form>
+           <Button asChild variant="outline">
+                <Link href="/dashboard">
+                    <ArrowLeft className="mr-2 h-4 w-4" /> {t('profile.backToDashboard')}
+                </Link>
+            </Button>
+        </div>
       </div>
 
 
@@ -100,7 +108,7 @@ export default function WeatherPage() {
               {getIcon(weatherData.current.icon, "h-24 w-24 text-accent")}
               <div>
                 <p className="text-6xl font-bold">{weatherData.current.temperature}</p>
-                <p className="text-muted-foreground">{weatherData.current.condition}</p>
+                <p className="text-muted-foreground">{t(`weather.conditions.${weatherData.current.condition}`, weatherData.current.condition)}</p>
               </div>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p className="flex items-center"><Wind className="mr-2 h-4 w-4" /> {t('weather.wind')}: {weatherData.current.wind}</p>
@@ -120,7 +128,7 @@ export default function WeatherPage() {
                   <CardContent className="flex flex-col items-center gap-2">
                     {getIcon(day.icon, "h-10 w-10 text-accent")}
                     <p className="text-xl font-semibold">{day.temp}</p>
-                    <p className="text-sm text-muted-foreground">{day.condition}</p>
+                    <p className="text-sm text-muted-foreground">{t(`weather.conditions.${day.condition}`, day.condition)}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -177,5 +185,3 @@ const WeatherSkeleton = () => (
         </div>
     </>
 );
-
-    

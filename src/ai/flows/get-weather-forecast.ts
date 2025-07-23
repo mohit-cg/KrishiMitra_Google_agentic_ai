@@ -22,7 +22,7 @@ export type GetWeatherForecastInput = z.infer<
 const DailyForecastSchema = z.object({
   day: z.string().describe('The day of the week (e.g., "Tuesday").'),
   temp: z.string().describe('The temperature (e.g., "32°C").'),
-  condition: z.string().describe('The weather condition (e.g., "Sunny").'),
+  condition: z.string().describe('The weather condition localization key (e.g., "sunny", "partlyCloudy").'),
   icon: z.enum(['CloudSun', 'Sun', 'CloudRain', 'Cloud', 'Wind', 'Droplets']).describe('An icon representing the condition.'),
 });
 
@@ -30,7 +30,7 @@ const GetWeatherForecastOutputSchema = z.object({
   city: z.string().describe('The city of the forecast.'),
   current: z.object({
     temperature: z.string().describe('The current temperature.'),
-    condition: z.string().describe('The current weather condition.'),
+    condition: z.string().describe('The current weather condition localization key.'),
     wind: z.string().describe('The current wind speed.'),
     humidity: z.string().describe('The current humidity level.'),
     icon: z.enum(['CloudSun', 'Sun', 'CloudRain', 'Cloud', 'Wind', 'Droplets']).describe('An icon representing the current condition.'),
@@ -41,49 +41,56 @@ export type GetWeatherForecastOutput = z.infer<
   typeof GetWeatherForecastOutputSchema
 >;
 
+// Map condition keys to icons
+const conditionMap: Record<string, 'CloudSun' | 'Sun' | 'CloudRain' | 'Cloud'> = {
+    sunny: 'Sun',
+    partlyCloudy: 'CloudSun',
+    cloudy: 'Cloud',
+    showers: 'CloudRain',
+    rainy: 'CloudRain',
+    humidAndCloudy: 'Cloud',
+    thunderstorms: 'CloudRain',
+};
+
+
 const mockWeatherData: Record<string, GetWeatherForecastOutput> = {
   pune: {
     city: 'Pune',
-    current: { temperature: '31°C', condition: 'Partly Cloudy', wind: '12 km/h', humidity: '55%', icon: 'CloudSun' },
+    current: { temperature: '31°C', condition: 'partlyCloudy', wind: '12 km/h', humidity: '55%', icon: 'CloudSun' },
     forecast: [
-      { day: 'Today', temp: '31°C', condition: 'Partly Cloudy', icon: 'CloudSun' },
-      { day: 'Tuesday', temp: '32°C', condition: 'Sunny', icon: 'Sun' },
-      { day: 'Wednesday', temp: '30°C', condition: 'Rainy', icon: 'CloudRain' },
-      { day: 'Thursday', temp: '33°C', condition: 'Sunny', icon: 'Sun' },
-      { day: 'Friday', temp: '29°C', condition: 'Showers', icon: 'CloudRain' },
-      { day: 'Saturday', temp: '31°C', condition: 'Cloudy', icon: 'Cloud' },
-      { day: 'Sunday', temp: '32°C', condition: 'Partly Cloudy', icon: 'CloudSun' },
+      { day: 'Today', temp: '31°C', condition: 'partlyCloudy', icon: 'CloudSun' },
+      { day: 'Tuesday', temp: '32°C', condition: 'sunny', icon: 'Sun' },
+      { day: 'Wednesday', temp: '30°C', condition: 'rainy', icon: 'CloudRain' },
+      { day: 'Thursday', temp: '33°C', condition: 'sunny', icon: 'Sun' },
+      { day: 'Friday', temp: '29°C', condition: 'showers', icon: 'CloudRain' },
+      { day: 'Saturday', temp: '31°C', condition: 'cloudy', icon: 'Cloud' },
+      { day: 'Sunday', temp: '32°C', condition: 'partlyCloudy', icon: 'CloudSun' },
     ],
   },
   mumbai: {
     city: 'Mumbai',
-    current: { temperature: '32°C', condition: 'Humid & Cloudy', wind: '18 km/h', humidity: '75%', icon: 'Cloud' },
+    current: { temperature: '32°C', condition: 'humidAndCloudy', wind: '18 km/h', humidity: '75%', icon: 'Cloud' },
     forecast: [
-      { day: 'Today', temp: '32°C', condition: 'Humid & Cloudy', icon: 'Cloud' },
-      { day: 'Tuesday', temp: '33°C', condition: 'Thunderstorms', icon: 'CloudRain' },
-      { day: 'Wednesday', temp: '31°C', condition: 'Cloudy', icon: 'Cloud' },
-      { day: 'Thursday', temp: '34°C', condition: 'Sunny', icon: 'Sun' },
-      { day: 'Friday', temp: '32°C', condition: 'Showers', icon: 'CloudRain' },
-      { day: 'Saturday', temp: '32°C', condition: 'Cloudy', icon: 'Cloud' },
-      { day: 'Sunday', temp: '33°C', condition: 'Partly Cloudy', icon: 'CloudSun' },
+      { day: 'Today', temp: '32°C', condition: 'humidAndCloudy', icon: 'Cloud' },
+      { day: 'Tuesday', temp: '33°C', condition: 'thunderstorms', icon: 'CloudRain' },
+      { day: 'Wednesday', temp: '31°C', condition: 'cloudy', icon: 'Cloud' },
+      { day: 'Thursday', temp: '34°C', condition: 'sunny', icon: 'Sun' },
+      { day: 'Friday', temp: '32°C', condition: 'showers', icon: 'CloudRain' },
+      { day: 'Saturday', temp: '32°C', condition: 'cloudy', icon: 'Cloud' },
+      { day: 'Sunday', temp: '33°C', condition: 'partlyCloudy', icon: 'CloudSun' },
     ],
   },
 };
 
 const generateRandomForecast = (city: string): GetWeatherForecastOutput => {
-  const conditions: Array<{ condition: string; icon: 'CloudSun' | 'Sun' | 'CloudRain' | 'Cloud' }> = [
-    { condition: 'Sunny', icon: 'Sun' },
-    { condition: 'Partly Cloudy', icon: 'CloudSun' },
-    { condition: 'Cloudy', icon: 'Cloud' },
-    { condition: 'Showers', icon: 'CloudRain' },
-    { condition: 'Rainy', icon: 'CloudRain' },
-  ];
+  const conditions = Object.keys(conditionMap);
   const days = ['Today', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   
-  const randomCondition = () => conditions[Math.floor(Math.random() * conditions.length)];
+  const randomConditionKey = () => conditions[Math.floor(Math.random() * conditions.length)];
 
   const forecast = days.map((day, index) => {
-    const { condition, icon } = randomCondition();
+    const condition = randomConditionKey();
+    const icon = conditionMap[condition];
     return {
       day: day === 'Today' ? 'Today' : new Date(Date.now() + (index * 24 * 60 * 60 * 1000)).toLocaleDateString('en-US', { weekday: 'long' }),
       temp: `${Math.floor(Math.random() * 15) + 20}°C`,
@@ -92,18 +99,20 @@ const generateRandomForecast = (city: string): GetWeatherForecastOutput => {
     };
   });
   
-  const currentCondition = randomCondition();
+  const currentConditionKey = randomConditionKey();
+  const currentIcon = conditionMap[currentConditionKey];
 
   return {
     city: city.charAt(0).toUpperCase() + city.slice(1),
     current: {
       temperature: `${Math.floor(Math.random() * 15) + 20}°C`,
-      condition: currentCondition.condition,
+      condition: currentConditionKey,
       wind: `${Math.floor(Math.random() * 15) + 5} km/h`,
       humidity: `${Math.floor(Math.random() * 50) + 40}%`,
-      icon: currentCondition.icon,
+      icon: currentIcon,
     },
-    forecast: forecast,
+    // Ensure the forecast array has exactly 7 items
+    forecast: forecast.slice(0, 7) as z.infer<typeof GetWeatherForecastOutputSchema>['forecast'],
   };
 }
 

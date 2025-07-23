@@ -183,7 +183,16 @@
         "wind": "Wind",
         "humidity": "Humidity",
         "weeklyForecast": "Weekly Forecast",
-        "noData": "No weather data available. Please try a different location."
+        "noData": "No weather data available. Please try a different location.",
+        "conditions": {
+            "sunny": "Sunny",
+            "partlyCloudy": "Partly Cloudy",
+            "cloudy": "Cloudy",
+            "showers": "Showers",
+            "rainy": "Rainy",
+            "humidAndCloudy": "Humid & Cloudy",
+            "thunderstorms": "Thunderstorms"
+        }
     },
     "community": {
         "title": "Community Forum",
