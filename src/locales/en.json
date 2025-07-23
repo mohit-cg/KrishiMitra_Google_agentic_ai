@@ -222,6 +222,36 @@
             "pest": "Pest Control",
             "organic": "Organic Methods",
             "market": "Market Prices"
+        },
+        "users": {
+            "ramesh": "Ramesh",
+            "suresh": "Suresh",
+            "geeta": "Geeta",
+            "ravi": "Ravi",
+            "priya": "Priya",
+            "amit": "Amit"
+        },
+        "messages": {
+            "general": [
+                "Has anyone tried the new organic fertilizer? Seeing good results here.",
+                "Yes, I have! My tomato yield has increased by almost 15%.",
+                "That's great to hear! I was thinking of buying it. Is it good for leafy greens?",
+                "Absolutely! My spinach has never been healthier."
+            ],
+            "tomato": [
+                "My tomato plants are showing some yellow leaves. Any advice?",
+                "Could be a nitrogen deficiency. Have you tested your soil recently?"
+            ],
+            "pest": [
+                "Whiteflies are a major issue in my cotton crop. What's the best way to handle them?"
+            ],
+            "organic": [
+                "I'm looking for good organic composting techniques. Any resources?",
+                "The E-Learning Hub has some great articles on vermicomposting!"
+            ],
+            "market": [
+                "Onion prices in Pune seem to be dropping. Should I sell now or wait?"
+            ]
         }
     },
     "shop": {
@@ -381,3 +411,5 @@
         "uploadFailedDesc": "Could not change your profile picture. Please try again."
     }
 }
+
+    

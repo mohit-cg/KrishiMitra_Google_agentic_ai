@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -20,28 +20,6 @@ const initialRooms = [
   { id: "market", name: "Market Prices" },
 ];
 
-const allMessages = {
-  general: [
-    { user: "Ramesh", avatar: "https://placehold.co/40x40.png", text: "Has anyone tried the new organic fertilizer? Seeing good results here.", isSelf: false, hint: "farmer portrait" },
-    { user: "Suresh", avatar: "https://placehold.co/40x40.png", text: "Yes, I have! My tomato yield has increased by almost 15%.", isSelf: false, hint: "farmer portrait" },
-    { user: "You", avatar: "https://placehold.co/40x40.png", text: "That's great to hear! I was thinking of buying it. Is it good for leafy greens?", isSelf: true, hint: "farmer portrait" },
-    { user: "Geeta", avatar: "https://placehold.co/40x40.png", text: "Absolutely! My spinach has never been healthier.", isSelf: false, hint: "farmer portrait" },
-  ],
-  tomato: [
-      { user: "Suresh", avatar: "https://placehold.co/40x40.png", text: "My tomato plants are showing some yellow leaves. Any advice?", isSelf: false, hint: "farmer portrait" },
-      { user: "You", avatar: "https://placehold.co/40x40.png", text: "Could be a nitrogen deficiency. Have you tested your soil recently?", isSelf: true, hint: "farmer portrait" },
-  ],
-  pest: [
-      { user: "Ravi", avatar: "https://placehold.co/40x40.png", text: "Whiteflies are a major issue in my cotton crop. What's the best way to handle them?", isSelf: false, hint: "farmer portrait" },
-  ],
-  organic: [
-      { user: "Priya", avatar: "https://placehold.co/40x40.png", text: "I'm looking for good organic composting techniques. Any resources?", isSelf: false, hint: "farmer portrait" },
-      { user: "You", avatar: "https://placehold.co/40x40.png", text: "The E-Learning Hub has some great articles on vermicomposting!", isSelf: true, hint: "farmer portrait" },
-  ],
-  market: [
-    { user: "Amit", avatar: "https://placehold.co/40x40.png", text: "Onion prices in Pune seem to be dropping. Should I sell now or wait?", isSelf: false, hint: "farmer portrait" },
-  ],
-};
 
 // Check for SpeechRecognition API
 const SpeechRecognition =
@@ -49,10 +27,34 @@ const SpeechRecognition =
 
 
 export default function CommunityPage() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+
+  const allMessages = useMemo(() => ({
+    general: [
+      { user: t('community.users.ramesh'), text: t('community.messages.general.0'), isSelf: false, hint: "farmer portrait" },
+      { user: t('community.users.suresh'), text: t('community.messages.general.1'), isSelf: false, hint: "farmer portrait" },
+      { user: t('community.you'), text: t('community.messages.general.2'), isSelf: true, hint: "farmer portrait" },
+      { user: t('community.users.geeta'), text: t('community.messages.general.3'), isSelf: false, hint: "farmer portrait" },
+    ],
+    tomato: [
+      { user: t('community.users.suresh'), text: t('community.messages.tomato.0'), isSelf: false, hint: "farmer portrait" },
+      { user: t('community.you'), text: t('community.messages.tomato.1'), isSelf: true, hint: "farmer portrait" },
+    ],
+    pest: [
+      { user: t('community.users.ravi'), text: t('community.messages.pest.0'), isSelf: false, hint: "farmer portrait" },
+    ],
+    organic: [
+      { user: t('community.users.priya'), text: t('community.messages.organic.0'), isSelf: false, hint: "farmer portrait" },
+      { user: t('community.you'), text: t('community.messages.organic.1'), isSelf: true, hint: "farmer portrait" },
+    ],
+    market: [
+      { user: t('community.users.amit'), text: t('community.messages.market.0'), isSelf: false, hint: "farmer portrait" },
+    ],
+  }), [t]);
+
   const [rooms] = useState(initialRooms.map(r => ({...r, name: t(`community.rooms.${r.id}`)})));
   const [activeRoom, setActiveRoom] = useState(rooms[0]);
-  const [messages, setMessages] = useState(allMessages[activeRoom.id]);
+  const [messages, setMessages] = useState(allMessages[activeRoom.id].map(m => ({ ...m, avatar: "https://placehold.co/40x40.png" })));
   const [newMessage, setNewMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
@@ -61,7 +63,7 @@ export default function CommunityPage() {
 
   const handleRoomChange = (room) => {
     setActiveRoom(room);
-    setMessages(allMessages[room.id] || []);
+    setMessages(allMessages[room.id].map(m => ({ ...m, avatar: "https://placehold.co/40x40.png" })) || []);
   };
 
   const handleSendMessage = (e) => {
@@ -69,7 +71,7 @@ export default function CommunityPage() {
     if (newMessage.trim() === "" && !attachmentPreview) return;
 
     const messageToSend = {
-      user: "You",
+      user: t('community.you'),
       avatar: "https://placehold.co/40x40.png",
       text: newMessage,
       attachment: attachmentPreview,
@@ -81,7 +83,9 @@ export default function CommunityPage() {
     setMessages(updatedMessages);
     
     // This part would be a database call in a real app
-    allMessages[activeRoom.id] = updatedMessages;
+    // We update a mutable object for demo purposes
+    const translatedMessages = allMessages[activeRoom.id].map(m => ({ ...m, avatar: "https://placehold.co/40x40.png" }));
+    allMessages[activeRoom.id] = [...translatedMessages.slice(0, translatedMessages.length), { user: t('community.you'), text: newMessage, isSelf: true, hint: 'farmer portrait' }];
     
     setNewMessage("");
     setAttachmentPreview(null);
@@ -95,11 +99,12 @@ export default function CommunityPage() {
       toast({ title: t('toast.browserNotSupported'), description: t('toast.noVoiceSupport'), variant: "destructive" });
       return;
     }
-
+    
+    const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.lang = 'en-IN';
+    recognition.lang = langMap[language] || 'en-IN';
 
     recognition.onstart = () => setIsRecording(true);
     recognition.onresult = (event) => setNewMessage(event.results[0][0].transcript);
