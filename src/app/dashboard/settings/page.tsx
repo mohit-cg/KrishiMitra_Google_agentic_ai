@@ -53,9 +53,9 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                     <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                        <li>Google Cloud Vertex AI</li>
-                        <li>Firebase</li>
-                        <li>Gemini Multimodal Models</li>
+                        <li>{t('settings.poweredBy.tech1')}</li>
+                        <li>{t('settings.poweredBy.tech2')}</li>
+                        <li>{t('settings.poweredBy.tech3')}</li>
                     </ul>
                 </CardContent>
             </Card>

@@ -379,7 +379,10 @@
             "title": "App Version"
         },
         "poweredBy": {
-            "title": "Powered By"
+            "title": "Powered By",
+            "tech1": "Google Cloud Vertex AI",
+            "tech2": "Firebase",
+            "tech3": "Gemini Multimodal Models"
         },
         "developedBy": {
             "title": "Developed By",
