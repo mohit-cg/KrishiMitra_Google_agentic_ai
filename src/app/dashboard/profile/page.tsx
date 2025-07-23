@@ -70,24 +70,32 @@ const districts = [
 
 
 export default function ProfilePage() {
-  const { user, updateUserProfile, loading } = useAuth();
+  const { user, userProfile, updateUserProfile, loading } = useAuth();
   
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
-  const [location, setLocation] = useState('Pune, Maharashtra');
-  const [language, setLanguage] = useState('en');
-  const [crops, setCrops] = useState('Tomatoes, Onions, Sugarcane');
+  const [location, setLocation] = useState('');
+  const [language, setLanguage] = useState('');
+  const [crops, setCrops] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [open, setOpen] = useState(false);
   const [photoURL, setPhotoURL] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user) {
-      setDisplayName(user.displayName || 'Farmer Patil');
-      setEmail(user.email || '');
-      setPhotoURL(user.photoURL);
+    if (userProfile) {
+      setDisplayName(userProfile.displayName || '');
+      setEmail(userProfile.email || '');
+      setPhotoURL(userProfile.photoURL);
+      setLocation(userProfile.location || 'Pune, Maharashtra');
+      setLanguage(userProfile.language || 'en');
+      setCrops(userProfile.crops || '');
+    } else if (user) {
+        // Fallback for when profile might still be creating
+        setDisplayName(user.displayName || '');
+        setEmail(user.email || '');
+        setPhotoURL(user.photoURL);
     }
-  }, [user]);
+  }, [user, userProfile]);
   
   const getInitials = (name: string | null | undefined) => {
     if (!name) return 'FP';
@@ -101,16 +109,13 @@ export default function ProfilePage() {
   const handleSaveChanges = async () => {
     setIsSaving(true);
     try {
-      const profileData: { displayName?: string } = {};
-      if (displayName !== user?.displayName) {
-        profileData.displayName = displayName;
-      }
-      
-      if (Object.keys(profileData).length > 0) {
-        await updateUserProfile(profileData);
-      }
+      await updateUserProfile({
+        displayName,
+        location,
+        language,
+        crops,
+      });
 
-      // In a real app, you would also save location, language, and crops to a database like Firestore.
       toast({
         title: "Profile Updated",
         description: "Your information has been successfully saved.",
@@ -194,7 +199,7 @@ export default function ProfilePage() {
                                 key={district.value}
                                 value={district.value}
                                 onSelect={(currentValue) => {
-                                  setLocation(currentValue);
+                                  setLocation(currentValue === location ? "" : currentValue);
                                   setOpen(false);
                                 }}
                             >
