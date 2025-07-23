@@ -223,8 +223,14 @@ export default function LearnPage() {
   return (
     <>
       {playingVideoUrl && (
-          <div className="fixed bottom-4 right-4 z-50">
-              <Card className="w-[350px] shadow-2xl">
+           <div 
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+            onClick={() => setPlayingVideoUrl(null)}
+          >
+              <Card 
+                className="w-full max-w-3xl shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
                   <div className="relative p-2">
                        <Button
                           variant="ghost"
@@ -470,3 +476,5 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
+
+    
