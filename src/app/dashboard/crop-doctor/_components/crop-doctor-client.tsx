@@ -17,7 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from '@/contexts/language-context';
 
 export function CropDoctorClient() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -120,7 +120,7 @@ export function CropDoctorClient() {
         audioRef.current.pause();
     }
     try {
-      const diagnosisResult = await diagnoseCropDisease({ photoDataUri: imageData });
+      const diagnosisResult = await diagnoseCropDisease({ photoDataUri: imageData, language });
       setResult(diagnosisResult);
     } catch (error) {
       console.error(error);
@@ -233,5 +233,3 @@ const LoadingSkeleton = () => (
       <Skeleton className="h-32 w-full" />
     </div>
 );
-
-    

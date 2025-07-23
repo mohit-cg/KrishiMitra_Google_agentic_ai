@@ -1,3 +1,4 @@
+
 // diagnose-crop-disease.ts
 'use server';
 
@@ -18,6 +19,7 @@ const DiagnoseCropDiseaseInputSchema = z.object({
     .describe(
       "A photo of a crop, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+    language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
 });
 export type DiagnoseCropDiseaseInput = z.infer<typeof DiagnoseCropDiseaseInputSchema>;
 
@@ -50,6 +52,8 @@ const prompt = ai.definePrompt({
   input: {schema: DiagnoseCropDiseaseInputSchema},
   output: {schema: InternalDiagnoseCropDiseaseOutputSchema},
   prompt: `You are an expert in diagnosing crop diseases. Your first task is to determine if the image provided is of a plant.
+
+The user's preferred language is {{language}}. All of your text output (diagnosis, solutions) MUST be in this language.
 
 - If it is not a plant, set the 'isPlant' field to false. In the diagnosis field, explain that the image does not appear to be a plant and that you can only analyze plant images. Leave other fields empty.
 - If it is a plant, set 'isPlant' to true. Then, analyze the provided image of the crop and provide a diagnosis of any diseases present. Also, suggest solutions with local product links that can help the farmer.
