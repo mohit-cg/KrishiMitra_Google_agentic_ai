@@ -19,7 +19,7 @@ const SpeechRecognition =
 
 
 export function SchemeNavigatorClient() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -38,7 +38,7 @@ export function SchemeNavigatorClient() {
     setIsLoading(true);
     setResult(null);
     try {
-      const schemeResult = await navigateGovernmentSchemes({ query });
+      const schemeResult = await navigateGovernmentSchemes({ query, language });
       setResult(schemeResult);
     } catch (error) {
       console.error(error);
@@ -65,7 +65,10 @@ export function SchemeNavigatorClient() {
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.lang = 'en-IN'; // Set to Indian English for better accuracy
+    
+    // Set language for speech recognition
+    const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
+    recognition.lang = langMap[language] || 'en-IN';
 
     recognition.onstart = () => {
       setIsRecording(true);
@@ -167,5 +170,3 @@ const LoadingSkeleton = () => (
         <Skeleton className="h-10 w-full" />
     </div>
 );
-
-    

@@ -14,6 +14,7 @@ import {z} from 'genkit';
 
 const NavigateGovernmentSchemesInputSchema = z.object({
   query: z.string().describe('The question about government schemes.'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
 });
 export type NavigateGovernmentSchemesInput = z.infer<
   typeof NavigateGovernmentSchemesInputSchema
@@ -40,11 +41,13 @@ const navigateGovernmentSchemesPrompt = ai.definePrompt({
   input: {schema: NavigateGovernmentSchemesInputSchema},
   output: {schema: NavigateGovernmentSchemesOutputSchema},
   prompt: `You are an expert in Indian government schemes for farmers.
+  
+  The farmer's preferred language is {{language}}. All of your text output (answer, schemeName, eligibility) MUST be in this language.
 
   Answer the following question about government schemes:
-  {{query}}
+  "{{query}}"
 
-  Provide the answer, scheme name, eligibility criteria, and application link.
+  Provide the answer, scheme name, eligibility criteria, and a valid application link.
 
   Make sure to fill out all fields in the output schema. Use the current year when specifying eligibility criteria.
   `,
