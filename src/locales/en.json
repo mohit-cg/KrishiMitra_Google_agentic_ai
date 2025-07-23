@@ -271,6 +271,8 @@
             "addToCart": "Add to Cart",
             "comingSoonTitle": "Coming Soon!",
             "comingSoonMessage": "We couldn't find a product matching '{{query}}'. We are constantly expanding our inventory, so please check back later!",
+            "irrelevantProductTitle": "Unrelated Product Search",
+            "irrelevantProductMessage": "What you are looking for is not available. Only agriculture-related products are sold here.",
             "products": {
                 "organicFertilizer": "Organic Fertilizer",
                 "pesticideSpray": "Pesticide Spray",

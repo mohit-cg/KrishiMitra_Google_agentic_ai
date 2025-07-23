@@ -271,6 +271,8 @@
             "addToCart": "कार्ट में जोड़ें",
             "comingSoonTitle": "जल्द आ रहा है!",
             "comingSoonMessage": "हमें '{{query}}' से मेल खाने वाला कोई उत्पाद नहीं मिला। हम अपनी इन्वेंट्री का लगातार विस्तार कर रहे हैं, इसलिए कृपया बाद में वापस देखें!",
+            "irrelevantProductTitle": "अप्रासंगिक उत्पाद खोज",
+            "irrelevantProductMessage": "आप जो खोज रहे हैं वह उपलब्ध नहीं है। यहाँ केवल कृषि संबंधी उत्पाद बेचे जाते हैं।",
             "products": {
                 "organicFertilizer": "जैविक उर्वरक",
                 "pesticideSpray": "कीटनाशक स्प्रे",

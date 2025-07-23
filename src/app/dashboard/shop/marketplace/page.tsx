@@ -5,12 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Mic, PackageSearch, Search, ShoppingCart, Square } from "lucide-react";
+import { ArrowLeft, Mic, PackageSearch, Search, ShoppingCart, Square, AlertCircle } from "lucide-react";
 import { useTranslation } from "@/contexts/language-context";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { analyzeSearchQuery } from "@/ai/flows/analyze-search-query";
 
 const productsData = [
   { key: "organicFertilizer", price: "₹450", image: "https://placehold.co/400x400.png", hint: "fertilizer bag" },
@@ -34,6 +35,8 @@ export default function MarketplacePage() {
   const { t, language } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [isRecording, setIsRecording] = useState(false);
+  const [isCheckingRelevance, setIsCheckingRelevance] = useState(false);
+  const [isRelevant, setIsRelevant] = useState(true);
 
   const products = useMemo(() => productsData.map(product => ({
     ...product,
@@ -47,6 +50,38 @@ export default function MarketplacePage() {
     );
   }, [searchQuery, products]);
   
+  useEffect(() => {
+    const checkRelevance = async () => {
+      if (searchQuery.trim() === '') {
+        setIsRelevant(true);
+        return;
+      }
+      
+      // Only check relevance if there are no local results
+      if (filteredProducts.length === 0) {
+        setIsCheckingRelevance(true);
+        try {
+          const result = await analyzeSearchQuery({ query: searchQuery });
+          setIsRelevant(result.isRelevant);
+        } catch (error) {
+          console.error("Relevance check failed", error);
+          // Default to relevant to avoid showing the wrong message on API error
+          setIsRelevant(true);
+        } finally {
+          setIsCheckingRelevance(false);
+        }
+      } else {
+        // If there are local results, it's definitely relevant
+        setIsRelevant(true);
+      }
+    };
+    
+    const debounceTimer = setTimeout(checkRelevance, 500);
+    return () => clearTimeout(debounceTimer);
+
+  }, [searchQuery, filteredProducts.length]);
+
+
   const handleMicClick = () => {
     if (!SpeechRecognition) {
       toast({ title: t('toast.browserNotSupported'), description: t('toast.noVoiceSupport'), variant: "destructive" });
@@ -126,9 +161,15 @@ export default function MarketplacePage() {
             </Card>
           ))
         ) : (
-          <div className="sm:col-span-2 md:col-span-3 lg:col-span-4">
-            <NoProductsFoundAlert query={searchQuery} />
-          </div>
+          searchQuery.trim() && !isCheckingRelevance && (
+             <div className="sm:col-span-2 md:col-span-3 lg:col-span-4">
+                {isRelevant ? (
+                    <NoProductsFoundAlert query={searchQuery} />
+                ) : (
+                    <IrrelevantProductAlert />
+                )}
+             </div>
+          )
         )}
       </div>
     </div>
@@ -143,6 +184,19 @@ const NoProductsFoundAlert = ({ query }: { query: string }) => {
             <AlertTitle>{t('shop.marketplace.comingSoonTitle')}</AlertTitle>
             <AlertDescription>
                 {t('shop.marketplace.comingSoonMessage', { query })}
+            </AlertDescription>
+        </Alert>
+    );
+};
+
+const IrrelevantProductAlert = () => {
+    const { t } = useTranslation();
+    return (
+        <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>{t('shop.marketplace.irrelevantProductTitle')}</AlertTitle>
+            <AlertDescription>
+                {t('shop.marketplace.irrelevantProductMessage')}
             </AlertDescription>
         </Alert>
     );

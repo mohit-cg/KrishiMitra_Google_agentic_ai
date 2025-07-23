@@ -8,3 +8,4 @@ import '@/ai/flows/get-weather-forecast.ts';
 import '@/ai/flows/text-to-speech.ts';
 import '@/ai/flows/search-youtube-videos.ts';
 import '@/ai/flows/summarize-article.ts';
+import '@/ai/flows/analyze-search-query.ts';
