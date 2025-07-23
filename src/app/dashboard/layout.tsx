@@ -20,6 +20,7 @@ import { PanelLeft } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Image from "next/image";
 
 export default function DashboardLayout({
   children,
@@ -45,19 +46,29 @@ export default function DashboardLayout({
     <TooltipProvider>
       <SidebarProvider>
         <div className="min-h-screen w-full flex">
-          <Sidebar className="hidden lg:flex lg:flex-col border-r">
-            <SidebarHeader className="p-4">
+          <Sidebar className="hidden lg:flex lg:flex-col border-r bg-card/50">
+            <div 
+              className="absolute inset-0 -z-10" 
+              style={{
+                backgroundImage: "url('https://placehold.co/600x900.png')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                filter: 'blur(8px) brightness(0.6)',
+              }}
+              data-ai-hint="abstract ai agriculture"
+            />
+            <SidebarHeader className="p-4 bg-background/70 backdrop-blur-sm border-b">
               <Link href="/dashboard" className="flex items-center gap-2 font-semibold font-headline">
                 <Icons.logo className="h-6 w-6 text-primary" />
                 <span className="">KrishiMitra AI</span>
               </Link>
             </SidebarHeader>
-            <SidebarContent className="flex-1">
+            <SidebarContent className="flex-1 bg-background/20 backdrop-blur-sm">
               <MainNav />
             </SidebarContent>
           </Sidebar>
           <div className="flex flex-col flex-1">
-            <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-2">
+            <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-2">
               <Sheet>
                 <SheetTrigger asChild>
                   <Button size="icon" variant="outline" className="lg:hidden">
