@@ -46,7 +46,7 @@ export default function DashboardLayout({
     <TooltipProvider>
       <SidebarProvider>
         <div className="min-h-screen w-full flex">
-          <Sidebar className="hidden lg:flex lg:flex-col border-r bg-card/50">
+          <Sidebar className="hidden lg:flex lg:flex-col border-r">
             <div 
               className="absolute inset-0 -z-10" 
               style={{
@@ -98,7 +98,7 @@ export default function DashboardLayout({
               </div>
               <UserNav />
             </header>
-            <main className="flex-1 p-4 sm:px-6 sm-py-0 ">{children}</main>
+            <main className="flex-1 p-4 sm:px-6 sm:py-0 bg-card/50 backdrop-blur-sm m-4 rounded-lg border">{children}</main>
           </div>
         </div>
       </SidebarProvider>
