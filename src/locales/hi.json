@@ -192,6 +192,16 @@
             "rainy": "बरसात",
             "humidAndCloudy": "नम और बादल छाए रहेंगे",
             "thunderstorms": "गरज के साथ बौछारें"
+        },
+        "days": {
+            "today": "आज",
+            "monday": "सोमवार",
+            "tuesday": "मंगलवार",
+            "wednesday": "बुधवार",
+            "thursday": "गुरुवार",
+            "friday": "शुक्रवार",
+            "saturday": "शनिवार",
+            "sunday": "रविवार"
         }
     },
     "community": {

@@ -175,7 +175,7 @@ export default function WeatherPage() {
               {weatherData.forecast.map((day, index) => (
                 <Card key={index} className="text-center">
                   <CardHeader>
-                    <CardTitle className="text-lg">{t(`dashboard.daysLong.${day.day.toLowerCase()}`, day.day)}</CardTitle>
+                    <CardTitle className="text-lg">{t(`weather.days.${day.day.toLowerCase()}`, day.day)}</CardTitle>
                   </CardHeader>
                   <CardContent className="flex flex-col items-center gap-2">
                     {getIcon(day.icon, "h-10 w-10 text-accent")}
