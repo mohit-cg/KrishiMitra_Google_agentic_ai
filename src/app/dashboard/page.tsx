@@ -172,7 +172,7 @@ export default function DashboardPage() {
               <>
                 <div className="text-3xl font-bold">{weatherData.current.temperature}</div>
                 <p className="text-sm text-muted-foreground">
-                  {weatherData.current.condition} in {weatherData.city}
+                  {t(`weather.conditions.${weatherData.current.condition}`)} in {weatherData.city}
                 </p>
                 <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
                   <div className="flex items-center gap-1">
@@ -192,5 +192,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    

@@ -21,9 +21,8 @@ const iconMap = {
   Droplets,
 };
 
-const getIcon = (iconName: keyof typeof iconMap | undefined, className?: string) => {
-  if (!iconName) return <Cloud className={className} />;
-  const IconComponent = iconMap[iconName];
+const getIcon = (iconName: keyof typeof iconMap, className?: string) => {
+  const IconComponent = iconMap[iconName] || Cloud;
   return <IconComponent className={className} />;
 };
 
