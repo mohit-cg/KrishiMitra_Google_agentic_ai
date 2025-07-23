@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Cloud, Sun, CloudRain, CloudSun, Wind, Droplets, Search, ArrowLeft } from "lucide-react";
+import { Cloud, Sun, CloudRain, CloudSun, Wind, Droplets, Search, ArrowLeft, Mic, Square } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getWeatherForecast, GetWeatherForecastOutput } from '@/ai/flows/get-weather-forecast';
 import { toast } from '@/hooks/use-toast';
@@ -27,12 +27,17 @@ const getIcon = (iconName: keyof typeof iconMap | undefined, className?: string)
   return <IconComponent className={className} />;
 };
 
+// Check for SpeechRecognition API
+const SpeechRecognition =
+  (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
+
 export default function WeatherPage() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [city, setCity] = useState("Pune");
   const [inputCity, setInputCity] = useState("Pune");
   const [weatherData, setWeatherData] = useState<GetWeatherForecastOutput | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -65,6 +70,49 @@ export default function WeatherPage() {
     }
   };
   
+  const handleMicClick = () => {
+    if (!SpeechRecognition) {
+      toast({
+        title: t('toast.browserNotSupported'),
+        description: t('toast.noVoiceSupport'),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
+    recognition.lang = langMap[language] || 'en-IN';
+
+    recognition.onstart = () => setIsRecording(true);
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setInputCity(transcript);
+      setCity(transcript); // Automatically trigger search
+    };
+    recognition.onerror = (event) => {
+      if (event.error === 'no-speech') {
+        toast({
+          title: t('toast.noSpeechDetected'),
+          description: t('toast.tryAgain'),
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: t('toast.voiceError'),
+          description: event.error,
+          variant: "destructive",
+        });
+      }
+    };
+    recognition.onend = () => setIsRecording(false);
+
+    recognition.start();
+  };
+
   return (
     <div className="container mx-auto p-4 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
@@ -82,10 +130,14 @@ export default function WeatherPage() {
               onChange={(e) => setInputCity(e.target.value)}
               className="min-w-[200px]"
             />
-            <Button type="submit" size="icon" disabled={isLoading}>
+            <Button type="submit" size="icon" disabled={isLoading || isRecording}>
               <Search className="h-4 w-4"/>
             </Button>
           </form>
+          <Button type="button" variant={isRecording ? "destructive" : "outline"} size="icon" onClick={handleMicClick} disabled={isLoading}>
+            {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+            <span className="sr-only">{isRecording ? t('learn.stopRecording') : t('learn.startVoiceSearch')}</span>
+          </Button>
            <Button asChild variant="outline">
                 <Link href="/dashboard">
                     <ArrowLeft className="mr-2 h-4 w-4" /> {t('profile.backToDashboard')}
