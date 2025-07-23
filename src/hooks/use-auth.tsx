@@ -136,15 +136,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
        throw new Error("No user is currently signed in.");
     }
     
-    // Data to update in Firestore
-    const firestoreData: Partial<UserProfile> = { ...data };
-
     // Data to update in Firebase Auth
     const authUpdateData: { displayName?: string; photoURL?: string } = {};
-    if (data.displayName && data.displayName !== currentUser.displayName) {
+    if (data.displayName !== undefined && data.displayName !== currentUser.displayName) {
         authUpdateData.displayName = data.displayName;
     }
-    if (data.photoURL && data.photoURL !== currentUser.photoURL) {
+    if (data.photoURL !== undefined && data.photoURL !== currentUser.photoURL) {
         authUpdateData.photoURL = data.photoURL;
     }
 
@@ -155,10 +152,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Update Firestore document
     const docRef = doc(db, "users", currentUser.uid);
-    await setDoc(docRef, firestoreData, { merge: true });
+    // Fetch existing profile to merge, ensuring we don't overwrite fields unintentionally
+    const currentProfileSnap = await getDoc(docRef);
+    const existingProfile = currentProfileSnap.exists() ? currentProfileSnap.data() : {};
+    
+    await setDoc(docRef, { ...existingProfile, ...data }, { merge: true });
 
     // We must re-fetch the user and profile to ensure UI consistency
-    // This ensures the local state (user, userProfile) is updated with the latest data.
     const updatedUser = { ...auth.currentUser }; // Create a fresh copy
     setUser(updatedUser as User); 
     await getUserProfile(updatedUser as User);
@@ -176,8 +176,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(storageRef);
     
-    // This will update the photoURL in both Firebase Auth and Firestore,
-    // and then refresh the local state to update the UI.
     await updateUserProfile({ photoURL: downloadURL });
   };
 
