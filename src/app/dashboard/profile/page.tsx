@@ -11,10 +11,11 @@ import { useAuth } from '@/hooks/use-auth';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Check, ChevronsUpDown, Upload } from 'lucide-react';
+import { ArrowLeft, Check, ChevronsUpDown, Upload } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
 
 
 const districts = [
@@ -159,10 +160,19 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-2 font-headline">Farmer Profile</h1>
-      <p className="text-muted-foreground mb-8">
-        Manage your personal information and preferences.
-      </p>
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold mb-2 font-headline">Farmer Profile</h1>
+          <p className="text-muted-foreground">
+            Manage your personal information and preferences.
+          </p>
+        </div>
+        <Button asChild variant="outline">
+          <Link href="/dashboard">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
+          </Link>
+        </Button>
+      </div>
 
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
@@ -206,7 +216,7 @@ export default function ProfilePage() {
                       className="w-full justify-between"
                     >
                       {location
-                        ? districts.find((district) => district.value === location)?.label
+                        ? districts.find((district) => district.value.toLowerCase() === location.toLowerCase())?.label
                         : "Select district..."}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -229,7 +239,7 @@ export default function ProfilePage() {
                                 <Check
                                 className={cn(
                                     "mr-2 h-4 w-4",
-                                    location === district.value ? "opacity-100" : "opacity-0"
+                                    location.toLowerCase() === district.value.toLowerCase() ? "opacity-100" : "opacity-0"
                                 )}
                                 />
                                 {district.label}
@@ -320,5 +330,3 @@ const ProfileSkeleton = () => (
     </Card>
   </div>
 );
-
-    
