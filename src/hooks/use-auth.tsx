@@ -158,9 +158,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await setDoc(docRef, firestoreData, { merge: true });
 
     // We must re-fetch the user and profile to ensure UI consistency
-    // This ensures the local state (user, userProfile) is updated
-    setUser(auth.currentUser); 
-    await getUserProfile(auth.currentUser!);
+    // This ensures the local state (user, userProfile) is updated with the latest data.
+    const updatedUser = { ...auth.currentUser }; // Create a fresh copy
+    setUser(updatedUser as User); 
+    await getUserProfile(updatedUser as User);
   };
 
   const uploadProfileImage = async (file: File): Promise<void> => {
