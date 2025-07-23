@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/use-auth';
 import en from '@/locales/en.json';
 import hi from '@/locales/hi.json';
 import kn from '@/locales/kn.json';
+import { SplashScreen } from '@/components/splash-screen';
 
 const translations = { en, hi, kn };
 
@@ -69,8 +70,8 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     t
   };
 
-  if (isLoading) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+  if (isLoading || authLoading) {
+    return <SplashScreen />;
   }
 
   return (

@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
 import { useTranslation } from '@/contexts/language-context';
+import { SplashScreen } from '@/components/splash-screen';
 
 const authSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -69,7 +70,7 @@ export default function LoginPage() {
   };
 
   if (loading || user) {
-    return <div className="flex h-screen items-center justify-center">{t('common.loading')}...</div>;
+    return <SplashScreen />;
   }
 
   return (
@@ -128,5 +129,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-    

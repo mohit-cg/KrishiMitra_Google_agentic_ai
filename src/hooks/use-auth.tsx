@@ -6,6 +6,7 @@ import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, sig
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth, db, storage } from "@/lib/firebase-config";
+import { SplashScreen } from "@/components/splash-screen";
 
 export interface UserProfile extends Record<string, any> {
   uid: string;
@@ -183,7 +184,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const value = { user, userProfile, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut, updateUserProfile, uploadProfileImage };
 
   if (loading) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+    return <SplashScreen />;
   }
   
   return (
