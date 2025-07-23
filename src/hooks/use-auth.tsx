@@ -129,25 +129,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const updateUserProfile = async (data: Partial<UserProfile>) => {
-    if (!auth.currentUser) {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
        throw new Error("No user is currently signed in.");
     }
     
-    // Update Firebase Auth profile if displayName or photoURL are changed
+    // Update Firebase Auth profile if displayName or photoURL are being changed
     const authUpdateData: { displayName?: string; photoURL?: string } = {};
-    if (data.displayName) authUpdateData.displayName = data.displayName;
-    if (data.photoURL) authUpdateData.photoURL = data.photoURL;
-
-    if (Object.keys(authUpdateData).length > 0) {
-        await updateProfile(auth.currentUser, authUpdateData);
-        // Manually update the user state to reflect changes immediately
-        setUser({ ...auth.currentUser }); 
+    if (data.displayName && data.displayName !== currentUser.displayName) {
+        authUpdateData.displayName = data.displayName;
+    }
+    if (data.photoURL && data.photoURL !== currentUser.photoURL) {
+        authUpdateData.photoURL = data.photoURL;
     }
 
-    // Update Firestore document
-    const docRef = doc(db, "users", auth.currentUser.uid);
+    if (Object.keys(authUpdateData).length > 0) {
+        await updateProfile(currentUser, authUpdateData);
+        // We need to update our local user state to reflect this change
+        setUser(auth.currentUser); 
+    }
+
+    // Update Firestore document with all data
+    const docRef = doc(db, "users", currentUser.uid);
     await setDoc(docRef, data, { merge: true });
-    setUserProfile((prev) => prev ? { ...prev, ...data } : null);
+
+    // Refresh the user profile from the database to ensure UI is in sync
+    await getUserProfile(currentUser);
   };
 
 
