@@ -12,13 +12,6 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Adjust authDomain for local development if not already set to a localhost variant
-if (process.env.NODE_ENV === 'development' && firebaseConfig.authDomain && !firebaseConfig.authDomain.includes('localhost')) {
-    const originalDomain = new URL(`https://${firebaseConfig.authDomain}`);
-    firebaseConfig.authDomain = `localhost:${originalDomain.port || '9002'}`;
-}
-
-
 let app: FirebaseApp;
 
 if (getApps().length === 0) {
