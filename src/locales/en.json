@@ -361,6 +361,17 @@
         "saving": "Saving...",
         "saveChanges": "Save Changes"
     },
+    "settings": {
+        "title": "Application Settings",
+        "description": "Customize the look and feel of the application.",
+        "theme": {
+            "title": "Theme",
+            "description": "Select a theme for the application.",
+            "light": "Light",
+            "dark": "Dark",
+            "system": "System"
+        }
+    },
     "toast": {
         "browserNotSupported": "Browser Not Supported",
         "noVoiceSupport": "Your browser does not support voice recognition.",

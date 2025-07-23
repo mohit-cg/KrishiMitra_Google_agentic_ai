@@ -64,8 +64,8 @@ export function UserNav() {
           <DropdownMenuItem asChild>
             <Link href="/dashboard/profile">{t('userNav.profile')}</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            {t('userNav.settings')}
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/settings">{t('userNav.settings')}</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -76,5 +76,3 @@ export function UserNav() {
     </DropdownMenu>
   );
 }
-
-    
