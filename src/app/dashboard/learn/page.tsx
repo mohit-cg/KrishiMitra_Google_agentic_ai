@@ -171,7 +171,8 @@ export default function LearnPage() {
     }, [searchQuery]);
 
     const playVideo = (videoId: string) => {
-        setPlayingVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1`);
+        const origin = window.location.origin;
+        setPlayingVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${origin}`);
     }
 
     const showNoLocalResultsMessage =
@@ -186,28 +187,26 @@ export default function LearnPage() {
       {playingVideoUrl && (
           <div className="fixed bottom-4 right-4 z-50">
               <Card className="w-[350px] shadow-2xl">
-                  <CardHeader className="p-2 relative">
-                      <Button
+                  <div className="relative p-2">
+                       <Button
                           variant="ghost"
                           size="icon"
-                          className="absolute top-2 right-2 h-6 w-6"
+                          className="absolute top-2 right-2 h-6 w-6 z-10 bg-black/30 hover:bg-black/50 text-white hover:text-white"
                           onClick={() => setPlayingVideoUrl(null)}
                       >
                           <X className="h-4 w-4" />
                           <span className="sr-only">Close Player</span>
                       </Button>
-                  </CardHeader>
-                  <CardContent className="p-0">
                       <div className="aspect-video">
                           <iframe
                               src={playingVideoUrl}
                               title="YouTube video player"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                               allowFullScreen
-                              className="w-full h-full"
+                              className="w-full h-full rounded-md"
                           ></iframe>
                       </div>
-                  </CardContent>
+                  </div>
                   <CardFooter className="p-2">
                        <Button asChild size="sm" className="w-full" variant="destructive">
                             <Link href={playingVideoUrl.replace('/embed/', '/watch?v=').replace('?autoplay=1', '')} target="_blank" rel="noopener noreferrer">
@@ -420,7 +419,3 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
-
-    
-
-    
