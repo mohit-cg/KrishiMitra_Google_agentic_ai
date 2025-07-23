@@ -180,6 +180,17 @@ export default function LearnPage() {
       filteredArticles.length === 0 && 
       !isSummarizing && // don't show while summarizing
       (!summarizedArticle || summarizedArticle.articles.length === 0);
+      
+    const getYoutubeWatchUrl = (embedUrl: string): string => {
+        try {
+            const url = new URL(embedUrl);
+            const videoId = url.pathname.split('/embed/')[1];
+            return `https://www.youtube.com/watch?v=${videoId}`;
+        } catch (error) {
+            console.error("Invalid embed URL", error);
+            return "https://www.youtube.com";
+        }
+    }
 
 
   return (
@@ -209,7 +220,7 @@ export default function LearnPage() {
                   </div>
                   <CardFooter className="p-2">
                        <Button asChild size="sm" className="w-full" variant="destructive">
-                            <Link href={playingVideoUrl.replace('/embed/', '/watch?v=').replace('?autoplay=1&origin=' + window.location.origin, '')} target="_blank" rel="noopener noreferrer">
+                            <Link href={getYoutubeWatchUrl(playingVideoUrl)} target="_blank" rel="noopener noreferrer">
                                 <Youtube className="mr-2 h-4 w-4" />
                                 Watch on YouTube
                             </Link>
