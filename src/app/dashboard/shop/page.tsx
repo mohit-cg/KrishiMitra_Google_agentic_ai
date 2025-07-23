@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExternalLink, Store } from "lucide-react";
@@ -25,7 +26,7 @@ export default function ShopPage() {
           </CardHeader>
           <CardContent className="flex-grow flex items-end">
             <Button asChild className="w-full" variant="secondary">
-              <Link href="https://agricoop.gov.in/" target="_blank" rel="noopener noreferrer">
+              <Link href="/dashboard/shop/government">
                 Explore Government Portals <ExternalLink className="ml-2 h-4 w-4" />
               </Link>
             </Button>
