@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { diagnoseCropDisease, type DiagnoseCropDiseaseOutput } from '@/ai/flows/diagnose-crop-disease';
 import { generateSpeech } from '@/ai/flows/text-to-speech';
-import { Leaf, Lightbulb, Upload, Volume2, Pause, BookOpen, Youtube } from 'lucide-react';
+import { Leaf, Lightbulb, Upload, Volume2, Pause, BookOpen, Youtube, FileUp } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from '@/contexts/language-context';
@@ -25,6 +25,8 @@ export function CropDoctorClient() {
   const [isGeneratingSpeech, setIsGeneratingSpeech] = useState(false);
   const [activeAudio, setActiveAudio] = useState<{ id: 'diagnosis' | 'solutions'; isPlaying: boolean } | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
 
   useEffect(() => {
     // Cleanup audio element and its event listeners
@@ -142,10 +144,15 @@ export function CropDoctorClient() {
           <CardDescription>{t('cropDoctor.client.uploadDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
+           <div className="space-y-2">
             <Label htmlFor="crop-image">{t('cropDoctor.client.imageFile')}</Label>
-            <Input id="crop-image" type="file" accept="image/*" onChange={handleImageChange} />
+            <Input id="crop-image" type="file" accept="image/*" onChange={handleImageChange} ref={fileInputRef} className="hidden" />
+            <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="w-full">
+                <FileUp className="mr-2 h-4 w-4" />
+                {t('cropDoctor.client.chooseFile')}
+            </Button>
           </div>
+
           {imagePreview && (
             <div className="relative aspect-video w-full overflow-hidden rounded-md border">
               <Image src={imagePreview} alt={t('cropDoctor.client.cropPreview')} layout="fill" objectFit="cover" />

@@ -79,6 +79,7 @@
             "uploadTitle": "Upload Crop Image",
             "uploadDescription": "Select a photo of the affected plant.",
             "imageFile": "Image File",
+            "chooseFile": "Choose File",
             "cropPreview": "Crop preview",
             "diagnosing": "Diagnosing...",
             "diagnoseButton": "Diagnose Disease",
@@ -361,5 +362,3 @@
         "uploadFailedDesc": "Could not change your profile picture. Please try again."
     }
 }
-
-    
