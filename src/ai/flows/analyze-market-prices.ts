@@ -13,6 +13,7 @@ import {z} from 'genkit';
 
 const AnalyzeMarketPricesInputSchema = z.object({
   query: z.string().describe('The user query about market prices, can be voice or text. Should include crop and location.'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
 });
 export type AnalyzeMarketPricesInput = z.infer<typeof AnalyzeMarketPricesInputSchema>;
 
@@ -139,11 +140,14 @@ const analysisPrompt = ai.definePrompt({
       crop: z.string(),
       city: z.string(),
       price: z.number(),
+      language: z.string(),
     }),
   },
   output: {schema: AnalyzeMarketPricesOutputSchema},
   prompt: `You are a market analyst providing advice to farmers in India.
   
+  The farmer's preferred language is {{language}}. All of your text output (recommendation, analysis) MUST be in this language.
+
   A farmer has the following query: "{{query}}".
   
   The current price for {{crop}} in {{city}} is {{price}} INR.
@@ -152,7 +156,7 @@ const analysisPrompt = ai.definePrompt({
   
   Then, provide a brief analysis of the market situation. For vegetables/fruits, the price is per kg. For grains like wheat and rice, the price is per quintal. Be mindful of this unit difference.
   
-  For example, if the price is high, you could say "With tomato prices currently at ₹{price} per kg in {city}, it's a good time to sell." For grains, you might say "Wheat is trading at ₹{price} per quintal in {city}, which is a stable price. You could consider selling a portion of your stock."`,
+  For example, if the price is high, you could say "With tomato prices currently at ₹{price} per kg in {city}, it's a good time to sell." For grains, you might say "Wheat is trading at ₹{price} per quintal in {city}, which is a stable price. You could consider selling a portion of your stock." If the requested language is Hindi, the response should be entirely in Hindi.`,
 });
 
 const analyzeMarketPricesFlow = ai.defineFlow(
@@ -161,7 +165,7 @@ const analyzeMarketPricesFlow = ai.defineFlow(
     inputSchema: AnalyzeMarketPricesInputSchema,
     outputSchema: AnalyzeMarketPricesOutputSchema,
   },
-  async ({query}) => {
+  async ({query, language}) => {
     // 1. Extract structured data (crop, city) from the user's query.
     const { output: priceInfo } = await extractPriceInfoPrompt({query});
     if (!priceInfo) {
@@ -176,6 +180,7 @@ const analyzeMarketPricesFlow = ai.defineFlow(
         query,
         ...priceInfo,
         price,
+        language,
     });
     
     return analysisResult!;

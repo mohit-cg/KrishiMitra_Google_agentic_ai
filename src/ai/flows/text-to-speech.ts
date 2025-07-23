@@ -10,9 +10,21 @@ import { googleAI } from '@genkit-ai/googleai';
 import { z } from 'genkit';
 import wav from 'wav';
 
-// Input schema is a simple string
-const TextToSpeechInputSchema = z.string();
+// Define language-to-voice mapping
+const voiceMap = {
+  en: 'Achernar', // Female
+  hi: 'Miaplacidus', // Female
+  kn: 'Miaplacidus', // Female, as there isn't a specific Kannada voice, Hindi is a fallback
+};
+type Language = keyof typeof voiceMap;
+
+
+const TextToSpeechInputSchema = z.object({
+    text: z.string().describe("The text to convert to speech."),
+    language: z.string().describe("The language of the text (e.g., 'en', 'hi', 'kn').").optional().default('en'),
+});
 export type TextToSpeechInput = z.infer<typeof TextToSpeechInputSchema>;
+
 
 // Output schema contains the media data URI
 const TextToSpeechOutputSchema = z.object({
@@ -61,18 +73,21 @@ const textToSpeechFlow = ai.defineFlow(
     inputSchema: TextToSpeechInputSchema,
     outputSchema: TextToSpeechOutputSchema,
   },
-  async (query) => {
+  async ({text, language}) => {
+    
+    const selectedVoice = voiceMap[language as Language] || voiceMap.en;
+
     const { media } = await ai.generate({
       model: googleAI.model('gemini-2.5-flash-preview-tts'),
       config: {
         responseModalities: ['AUDIO'],
         speechConfig: {
           voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: 'Achernar' }, // A female voice
+            prebuiltVoiceConfig: { voiceName: selectedVoice },
           },
         },
       },
-      prompt: query,
+      prompt: text,
     });
 
     if (!media) {

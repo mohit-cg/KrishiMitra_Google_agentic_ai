@@ -18,7 +18,7 @@ const SpeechRecognition =
   (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
 
 export function MarketAnalystClient() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -51,7 +51,10 @@ export function MarketAnalystClient() {
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.lang = 'en-IN'; // Set to Indian English for better accuracy
+    
+    // Set language for speech recognition
+    const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
+    recognition.lang = langMap[language] || 'en-IN';
 
     recognition.onstart = () => {
       setIsRecording(true);
@@ -109,7 +112,7 @@ export function MarketAnalystClient() {
     setIsGeneratingSpeech(true);
     setActiveAudio(null);
     try {
-      const response = await generateSpeech(text);
+      const response = await generateSpeech({ text, language });
       if (response.media) {
         if (!audioRef.current) {
           audioRef.current = new Audio();
@@ -158,7 +161,7 @@ export function MarketAnalystClient() {
 
 
     try {
-      const analysisResult = await analyzeMarketPrices({ query });
+      const analysisResult = await analyzeMarketPrices({ query, language });
       setResult(analysisResult);
     } catch (error) {
       console.error(error);
@@ -247,5 +250,3 @@ const LoadingSkeleton = () => (
       <Skeleton className="h-32 w-full" />
     </div>
 );
-
-    
