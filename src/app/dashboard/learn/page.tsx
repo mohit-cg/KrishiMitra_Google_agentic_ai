@@ -197,13 +197,15 @@ export default function LearnPage() {
       
     const getYoutubeWatchUrl = (embedUrl: string): string => {
         try {
-            const url = new URL(embedUrl);
-            const videoId = url.pathname.split('/embed/')[1].split('?')[0];
-            return `https://www.youtube.com/watch?v=${videoId}`;
+            const videoIdMatch = embedUrl.match(/embed\/([^?]+)/);
+            if (videoIdMatch && videoIdMatch[1]) {
+                const videoId = videoIdMatch[1];
+                return `https://www.youtube.com/watch?v=${videoId}`;
+            }
         } catch (error) {
             console.error("Invalid embed URL", error);
-            return "https://www.youtube.com";
         }
+        return "https://www.youtube.com";
     }
 
 
@@ -284,7 +286,7 @@ export default function LearnPage() {
                         <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4" />
                         <AlertTitle>Irrelevant Topic</AlertTitle>
-                        <AlertDescription>Please search for a topic related to agriculture.</AlertDescription>
+                        <AlertDescription>Your search for "{searchQuery}" seems to be unrelated to agriculture. Please try a different search term.</AlertDescription>
                         </Alert>
                     ) : summarizedArticle.articles.length > 0 ? (
                         <div className="space-y-4">
@@ -446,3 +448,6 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
+
+
+    
