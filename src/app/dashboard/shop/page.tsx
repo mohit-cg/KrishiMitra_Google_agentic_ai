@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, Store } from "lucide-react";
+import { ArrowLeft, ExternalLink, Store } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "@/contexts/language-context";
@@ -13,10 +13,20 @@ export default function ShopPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-2 font-headline">{t('shop.title')}</h1>
-      <p className="text-muted-foreground mb-8">
-        {t('shop.description')}
-      </p>
+       <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold mb-2 font-headline">{t('shop.title')}</h1>
+          <p className="text-muted-foreground">
+            {t('shop.description')}
+          </p>
+        </div>
+        <Button asChild variant="outline">
+            <Link href="/dashboard">
+                <ArrowLeft className="mr-2 h-4 w-4" /> {t('profile.backToDashboard')}
+            </Link>
+        </Button>
+      </div>
+
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Card className="flex flex-col">
@@ -60,5 +70,3 @@ export default function ShopPage() {
     </div>
   );
 }
-
-    
