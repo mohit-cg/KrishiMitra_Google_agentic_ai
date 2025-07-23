@@ -103,7 +103,7 @@ export default function LearnPage() {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [isRecording, setIsRecording] = useState(false);
-    const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null);
+    const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState("articles");
     const [videoResults, setVideoResults] = useState<Video[]>(initialVideos);
     const [isSearchingVideos, setIsSearchingVideos] = useState(false);
@@ -196,8 +196,7 @@ export default function LearnPage() {
     }, [searchQuery, articles]);
 
     const playVideo = (videoId: string) => {
-        const origin = window.location.origin;
-        setPlayingVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${origin}`);
+        setPlayingVideoId(videoId);
     }
 
     const showNoLocalResultsMessage =
@@ -206,26 +205,23 @@ export default function LearnPage() {
       !isSummarizing && // don't show while summarizing
       (!summarizedArticle || summarizedArticle.articles.length === 0);
       
-    const getYoutubeWatchUrl = (embedUrl: string): string => {
-        try {
-            const url = new URL(embedUrl);
-            const videoId = url.pathname.split('/').pop();
-            if (videoId) {
-                return `https://www.youtube.com/watch?v=${videoId}`;
-            }
-        } catch (error) {
-            console.error("Invalid embed URL", error);
-        }
-        return "https://www.youtube.com";
+    const getYoutubeWatchUrl = (videoId: string | null): string => {
+        return videoId ? `https://www.youtube.com/watch?v=${videoId}` : "https://www.youtube.com";
+    }
+    
+    const getYoutubeEmbedUrl = (videoId: string | null): string => {
+        if (!videoId) return "";
+        const origin = typeof window !== 'undefined' ? window.location.origin : "";
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${origin}`;
     }
 
 
   return (
     <>
-      {playingVideoUrl && (
+      {playingVideoId && (
            <div 
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-            onClick={() => setPlayingVideoUrl(null)}
+            onClick={() => setPlayingVideoId(null)}
           >
               <Card 
                 className="w-full max-w-3xl shadow-2xl"
@@ -236,14 +232,14 @@ export default function LearnPage() {
                           variant="ghost"
                           size="icon"
                           className="absolute top-2 right-2 h-6 w-6 z-10 bg-black/30 hover:bg-black/50 text-white hover:text-white"
-                          onClick={() => setPlayingVideoUrl(null)}
+                          onClick={() => setPlayingVideoId(null)}
                       >
                           <X className="h-4 w-4" />
                           <span className="sr-only">{t('learn.closePlayer')}</span>
                       </Button>
                       <div className="aspect-video">
                           <iframe
-                              src={playingVideoUrl}
+                              src={getYoutubeEmbedUrl(playingVideoId)}
                               title="YouTube video player"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                               allowFullScreen
@@ -253,7 +249,7 @@ export default function LearnPage() {
                   </div>
                   <CardFooter className="p-2">
                        <Button asChild size="sm" className="w-full" variant="destructive">
-                            <Link href={getYoutubeWatchUrl(playingVideoUrl)} target="_blank" rel="noopener noreferrer">
+                            <Link href={getYoutubeWatchUrl(playingVideoId)} target="_blank" rel="noopener noreferrer">
                                 <Youtube className="mr-2 h-4 w-4" />
                                 {t('learn.watchOnYoutube')}
                             </Link>
@@ -476,5 +472,3 @@ const VideoSkeletonCard = () => (
       </CardFooter>
     </Card>
   );
-
-    
