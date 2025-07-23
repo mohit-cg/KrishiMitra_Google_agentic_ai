@@ -335,5 +335,3 @@ const ProfileSkeleton = () => {
     </div>
   );
 }
-
-    
