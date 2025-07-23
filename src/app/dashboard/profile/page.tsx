@@ -11,7 +11,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Check, ChevronsUpDown } from 'lucide-react';
+import { Check, ChevronsUpDown, Upload } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -70,7 +70,8 @@ const districts = [
 
 
 export default function ProfilePage() {
-  const { user, userProfile, updateUserProfile, loading } = useAuth();
+  const { user, userProfile, updateUserProfile, uploadProfileImage, loading } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
@@ -78,22 +79,19 @@ export default function ProfilePage() {
   const [language, setLanguage] = useState('');
   const [crops, setCrops] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [photoURL, setPhotoURL] = useState<string | null>(null);
 
   useEffect(() => {
     if (userProfile) {
       setDisplayName(userProfile.displayName || '');
       setEmail(userProfile.email || '');
-      setPhotoURL(userProfile.photoURL);
       setLocation(userProfile.location || 'Pune, Maharashtra');
       setLanguage(userProfile.language || 'en');
       setCrops(userProfile.crops || '');
     } else if (user) {
-        // Fallback for when profile might still be creating
         setDisplayName(user.displayName || '');
         setEmail(user.email || '');
-        setPhotoURL(user.photoURL);
     }
   }, [user, userProfile]);
   
@@ -132,6 +130,29 @@ export default function ProfilePage() {
     }
   };
 
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setIsUploading(true);
+      try {
+        await uploadProfileImage(file);
+        toast({
+          title: "Photo Updated",
+          description: "Your profile picture has been changed.",
+        });
+      } catch (error) {
+        console.error("Failed to upload image", error);
+        toast({
+          title: "Upload Failed",
+          description: "Could not change your profile picture. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsUploading(false);
+      }
+    }
+  };
+
   if (loading) {
     return <ProfileSkeleton />;
   }
@@ -153,11 +174,13 @@ export default function ProfilePage() {
         <CardContent className="space-y-6">
            <div className="flex flex-col items-center space-y-4">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={photoURL || "https://placehold.co/100x100.png"} alt={displayName} data-ai-hint="farmer portrait" />
+                <AvatarImage src={userProfile?.photoURL || "https://placehold.co/100x100.png"} alt={displayName} data-ai-hint="farmer portrait" />
                 <AvatarFallback className="text-3xl">{getInitials(displayName)}</AvatarFallback>
               </Avatar>
-              <Button variant="outline" disabled>
-                Update Profile Photo (Coming Soon)
+              <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading}/>
+              <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
+                 <Upload className="mr-2 h-4 w-4" />
+                {isUploading ? 'Uploading...' : 'Change Photo'}
               </Button>
             </div>
 
@@ -240,7 +263,7 @@ export default function ProfilePage() {
             <Input id="crops" value={crops} onChange={(e) => setCrops(e.target.value)} />
           </div>
           <div className="flex justify-end">
-            <Button onClick={handleSaveChanges} disabled={isSaving}>
+            <Button onClick={handleSaveChanges} disabled={isSaving || isUploading}>
               {isSaving ? "Saving..." : "Save Changes"}
             </Button>
           </div>

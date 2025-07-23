@@ -4,7 +4,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase-config";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { auth, db, storage } from "@/lib/firebase-config";
 
 export interface UserProfile extends Record<string, any> {
   uid: string;
@@ -26,6 +27,7 @@ interface AuthContextType {
   signUpWithEmail: (email: string, pass: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
+  uploadProfileImage: (file: File) => Promise<string>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -134,7 +136,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
        throw new Error("No user is currently signed in.");
     }
     
-    // Update Firebase Auth profile if displayName or photoURL are being changed
     const authUpdateData: { displayName?: string; photoURL?: string } = {};
     if (data.displayName && data.displayName !== currentUser.displayName) {
         authUpdateData.displayName = data.displayName;
@@ -145,20 +146,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (Object.keys(authUpdateData).length > 0) {
         await updateProfile(currentUser, authUpdateData);
-        // We need to update our local user state to reflect this change
-        setUser(auth.currentUser); 
     }
 
-    // Update Firestore document with all data
     const docRef = doc(db, "users", currentUser.uid);
     await setDoc(docRef, data, { merge: true });
 
-    // Refresh the user profile from the database to ensure UI is in sync
-    await getUserProfile(currentUser);
+    // We must re-fetch the user and profile to ensure UI consistency
+    setUser(auth.currentUser); 
+    await getUserProfile(auth.currentUser!);
+  };
+
+  const uploadProfileImage = async (file: File): Promise<string> => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      throw new Error("No user is currently signed in.");
+    }
+    const filePath = `profile-images/${currentUser.uid}/${file.name}`;
+    const storageRef = ref(storage, filePath);
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
+    
+    await updateUserProfile({ photoURL: downloadURL });
+    
+    return downloadURL;
   };
 
 
-  const value = { user, userProfile, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut, updateUserProfile };
+  const value = { user, userProfile, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut, updateUserProfile, uploadProfileImage };
 
   if (loading) {
     return <div className="flex h-screen items-center justify-center">Loading...</div>;
