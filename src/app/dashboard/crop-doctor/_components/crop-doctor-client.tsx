@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { diagnoseCropDisease, type DiagnoseCropDiseaseOutput } from '@/ai/flows/diagnose-crop-disease';
+import { diagnoseCropDisease, type DiagnoseCropDiseaseOutput, DiagnoseCropDiseaseInput } from '@/ai/flows/diagnose-crop-disease';
 import { generateSpeech } from '@/ai/flows/text-to-speech';
 import { Leaf, Lightbulb, Upload, Volume2, Pause, BookOpen, Youtube, FileUp, Mic, Square } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
@@ -155,11 +155,15 @@ export function CropDoctorClient() {
         audioRef.current.pause();
     }
     try {
-      const diagnosisResult = await diagnoseCropDisease({ 
-          photoDataUri: imageData, 
-          description: description,
-          language 
-      });
+      const requestData: DiagnoseCropDiseaseInput = {
+        description,
+        language,
+      };
+      if (imageData) {
+        requestData.photoDataUri = imageData;
+      }
+      
+      const diagnosisResult = await diagnoseCropDisease(requestData);
       setResult(diagnosisResult);
     } catch (error) {
       console.error(error);
