@@ -25,6 +25,7 @@ import {
   Users,
   BookOpen,
   Wallet,
+  Leaf,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getWeatherForecast, type GetWeatherForecastOutput } from "@/ai/flows/get-weather-forecast";
@@ -53,6 +54,12 @@ export default function DashboardPage() {
       description: t('dashboard.quickLinks.cropDoctor'),
       href: "/dashboard/crop-doctor",
       icon: HeartPulse,
+    },
+    {
+      title: t('nav.cropRecommender'),
+      description: t('dashboard.quickLinks.cropRecommender'),
+      href: "/dashboard/crop-recommender",
+      icon: Leaf,
     },
     {
       title: t('nav.marketAnalyst'),
@@ -113,7 +120,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {quickLinks.map((link) => (
           <Link href={link.href} key={link.href} className="group">
             <Card className="h-full transition-all duration-300 group-hover:bg-secondary/50 group-hover:shadow-lg group-hover:-translate-y-1">
@@ -131,8 +138,7 @@ export default function DashboardPage() {
         ))}
       </div>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="lg:col-span-3">
+      <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('dashboard.currentWeather')}</CardTitle>
             <Cloud className="h-4 w-4 text-muted-foreground" />
@@ -173,7 +179,6 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
-      </div>
     </div>
   );
 }

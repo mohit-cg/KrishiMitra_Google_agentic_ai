@@ -14,6 +14,7 @@ import {
   Users,
   ShoppingCart,
   Wallet,
+  Leaf,
 } from "lucide-react";
 import {
   Tooltip,
@@ -34,6 +35,7 @@ export function MainNav() {
   const navItems = [
     { href: "/dashboard", icon: LayoutGrid, label: t('nav.dashboard') },
     { href: "/dashboard/crop-doctor", icon: HeartPulse, label: t('nav.cropDoctor') },
+    { href: "/dashboard/crop-recommender", icon: Leaf, label: t('nav.cropRecommender') },
     { href: "/dashboard/market-analyst", icon: LineChart, label: t('nav.marketAnalyst') },
     { href: "/dashboard/schemes", icon: Banknote, label: t('nav.govtSchemes') },
     { href: "/dashboard/tracker", icon: Wallet, label: t('nav.tracker') },

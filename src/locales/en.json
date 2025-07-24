@@ -13,7 +13,8 @@
         "community": "Community",
         "shop": "Shop",
         "eLearning": "E-Learning",
-        "tracker": "Tracker"
+        "tracker": "Tracker",
+        "cropRecommender": "Crop Recommender"
     },
     "userNav": {
         "profile": "Profile",
@@ -50,21 +51,11 @@
             "marketAnalyst": "Get real-time price analysis.",
             "govtSchemes": "Find government schemes for you.",
             "eLearning": "Browse guides and tutorials.",
-            "tracker": "Track your farm expenses and profits."
+            "tracker": "Track your farm expenses and profits.",
+            "cropRecommender": "Get AI-powered crop suggestions."
         },
-        "weeklyForecast": "Weekly Forecast",
         "currentWeather": "Current Weather",
-        "forecastUnavailable": "Forecast unavailable.",
-        "weatherUnavailable": "Weather data unavailable.",
-        "days": {
-            "tod": "TOD",
-            "tue": "TUE",
-            "wed": "WED",
-            "thu": "THU",
-            "fri": "FRI",
-            "sat": "SAT",
-            "sun": "SUN"
-        }
+        "weatherUnavailable": "Weather data unavailable."
     },
     "cropDoctor": {
         "title": "AI Crop Doctor",
@@ -533,7 +524,9 @@
         "photoUpdated": "Photo Updated",
         "photoUpdatedDesc": "Your profile picture has been changed.",
         "uploadFailed": "Upload Failed",
-        "uploadFailedDesc": "Could not change your profile picture. Please try again."
+        "uploadFailedDesc": "Could not change your profile picture. Please try again.",
+        "recommendationFailed": "Recommendation Failed",
+        "errorGeneratingRecommendation": "Could not generate crop recommendations. Please try again."
     },
     "tracker": {
         "title": "Expense & Profit Tracker",
@@ -582,6 +575,27 @@
         "actions": {
             "edit": "Edit",
             "delete": "Delete"
+        }
+    },
+    "cropRecommender": {
+        "title": "AI Crop Recommender",
+        "description": "Get intelligent crop suggestions based on your location, farm type, and market trends.",
+        "client": {
+            "formTitle": "Farm Details",
+            "formDescription": "Provide details about your farm to get the best recommendations.",
+            "farmType": "Farm Type",
+            "irrigated": "Irrigated",
+            "rainfed": "Rainfed / Dry",
+            "landSize": "Land Size (in acres)",
+            "cropPreference": "Crop Preference (Optional)",
+            "cropPreferencePlaceholder": "e.g., Vegetables, Millets",
+            "getRecommendations": "Get Recommendations",
+            "gettingRecommendations": "Getting Recommendations...",
+            "resultsTitle": "AI-Powered Recommendations",
+            "resultsPlaceholder": "Your personalized crop recommendations will appear here.",
+            "topPicks": "Our Top Picks For You",
+            "topPicksDescription": "Based on your inputs, here are the most suitable crops for the upcoming season.",
+            "learnMore": "Learn More"
         }
     }
 }
