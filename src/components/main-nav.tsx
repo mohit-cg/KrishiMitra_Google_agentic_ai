@@ -35,6 +35,7 @@ export function MainNav() {
   const { t } = useTranslation();
 
   const navItems = [
+    { href: "/dashboard/profile", icon: User, label: t('nav.profile') },
     { href: "/dashboard", icon: LayoutGrid, label: t('nav.dashboard') },
     { href: "/dashboard/crop-doctor", icon: HeartPulse, label: t('nav.cropDoctor') },
     { href: "/dashboard/crop-recommender", icon: Leaf, label: t('nav.cropRecommender') },
@@ -45,7 +46,6 @@ export function MainNav() {
     { href: "/dashboard/community", icon: Users, label: t('nav.community') },
     { href: "/dashboard/shop", icon: ShoppingCart, label: t('nav.shop') },
     { href: "/dashboard/learn", icon: BookOpen, label: t('nav.eLearning') },
-    { href: "/dashboard/profile", icon: User, label: t('nav.profile') },
     { href: "/dashboard/settings", icon: Settings, label: t('nav.settings') },
   ];
 
