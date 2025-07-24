@@ -132,64 +132,42 @@ export default function DashboardPage() {
       </div>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('dashboard.weeklyForecast')}
-            </CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="flex justify-around items-center pt-2 h-[120px]">
-            {loadingWeather ? (
-                Array.from({length: 7}).map((_, i) => (
-                  <div key={i} className="flex flex-col items-center gap-2">
-                    <Skeleton className="h-5 w-8" />
-                    <Skeleton className="h-8 w-8 rounded-full" />
-                    <Skeleton className="h-5 w-10" />
-                  </div>
-                ))
-            ) : weatherData ? (
-              weatherData.forecast.map((day) => (
-                <div key={day.day} className="flex flex-col items-center gap-2 text-center">
-                  <span className="text-xs font-semibold text-muted-foreground">
-                    {t(`dashboard.days.${day.day.substring(0, 3).toLowerCase()}`)}
-                  </span>
-                  {getIcon(day.icon as keyof typeof iconMap)}
-                  <span className="text-sm font-bold">{day.temp}</span>
-                </div>
-              ))
-            ) : (
-                <p className="text-xs text-muted-foreground">{t('dashboard.forecastUnavailable')}</p>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
+        <Card className="lg:col-span-3">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('dashboard.currentWeather')}</CardTitle>
             <Cloud className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="flex flex-col justify-center h-[120px]">
+          <CardContent className="flex items-center space-x-4">
             {loadingWeather ? (
-              <div className="space-y-2">
-                <Skeleton className="h-8 w-1/2" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-full" />
+              <div className="flex items-center space-x-4 w-full">
+                <Skeleton className="h-16 w-16 rounded-full" />
+                <div className="space-y-2">
+                    <Skeleton className="h-8 w-24" />
+                    <Skeleton className="h-4 w-32" />
+                </div>
+                 <div className="space-y-2 pl-4">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-20" />
+                </div>
               </div>
             ) : weatherData ? (
-              <>
-                <div className="text-3xl font-bold">{weatherData.current.temperature}</div>
-                <p className="text-sm text-muted-foreground">
-                  {t(`weather.conditions.${weatherData.current.condition}`)} in {weatherData.city}
-                </p>
-                <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
-                  <div className="flex items-center gap-1">
-                    <Wind className="h-3 w-3" /> <span>{weatherData.current.wind}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Droplets className="h-3 w-3" /> <span>{weatherData.current.humidity}</span>
-                  </div>
-                </div>
-              </>
+                <>
+                    {getIcon(weatherData.current.icon as keyof typeof iconMap, "h-16 w-16 text-accent")}
+                    <div>
+                        <div className="text-3xl font-bold">{weatherData.current.temperature}</div>
+                        <p className="text-sm text-muted-foreground">
+                        {t(`weather.conditions.${weatherData.current.condition}`)} in {weatherData.city}
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm pl-4">
+                        <div className="flex items-center gap-1">
+                            <Wind className="h-4 w-4" /> <span>{weatherData.current.wind}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <Droplets className="h-4 w-4" /> <span>{weatherData.current.humidity}</span>
+                        </div>
+                    </div>
+                </>
             ) : (
                <p className="text-sm text-muted-foreground">{t('dashboard.weatherUnavailable')}</p>
             )}
