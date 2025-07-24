@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetT
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Mic, Send, Square, User, Volume2, Waves, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Bot, Mic, Send, Square, User, Waves, ThumbsUp, ThumbsDown } from "lucide-react";
 import { annapurnaChat, AnnapurnaChatOutput } from "@/ai/flows/annapurna-chat-flow";
 import { generateSpeech } from "@/ai/flows/text-to-speech";
 import { useTranslation } from "@/contexts/language-context";
@@ -68,11 +68,6 @@ export function AnnapurnaChatbot() {
   const viewportRef = useRef<HTMLDivElement>(null);
 
   const playAudio = useCallback(async (text: string, messageId: number) => {
-    if (audioRef.current && !audioRef.current.paused) {
-      audioRef.current.pause();
-      setIsSpeaking(null);
-    }
-
     // Stop any currently playing audio before starting a new one
     if (audioRef.current && !audioRef.current.paused) {
       audioRef.current.pause();
@@ -100,11 +95,11 @@ export function AnnapurnaChatbot() {
 
   useEffect(() => {
     // Open the chatbot on the first load of the session
-    if (!hasOpenedOnce) {
-        setIsOpen(true);
-        hasOpenedOnce = true;
+    if (!hasOpenedOnce && !isOpen) {
+      setIsOpen(true);
+      hasOpenedOnce = true;
     }
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     chatHistory = messages;
@@ -122,7 +117,6 @@ export function AnnapurnaChatbot() {
       const messageId = Date.now();
       const welcomeMessage: Message = { id: messageId, sender: 'bot', text: welcomeMessageText };
       setMessages([welcomeMessage]);
-      playAudio(welcomeMessageText, messageId);
     }
   }, [isOpen, messages.length, t, userProfile, playAudio]);
 
@@ -137,24 +131,23 @@ export function AnnapurnaChatbot() {
   }, []);
 
   const handleAction = (messageId: number, confirm: boolean) => {
-    const messageToUpdate = messages.find(msg => msg.id === messageId);
     let routeToNavigate: string | undefined;
 
-    if (messageToUpdate && 'actions' in messageToUpdate && messageToUpdate.actions) {
-        if (confirm && messageToUpdate.actions.route) {
-            routeToNavigate = messageToUpdate.actions.route;
+    const updatedMessages = messages.map(msg => {
+      if (msg.id === messageId && 'actions' in msg && msg.actions) {
+        if (confirm && msg.actions.route) {
+          routeToNavigate = msg.actions.route;
         }
-    }
+        return { ...msg, actions: { ...msg.actions, responded: true } };
+      }
+      return msg;
+    });
 
-    setMessages(prev => prev.map(msg => 
-        msg.id === messageId && 'actions' in msg && msg.actions
-        ? { ...msg, actions: { ...msg.actions, responded: true } }
-        : msg
-    ));
-    
+    setMessages(updatedMessages);
+
     if (routeToNavigate) {
-        router.push(routeToNavigate);
-        setIsOpen(false);
+      router.push(routeToNavigate);
+      setIsOpen(false);
     }
   }
 
@@ -304,3 +297,5 @@ export function AnnapurnaChatbot() {
     </Sheet>
   );
 }
+
+    
