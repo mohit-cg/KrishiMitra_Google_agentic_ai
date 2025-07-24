@@ -91,11 +91,17 @@ export function AnnapurnaChatbot() {
   }, []);
 
   const playAudio = async (text: string, messageId: number) => {
+    if (isSpeaking) {
+      audioRef.current?.pause();
+      setIsSpeaking(null);
+    }
+    
+    // Stop any currently playing audio before starting a new one
     if (audioRef.current && !audioRef.current.paused) {
       audioRef.current.pause();
     }
     
-    setIsSpeaking(null);
+    setIsSpeaking(messageId);
     try {
       const response = await generateSpeech({ text, language });
       if (response.media) {
@@ -106,7 +112,8 @@ export function AnnapurnaChatbot() {
         }
         audioRef.current.src = response.media;
         audioRef.current.play();
-        setIsSpeaking(messageId);
+      } else {
+        setIsSpeaking(null);
       }
     } catch (error) {
       console.error("Speech generation failed", error);
@@ -115,16 +122,20 @@ export function AnnapurnaChatbot() {
   };
 
   const handleAction = (messageId: number, confirm: boolean) => {
-     setMessages(prev => prev.map(msg => {
-        if (msg.id === messageId && 'actions' in msg && msg.actions) {
-            if (confirm && msg.actions.route) {
-                router.push(msg.actions.route);
-                setIsOpen(false);
-            }
-            return {...msg, actions: {...msg.actions, responded: true}};
+    const messageToUpdate = messages.find(msg => msg.id === messageId);
+
+    if (messageToUpdate && 'actions' in messageToUpdate && messageToUpdate.actions) {
+        if (confirm && messageToUpdate.actions.route) {
+            router.push(messageToUpdate.actions.route);
+            setIsOpen(false);
         }
-        return msg;
-    }));
+        
+        setMessages(prev => prev.map(msg => 
+            msg.id === messageId 
+            ? { ...msg, actions: { ...(msg as ActionableMessage).actions!, responded: true } }
+            : msg
+        ));
+    }
   }
 
   const handleBotResponse = (result: AnnapurnaChatOutput) => {
