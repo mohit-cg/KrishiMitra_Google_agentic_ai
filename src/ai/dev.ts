@@ -11,3 +11,4 @@ import '@/ai/flows/summarize-article.ts';
 import '@/ai/flows/analyze-search-query.ts';
 import '@/ai/flows/translate-text.ts';
 import '@/ai/flows/recommend-crops.ts';
+import '@/ai/flows/seira-chat-flow.ts';
