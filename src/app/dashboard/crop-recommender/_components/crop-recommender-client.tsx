@@ -6,12 +6,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { recommendCrops, RecommendCropsInputSchema, type RecommendCropsOutput } from '@/ai/flows/recommend-crops';
+import { recommendCrops, type RecommendCropsOutput, type RecommendCropsInput } from '@/ai/flows/recommend-crops';
 import { Bot, Leaf, Droplets, Sun, Sparkles, AlertCircle, ArrowRight } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -19,7 +20,17 @@ import { useTranslation } from '@/contexts/language-context';
 import { useAuth } from '@/hooks/use-auth';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-type RecommendationFormValues = Zod.infer<typeof RecommendCropsInputSchema>;
+// Re-define schema here as it cannot be exported from a 'use server' file.
+const RecommendCropsInputClientSchema = z.object({
+  location: z.string().min(1, "Location is required."),
+  farmType: z.enum(['irrigated', 'rainfed']),
+  landSize: z.string().min(1, "Land size is required."),
+  cropPreference: z.string().optional(),
+  language: z.string(),
+});
+
+
+type RecommendationFormValues = z.infer<typeof RecommendCropsInputClientSchema>;
 
 export function CropRecommenderClient() {
   const { t, language } = useTranslation();
@@ -29,7 +40,7 @@ export function CropRecommenderClient() {
   const [result, setResult] = useState<RecommendCropsOutput | null>(null);
 
   const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<RecommendationFormValues>({
-    resolver: zodResolver(RecommendCropsInputSchema),
+    resolver: zodResolver(RecommendCropsInputClientSchema),
     defaultValues: {
       location: '',
       farmType: 'irrigated',

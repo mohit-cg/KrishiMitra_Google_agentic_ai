@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const RecommendCropsInputSchema = z.object({
+const RecommendCropsInputSchema = z.object({
   location: z.string().describe('The user\'s location (e.g., district, state).'),
   farmType: z.enum(['irrigated', 'rainfed']).describe('The type of farm (irrigated or rainfed/dry).'),
   landSize: z.string().describe('The size of the land (e.g., "2 acres").'),
@@ -26,7 +26,7 @@ const RecommendedCropSchema = z.object({
     imageHint: z.string().describe("Two keywords for a relevant image of the crop, e.g., 'pearl millet'."),
 });
 
-export const RecommendCropsOutputSchema = z.object({
+const RecommendCropsOutputSchema = z.object({
   recommendations: z.array(RecommendedCropSchema).min(2).max(3).describe('A list of 2-3 recommended crops.'),
 });
 export type RecommendCropsOutput = z.infer<typeof RecommendCropsOutputSchema>;
