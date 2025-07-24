@@ -15,6 +15,8 @@ import {
   ShoppingCart,
   Wallet,
   Leaf,
+  User,
+  Settings,
 } from "lucide-react";
 import {
   Tooltip,
@@ -43,6 +45,8 @@ export function MainNav() {
     { href: "/dashboard/community", icon: Users, label: t('nav.community') },
     { href: "/dashboard/shop", icon: ShoppingCart, label: t('nav.shop') },
     { href: "/dashboard/learn", icon: BookOpen, label: t('nav.eLearning') },
+    { href: "/dashboard/profile", icon: User, label: t('nav.profile') },
+    { href: "/dashboard/settings", icon: Settings, label: t('nav.settings') },
   ];
 
   return (

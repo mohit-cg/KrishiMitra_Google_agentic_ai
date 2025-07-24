@@ -14,7 +14,9 @@
         "shop": "दुकान",
         "eLearning": "ई-लर्निंग",
         "tracker": "ट्रैकर",
-        "cropRecommender": "फसल सिफारिश"
+        "cropRecommender": "फसल सिफारिश",
+        "profile": "प्रोफ़ाइल",
+        "settings": "सेटिंग्स"
     },
     "userNav": {
         "profile": "प्रोफ़ाइल",

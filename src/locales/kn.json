@@ -14,7 +14,9 @@
         "shop": "ಅಂಗಡಿ",
         "eLearning": "ಇ-ಲರ್ನಿಂಗ್",
         "tracker": "ಟ್ರ್ಯಾಕರ್",
-        "cropRecommender": "ಬೆಳೆ ಶಿಫಾರಸು"
+        "cropRecommender": "ಬೆಳೆ ಶಿಫಾರಸು",
+        "profile": "ಪ್ರೊಫೈಲ್",
+        "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
     },
     "userNav": {
         "profile": "ಪ್ರೊಫೈಲ್",

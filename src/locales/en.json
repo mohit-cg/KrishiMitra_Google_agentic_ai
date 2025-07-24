@@ -14,7 +14,9 @@
         "shop": "Shop",
         "eLearning": "E-Learning",
         "tracker": "Tracker",
-        "cropRecommender": "Crop Recommender"
+        "cropRecommender": "Crop Recommender",
+        "profile": "Profile",
+        "settings": "Settings"
     },
     "userNav": {
         "profile": "Profile",
@@ -48,11 +50,11 @@
         "farmer": "Farmer",
         "quickLinks": {
             "cropDoctor": "Diagnose crop diseases instantly.",
+            "cropRecommender": "Get AI-powered crop suggestions.",
             "marketAnalyst": "Get real-time price analysis.",
             "govtSchemes": "Find government schemes for you.",
-            "eLearning": "Browse guides and tutorials.",
             "tracker": "Track your farm expenses and profits.",
-            "cropRecommender": "Get AI-powered crop suggestions."
+            "eLearning": "Browse guides and tutorials."
         },
         "currentWeather": "Current Weather",
         "weatherUnavailable": "Weather data unavailable."
