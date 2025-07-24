@@ -1,7 +1,7 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Bell, Info, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,27 +15,38 @@ import {
 import { useTranslation } from "@/contexts/language-context";
 import { Badge } from "./ui/badge";
 
+// Mock data for now, this would come from a backend in a real app
+const initialNotifications = [
+    { 
+        id: 1,
+        title: "Market Alert: Tomato Prices Up", 
+        description: "Tomato prices in your region have increased by 12%. Consider selling.",
+        type: "info"
+    },
+    { 
+        id: 2,
+        title: "Weather Warning: Heavy Rain", 
+        description: "Heavy rainfall expected in the next 24 hours. Secure your crops.",
+        type: "warning"
+    },
+    { 
+        id: 3,
+        title: "New Govt. Scheme Available",
+        description: "A new subsidy for solar pumps is now available in your state.",
+        type: "info"
+    },
+];
+
+
 export function Notifications() {
     const { t } = useTranslation();
+    const [notifications, setNotifications] = useState(initialNotifications);
 
-    // Mock data for now, this would come from a backend in a real app
-    const notifications = [
-        { 
-            title: "Market Alert: Tomato Prices Up", 
-            description: "Tomato prices in your region have increased by 12%. Consider selling.",
-            type: "info"
-        },
-        { 
-            title: "Weather Warning: Heavy Rain", 
-            description: "Heavy rainfall expected in the next 24 hours. Secure your crops.",
-            type: "warning"
-        },
-        { 
-            title: "New Govt. Scheme Available",
-            description: "A new subsidy for solar pumps is now available in your state.",
-            type: "info"
-        },
-    ];
+    const handleNotificationClick = (notificationId: number) => {
+        setNotifications(currentNotifications => 
+            currentNotifications.filter(n => n.id !== notificationId)
+        );
+    };
 
     const getIcon = (type: string) => {
         if (type === 'warning') {
@@ -61,8 +72,11 @@ export function Notifications() {
                 <DropdownMenuSeparator />
                 {notifications.length > 0 ? (
                     notifications.map((notification, index) => (
-                        <React.Fragment key={index}>
-                            <DropdownMenuItem className="flex flex-col items-start gap-1 whitespace-normal">
+                        <React.Fragment key={notification.id}>
+                            <DropdownMenuItem 
+                                className="flex flex-col items-start gap-1 whitespace-normal cursor-pointer"
+                                onSelect={() => handleNotificationClick(notification.id)}
+                            >
                                 <div className="flex items-center gap-2">
                                    {getIcon(notification.type)}
                                    <p className="font-semibold">{notification.title}</p>
