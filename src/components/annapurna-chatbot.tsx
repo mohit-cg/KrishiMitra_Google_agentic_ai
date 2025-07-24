@@ -33,8 +33,8 @@ export function AnnapurnaChatbot() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (messages.length) {
-      scrollAreaRef.current?.scrollTo({
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({
         top: scrollAreaRef.current.scrollHeight,
         behavior: 'smooth',
       });
@@ -129,8 +129,8 @@ export function AnnapurnaChatbot() {
           <SheetTitle>{t('chatbot.title')}</SheetTitle>
           <SheetDescription>{t('chatbot.description')}</SheetDescription>
         </SheetHeader>
-        <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-          <div className="space-y-4">
+        <ScrollArea className="flex-1">
+          <div className="space-y-4 p-4" ref={scrollAreaRef}>
             {messages.map((message, index) => (
               <div key={index} className={`flex items-start gap-3 ${message.sender === 'user' ? 'justify-end' : ''}`}>
                 {message.sender === 'bot' && <Avatar className="bg-primary text-primary-foreground"><AvatarFallback><Bot className="h-5 w-5"/></AvatarFallback></Avatar>}
@@ -170,3 +170,4 @@ export function AnnapurnaChatbot() {
     </Sheet>
   );
 }
+
