@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { useTranslation } from "@/contexts/language-context";
 import { AnnapurnaChatbot } from "@/components/annapurna-chatbot";
+import { Notifications } from "@/components/notifications";
 
 export default function DashboardLayout({
   children,
@@ -99,6 +100,7 @@ export default function DashboardLayout({
               <div className="flex-1">
                 {/* Placeholder for breadcrumbs or page title */}
               </div>
+              <Notifications />
               <UserNav />
             </header>
             <main className="flex-1 p-4 sm:px-6 sm:py-0 bg-card/50 backdrop-blur-sm m-4 rounded-lg border">{children}</main>
