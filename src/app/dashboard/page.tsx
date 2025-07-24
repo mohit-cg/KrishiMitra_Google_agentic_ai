@@ -226,35 +226,37 @@ export default function DashboardPage() {
                         </div>
                         <CardDescription>Crops suggested for the current season based on your location and weather.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="grid gap-4 md:grid-cols-2">
                         {loadingRecommendations ? (
                              Array.from({length: 2}).map((_, i) => (
-                                <div key={i} className="flex items-center gap-4 p-2 border-b last:border-b-0">
-                                    <Skeleton className="h-16 w-16 rounded-md"/>
+                                <Card key={i} className="flex items-center gap-4 p-4">
+                                    <Skeleton className="h-20 w-20 rounded-lg"/>
                                     <div className="space-y-2 flex-1">
-                                        <Skeleton className="h-5 w-1/3"/>
+                                        <Skeleton className="h-5 w-1/2"/>
                                         <Skeleton className="h-4 w-full"/>
-                                        <Skeleton className="h-4 w-2/3"/>
+                                        <Skeleton className="h-4 w-3/4"/>
                                     </div>
-                                </div>
+                                </Card>
                              ))
                         ) : recommendations && recommendations.recommendations.length > 0 ? (
                            recommendations.recommendations.map(rec => (
-                            <div key={rec.cropName} className="flex items-start gap-4 p-2 border-b last:border-b-0">
-                                <Image src="https://placehold.co/100x100.png" alt={rec.cropName} width={64} height={64} className="rounded-md" data-ai-hint={rec.imageHint}/>
-                                <div className="flex-1">
-                                    <h4 className="font-semibold">{rec.cropName}</h4>
-                                    <p className="text-sm text-muted-foreground">{rec.reasoning}</p>
+                            <Card key={rec.cropName} className="overflow-hidden">
+                                <div className="flex items-start gap-4 p-4">
+                                    <Image src="https://placehold.co/100x100.png" alt={rec.cropName} width={80} height={80} className="rounded-lg object-cover" data-ai-hint={rec.imageHint}/>
+                                    <div className="flex-1">
+                                        <h4 className="font-semibold text-base">{rec.cropName}</h4>
+                                        <p className="text-xs text-muted-foreground mt-1 mb-2">{rec.reasoning}</p>
+                                        <Button asChild size="sm" variant="secondary" className="text-xs">
+                                            <Link href={`/dashboard/learn?q=${encodeURIComponent(rec.cropName)}`}>
+                                                Learn More <ArrowRight className="ml-1 h-3 w-3"/>
+                                            </Link>
+                                        </Button>
+                                    </div>
                                 </div>
-                                <Button asChild size="sm" variant="ghost" className="shrink-0">
-                                    <Link href={`/dashboard/learn?q=${encodeURIComponent(rec.cropName)}`}>
-                                        Learn More <ArrowRight className="ml-2 h-4 w-4"/>
-                                    </Link>
-                                </Button>
-                            </div>
+                            </Card>
                            ))
                         ) : (
-                             <p className="text-sm text-muted-foreground text-center py-4">Could not load recommendations at this time.</p>
+                             <p className="text-sm text-muted-foreground text-center py-4 md:col-span-2">Could not load recommendations at this time.</p>
                         )}
                     </CardContent>
                 </Card>
