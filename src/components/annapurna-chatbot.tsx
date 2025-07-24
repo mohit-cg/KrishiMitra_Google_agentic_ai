@@ -140,8 +140,10 @@ export function AnnapurnaChatbot() {
     
     setMessages(prev => [...prev, botMessage]);
 
-    // Play TTS response
-    playAudio(result.response, messageId);
+    // Play TTS response only if there's text
+    if (result.response) {
+      playAudio(result.response, messageId);
+    }
   }
 
   const handleSendMessage = async (e?: React.FormEvent, messageText?: string) => {
