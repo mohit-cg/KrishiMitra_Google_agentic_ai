@@ -69,7 +69,13 @@ export default function LoginPage() {
     }
   };
 
-  if (loading || user) {
+  if (loading) {
+    return <SplashScreen />;
+  }
+  
+  // If user is logged in, useEffect will redirect. In the meantime,
+  // we can show a splash screen or null to avoid flashing the login page.
+  if (user) {
     return <SplashScreen />;
   }
 

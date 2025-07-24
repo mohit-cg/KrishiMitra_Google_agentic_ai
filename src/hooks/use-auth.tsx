@@ -233,10 +233,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
   const value = { user, userProfile, transactions, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut, updateUserProfile, uploadProfileImage, addTransaction, updateTransaction, deleteTransaction };
-
-  if (loading) {
-    return <SplashScreen />;
-  }
   
   return (
     <AuthContext.Provider value={value}>
