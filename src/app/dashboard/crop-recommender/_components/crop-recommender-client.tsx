@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { recommendCrops, type RecommendCropsOutput, type RecommendCropsInput } from '@/ai/flows/recommend-crops';
-import { Bot, Leaf, Droplets, Sun, Sparkles, AlertCircle, ArrowRight } from 'lucide-react';
+import { Bot, Leaf, Droplets, Sun, Sparkles, AlertCircle, ArrowRight, Mic, Square } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from '@/contexts/language-context';
@@ -29,6 +29,9 @@ const RecommendCropsInputClientSchema = z.object({
   language: z.string(),
 });
 
+const SpeechRecognition =
+  (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
+
 
 type RecommendationFormValues = z.infer<typeof RecommendCropsInputClientSchema>;
 
@@ -38,6 +41,8 @@ export function CropRecommenderClient() {
   
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<RecommendCropsOutput | null>(null);
+  const [recordingField, setRecordingField] = useState<keyof RecommendationFormValues | null>(null);
+
 
   const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<RecommendationFormValues>({
     resolver: zodResolver(RecommendCropsInputClientSchema),
@@ -55,6 +60,32 @@ export function CropRecommenderClient() {
       setValue('location', userProfile.location);
     }
   }, [userProfile, setValue]);
+
+  const handleMicClick = (field: keyof RecommendationFormValues) => {
+    if (!SpeechRecognition) {
+      toast({ title: t('toast.browserNotSupported'), description: t('toast.noVoiceSupport'), variant: "destructive" });
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
+    recognition.lang = langMap[language] || 'en-IN';
+
+    recognition.onstart = () => setRecordingField(field);
+    recognition.onresult = (event) => setValue(field, event.results[0][0].transcript);
+    recognition.onerror = (event) => {
+        if (event.error === 'no-speech') {
+            toast({ title: t('toast.noSpeechDetected'), description: t('toast.tryAgain'), variant: "destructive" });
+        } else {
+            toast({ title: t('toast.voiceError'), description: event.error, variant: "destructive" });
+        }
+    };
+    recognition.onend = () => setRecordingField(null);
+
+    recognition.start();
+  };
 
   const onSubmit = async (data: RecommendationFormValues) => {
     setIsLoading(true);
@@ -111,12 +142,22 @@ export function CropRecommenderClient() {
             </div>
              <div>
               <Label htmlFor="landSize">{t('cropRecommender.client.landSize')}</Label>
-              <Input id="landSize" {...register('landSize')} placeholder="e.g., 5 acres"/>
+              <div className="flex items-center gap-2">
+                <Input id="landSize" {...register('landSize')} placeholder="e.g., 5 acres"/>
+                 <Button type="button" variant={recordingField === 'landSize' ? "destructive" : "outline"} size="icon" onClick={() => handleMicClick('landSize')} disabled={!!recordingField}>
+                    {recordingField === 'landSize' ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </Button>
+              </div>
               {errors.landSize && <p className="text-xs text-destructive">{errors.landSize.message}</p>}
             </div>
             <div>
               <Label htmlFor="cropPreference">{t('cropRecommender.client.cropPreference')}</Label>
-              <Input id="cropPreference" {...register('cropPreference')} placeholder={t('cropRecommender.client.cropPreferencePlaceholder')}/>
+               <div className="flex items-center gap-2">
+                <Input id="cropPreference" {...register('cropPreference')} placeholder={t('cropRecommender.client.cropPreferencePlaceholder')}/>
+                 <Button type="button" variant={recordingField === 'cropPreference' ? "destructive" : "outline"} size="icon" onClick={() => handleMicClick('cropPreference')} disabled={!!recordingField}>
+                    {recordingField === 'cropPreference' ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </Button>
+              </div>
             </div>
             <Button type="submit" disabled={isLoading} className="w-full">
               {isLoading ? t('cropRecommender.client.gettingRecommendations') : t('cropRecommender.client.getRecommendations')}
@@ -207,3 +248,5 @@ const LoadingSkeleton = () => (
       </Card>
     </div>
 );
+
+    
