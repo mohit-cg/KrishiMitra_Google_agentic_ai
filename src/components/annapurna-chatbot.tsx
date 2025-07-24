@@ -93,9 +93,9 @@ export function AnnapurnaChatbot() {
   const playAudio = async (text: string, messageId: number) => {
     if (audioRef.current && !audioRef.current.paused) {
       audioRef.current.pause();
-      setIsSpeaking(null);
     }
     
+    setIsSpeaking(null);
     try {
       const response = await generateSpeech({ text, language });
       if (response.media) {
@@ -110,6 +110,7 @@ export function AnnapurnaChatbot() {
       }
     } catch (error) {
       console.error("Speech generation failed", error);
+      setIsSpeaking(null);
     }
   };
 
