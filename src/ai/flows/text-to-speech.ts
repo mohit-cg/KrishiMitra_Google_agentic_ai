@@ -77,34 +77,41 @@ const textToSpeechFlow = ai.defineFlow(
     
     const selectedVoice = voiceMap[language as Language] || voiceMap.en;
 
-    const { media } = await ai.generate({
-      model: googleAI.model('gemini-2.5-flash-preview-tts'),
-      config: {
-        responseModalities: ['AUDIO'],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: selectedVoice },
-          },
+    try {
+        const { media } = await ai.generate({
+        model: googleAI.model('gemini-2.5-flash-preview-tts'),
+        config: {
+            responseModalities: ['AUDIO'],
+            speechConfig: {
+            voiceConfig: {
+                prebuiltVoiceConfig: { voiceName: selectedVoice },
+            },
+            },
         },
-      },
-      prompt: text,
-    });
+        prompt: text,
+        });
 
-    if (!media) {
-      throw new Error('No media was returned from the text-to-speech model.');
+        if (!media) {
+            console.warn('No media was returned from the text-to-speech model.');
+            return { media: '' };
+        }
+        
+        // The media URL is a data URI with base64 encoded PCM audio data.
+        // We need to extract the base64 part and convert it to a WAV file.
+        const audioBuffer = Buffer.from(
+        media.url.substring(media.url.indexOf(',') + 1),
+        'base64'
+        );
+        
+        const wavBase64 = await toWav(audioBuffer);
+
+        return {
+        media: 'data:audio/wav;base64,' + wavBase64,
+        };
+    } catch (error) {
+        console.error("Error in text-to-speech flow:", error);
+        // Return an empty media string to prevent the app from crashing
+        return { media: '' };
     }
-    
-    // The media URL is a data URI with base64 encoded PCM audio data.
-    // We need to extract the base64 part and convert it to a WAV file.
-    const audioBuffer = Buffer.from(
-      media.url.substring(media.url.indexOf(',') + 1),
-      'base64'
-    );
-    
-    const wavBase64 = await toWav(audioBuffer);
-
-    return {
-      media: 'data:audio/wav;base64,' + wavBase64,
-    };
   }
 );
