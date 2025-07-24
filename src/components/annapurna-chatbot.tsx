@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -22,9 +23,26 @@ interface Message {
 const SpeechRecognition =
   (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
 
+const intentToRouteMap: Record<string, string> = {
+    navigate_dashboard: '/dashboard',
+    navigate_crop_doctor: '/dashboard/crop-doctor',
+    navigate_market_analyst: '/dashboard/market-analyst',
+    navigate_schemes: '/dashboard/schemes',
+    navigate_weather: '/dashboard/weather',
+    navigate_community: '/dashboard/community',
+    navigate_shop: '/dashboard/shop',
+    navigate_learn: '/dashboard/learn',
+    navigate_tracker: '/dashboard/tracker',
+    navigate_recommender: '/dashboard/crop-recommender',
+    navigate_profile: '/dashboard/profile',
+    navigate_settings: '/dashboard/settings',
+};
+
+
 export function AnnapurnaChatbot() {
   const { t, language } = useTranslation();
   const { userProfile } = useAuth();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -47,6 +65,19 @@ export function AnnapurnaChatbot() {
     }
   }, [isOpen, messages.length, t, userProfile]);
 
+  const handleBotResponse = (result: any) => {
+    const botMessage: Message = { sender: 'bot', text: result.response };
+    setMessages(prev => [...prev, botMessage]);
+
+    const route = intentToRouteMap[result.intent];
+    if (route) {
+        setTimeout(() => {
+            router.push(route);
+            setIsOpen(false);
+        }, 1000); // Add a small delay so the user can read the bot's response
+    }
+  }
+
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (input.trim() === '') return;
@@ -58,8 +89,7 @@ export function AnnapurnaChatbot() {
 
     try {
       const result = await annapurnaChat({ query: input, language });
-      const botMessage: Message = { sender: 'bot', text: result.response };
-      setMessages(prev => [...prev, botMessage]);
+      handleBotResponse(result);
     } catch (error) {
       console.error("Chatbot error:", error);
       const errorMessage: Message = { sender: 'bot', text: t('chatbot.errorMessage') };
@@ -85,8 +115,7 @@ export function AnnapurnaChatbot() {
     recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
         setInput(transcript);
-        // Automatically send the message after successful recognition
-        // This makes it feel more like a voice assistant
+        
         const userMessage: Message = { sender: 'user', text: transcript };
         setMessages(prev => [...prev, userMessage]);
         setInput('');
@@ -94,8 +123,7 @@ export function AnnapurnaChatbot() {
 
         annapurnaChat({ query: transcript, language })
             .then(result => {
-                const botMessage: Message = { sender: 'bot', text: result.response };
-                setMessages(prev => [...prev, botMessage]);
+                handleBotResponse(result);
             })
             .catch(error => {
                 console.error("Chatbot error:", error);
