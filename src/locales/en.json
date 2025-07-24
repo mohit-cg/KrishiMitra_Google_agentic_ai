@@ -63,11 +63,14 @@
         "title": "AI Crop Doctor",
         "description": "Upload a clear image of an affected crop leaf to get an instant diagnosis and suggested solutions.",
         "client": {
-            "uploadTitle": "Upload Crop Image",
-            "uploadDescription": "Select a photo of the affected plant.",
-            "imageFile": "Image File",
+            "uploadTitle": "Diagnose Your Crop",
+            "uploadDescription": "Upload an image, describe the issue, or both for the most accurate diagnosis.",
+            "imageLabel": "1. Upload Image (Optional)",
+            "changeFile": "Change File",
             "chooseFile": "Choose File",
             "cropPreview": "Crop preview",
+            "descriptionLabel": "2. Describe the Issue (Optional)",
+            "descriptionPlaceholder": "e.g., 'My tomato leaves have yellow spots with brown centers.' or click the mic to speak.",
             "diagnosing": "Diagnosing...",
             "diagnoseButton": "Diagnose Disease",
             "resultTitle": "Diagnosis Result",
@@ -528,7 +531,9 @@
         "uploadFailed": "Upload Failed",
         "uploadFailedDesc": "Could not change your profile picture. Please try again.",
         "recommendationFailed": "Recommendation Failed",
-        "errorGeneratingRecommendation": "Could not generate crop recommendations. Please try again."
+        "errorGeneratingRecommendation": "Could not generate crop recommendations. Please try again.",
+        "noInput": "No Input Provided",
+        "provideImageOrDescription": "Please upload an image or provide a description of the issue."
     },
     "tracker": {
         "title": "Expense & Profit Tracker",

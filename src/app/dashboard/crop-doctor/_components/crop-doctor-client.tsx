@@ -8,19 +8,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { diagnoseCropDisease, type DiagnoseCropDiseaseOutput } from '@/ai/flows/diagnose-crop-disease';
 import { generateSpeech } from '@/ai/flows/text-to-speech';
-import { Leaf, Lightbulb, Upload, Volume2, Pause, BookOpen, Youtube, FileUp } from 'lucide-react';
+import { Leaf, Lightbulb, Upload, Volume2, Pause, BookOpen, Youtube, FileUp, Mic, Square } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from '@/contexts/language-context';
+
+const SpeechRecognition =
+  (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
 
 export function CropDoctorClient() {
   const { t, language } = useTranslation();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
+  const [description, setDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [result, setResult] = useState<DiagnoseCropDiseaseOutput | null>(null);
   const [isGeneratingSpeech, setIsGeneratingSpeech] = useState(false);
   const [activeAudio, setActiveAudio] = useState<{ id: 'diagnosis' | 'solutions'; isPlaying: boolean } | null>(null);
@@ -51,6 +57,33 @@ export function CropDoctorClient() {
       reader.readAsDataURL(file);
     }
   };
+  
+   const handleMicClick = () => {
+    if (!SpeechRecognition) {
+      toast({ title: t('toast.browserNotSupported'), description: t('toast.noVoiceSupport'), variant: "destructive" });
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
+    recognition.lang = langMap[language] || 'en-IN';
+
+    recognition.onstart = () => setIsRecording(true);
+    recognition.onresult = (event) => setDescription(event.results[0][0].transcript);
+    recognition.onerror = (event) => {
+        if (event.error === 'no-speech') {
+            toast({ title: t('toast.noSpeechDetected'), description: t('toast.tryAgain'), variant: "destructive" });
+        } else {
+            toast({ title: t('toast.voiceError'), description: event.error, variant: "destructive" });
+        }
+    };
+    recognition.onend = () => setIsRecording(false);
+
+    recognition.start();
+  };
+
 
   const playAudio = async (text: string, id: 'diagnosis' | 'solutions') => {
     // If this audio is already playing, pause it
@@ -107,10 +140,10 @@ export function CropDoctorClient() {
   };
 
   const handleSubmit = async () => {
-    if (!imageData) {
+    if (!imageData && !description.trim()) {
       toast({
-        title: t('toast.noImageSelected'),
-        description: t('toast.selectImageToDiagnose'),
+        title: t('toast.noInput'),
+        description: t('toast.provideImageOrDescription'),
         variant: "destructive",
       });
       return;
@@ -122,7 +155,11 @@ export function CropDoctorClient() {
         audioRef.current.pause();
     }
     try {
-      const diagnosisResult = await diagnoseCropDisease({ photoDataUri: imageData, language });
+      const diagnosisResult = await diagnoseCropDisease({ 
+          photoDataUri: imageData, 
+          description: description,
+          language 
+      });
       setResult(diagnosisResult);
     } catch (error) {
       console.error(error);
@@ -145,11 +182,11 @@ export function CropDoctorClient() {
         </CardHeader>
         <CardContent className="space-y-4">
            <div className="space-y-2">
-            <Label htmlFor="crop-image">{t('cropDoctor.client.imageFile')}</Label>
+            <Label htmlFor="crop-image">{t('cropDoctor.client.imageLabel')}</Label>
             <Input id="crop-image" type="file" accept="image/*" onChange={handleImageChange} ref={fileInputRef} className="hidden" />
             <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="w-full">
                 <FileUp className="mr-2 h-4 w-4" />
-                {t('cropDoctor.client.chooseFile')}
+                {imagePreview ? t('cropDoctor.client.changeFile') : t('cropDoctor.client.chooseFile')}
             </Button>
           </div>
 
@@ -158,7 +195,32 @@ export function CropDoctorClient() {
               <Image src={imagePreview} alt={t('cropDoctor.client.cropPreview')} layout="fill" objectFit="cover" />
             </div>
           )}
-          <Button onClick={handleSubmit} disabled={isLoading || !imageData} className="w-full">
+          
+           <div className="space-y-2">
+              <Label htmlFor="description">{t('cropDoctor.client.descriptionLabel')}</Label>
+              <div className="relative">
+                <Textarea
+                    id="description"
+                    placeholder={t('cropDoctor.client.descriptionPlaceholder')}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
+                    className="pr-10"
+                />
+                <Button 
+                    type="button" 
+                    variant={isRecording ? "destructive" : "ghost"} 
+                    size="icon" 
+                    onClick={handleMicClick}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                >
+                    {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                    <span className="sr-only">{isRecording ? t('community.stopRecording') : t('community.startRecording')}</span>
+                </Button>
+              </div>
+            </div>
+
+          <Button onClick={handleSubmit} disabled={isLoading || (!imageData && !description.trim())} className="w-full">
             {isLoading ? t('cropDoctor.client.diagnosing') : t('cropDoctor.client.diagnoseButton')}
           </Button>
         </CardContent>
