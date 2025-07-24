@@ -49,12 +49,6 @@ export default function DashboardPage() {
 
   const quickLinks = [
     {
-      title: t('nav.tracker'),
-      description: t('dashboard.quickLinks.tracker'),
-      href: "/dashboard/tracker",
-      icon: Wallet,
-    },
-    {
       title: t('nav.cropDoctor'),
       description: t('dashboard.quickLinks.cropDoctor'),
       href: "/dashboard/crop-doctor",
@@ -71,6 +65,12 @@ export default function DashboardPage() {
       description: t('dashboard.quickLinks.govtSchemes'),
       href: "/dashboard/schemes",
       icon: Banknote,
+    },
+    {
+      title: t('nav.tracker'),
+      description: t('dashboard.quickLinks.tracker'),
+      href: "/dashboard/tracker",
+      icon: Wallet,
     },
     {
       title: t('nav.eLearning'),

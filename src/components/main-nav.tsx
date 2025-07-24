@@ -33,10 +33,10 @@ export function MainNav() {
 
   const navItems = [
     { href: "/dashboard", icon: LayoutGrid, label: t('nav.dashboard') },
-    { href: "/dashboard/tracker", icon: Wallet, label: t('nav.tracker') },
     { href: "/dashboard/crop-doctor", icon: HeartPulse, label: t('nav.cropDoctor') },
     { href: "/dashboard/market-analyst", icon: LineChart, label: t('nav.marketAnalyst') },
     { href: "/dashboard/schemes", icon: Banknote, label: t('nav.govtSchemes') },
+    { href: "/dashboard/tracker", icon: Wallet, label: t('nav.tracker') },
     { href: "/dashboard/weather", icon: CloudSun, label: t('nav.weather') },
     { href: "/dashboard/community", icon: Users, label: t('nav.community') },
     { href: "/dashboard/shop", icon: ShoppingCart, label: t('nav.shop') },
@@ -105,5 +105,3 @@ export function MainNav() {
     </nav>
   );
 }
-
-    
