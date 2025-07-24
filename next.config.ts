@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 require('dotenv').config({ path: './.env' });
 
@@ -20,6 +21,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'placehold.co',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
         pathname: '/**',
       },
     ],
