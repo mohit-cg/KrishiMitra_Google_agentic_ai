@@ -52,7 +52,7 @@ export function MainNav() {
   return (
     <nav className="flex flex-col gap-2 px-2">
       {navItems.map((item) => {
-        const isActive = (pathname === item.href) || (pathname.startsWith(item.href) && item.href !== '/dashboard');
+        const isActive = (pathname === item.href) || (item.href !== "/dashboard" && pathname.startsWith(item.href));
         
         // A special case for the shop parent route
         const isShopActive = (pathname.startsWith("/dashboard/shop") && item.href === "/dashboard/shop");
@@ -77,28 +77,24 @@ export function MainNav() {
             state === "collapsed" && !isMobile && "justify-center"
         );
         
-        // On mobile, the nav is in a Sheet, so we wrap links in SheetClose
-        // to close the sheet after navigation.
+        const NavLink = (
+            <Link href={item.href} className={linkClassName}>
+                {linkContent}
+            </Link>
+        );
+
         if (isMobile) {
              return (
                  <SheetClose asChild key={item.href}>
-                     <Link href={item.href} className={linkClassName}>
-                         {linkContent}
-                     </Link>
+                     {NavLink}
                  </SheetClose>
              )
         }
         
-        // On desktop, we use tooltips for collapsed sidebar state.
         return (
           <Tooltip key={item.href}>
             <TooltipTrigger asChild>
-              <Link
-                href={item.href}
-                className={linkClassName}
-              >
-                {linkContent}
-              </Link>
+              {NavLink}
             </TooltipTrigger>
             {state === "collapsed" && (
               <TooltipContent side="right">
