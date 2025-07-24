@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -50,8 +50,9 @@ const intentToRouteMap: Record<string, string> = {
     navigate_settings: '/dashboard/settings',
 };
 
-// Store messages outside the component to persist during the session
+// Store messages and session state outside the component to persist during the session
 let chatHistory: Message[] = [];
+let hasOpenedOnce = false;
 
 export function AnnapurnaChatbot() {
   const { t, language } = useTranslation();
@@ -66,34 +67,7 @@ export function AnnapurnaChatbot() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    chatHistory = messages;
-    if (viewportRef.current) {
-      viewportRef.current.scrollTo({
-        top: viewportRef.current.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [messages]);
-  
-  useEffect(() => {
-    if (isOpen && messages.length === 0) {
-      const welcomeMessage = t('chatbot.welcomeMessage', { name: userProfile?.displayName?.split(' ')[0] || t('dashboard.farmer') });
-      setMessages([{ id: Date.now(), sender: 'bot', text: welcomeMessage }]);
-    }
-  }, [isOpen, messages.length, t, userProfile]);
-
-  useEffect(() => {
-    // Audio cleanup
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  const playAudio = async (text: string, messageId: number) => {
+  const playAudio = useCallback(async (text: string, messageId: number) => {
     if (audioRef.current && !audioRef.current.paused) {
       audioRef.current.pause();
       setIsSpeaking(null);
@@ -122,7 +96,45 @@ export function AnnapurnaChatbot() {
       console.error("Speech generation failed", error);
       setIsSpeaking(null);
     }
-  };
+  }, [language]);
+
+  useEffect(() => {
+    // Open the chatbot on the first load of the session
+    if (!hasOpenedOnce) {
+        setIsOpen(true);
+        hasOpenedOnce = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    chatHistory = messages;
+    if (viewportRef.current) {
+      viewportRef.current.scrollTo({
+        top: viewportRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [messages]);
+  
+  useEffect(() => {
+    if (isOpen && messages.length === 0) {
+      const welcomeMessageText = t('chatbot.welcomeMessage', { name: userProfile?.displayName?.split(' ')[0] || t('dashboard.farmer') });
+      const messageId = Date.now();
+      const welcomeMessage: Message = { id: messageId, sender: 'bot', text: welcomeMessageText };
+      setMessages([welcomeMessage]);
+      playAudio(welcomeMessageText, messageId);
+    }
+  }, [isOpen, messages.length, t, userProfile, playAudio]);
+
+  useEffect(() => {
+    // Audio cleanup
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   const handleAction = (messageId: number, confirm: boolean) => {
     const messageToUpdate = messages.find(msg => msg.id === messageId);
