@@ -207,14 +207,14 @@ export function MarketAnalystClient() {
         {isLoading && <LoadingSkeleton />}
         {result && !isLoading && (
           <div className="space-y-4">
-            <Alert className="border-accent text-accent-foreground">
+            <Alert variant="destructive">
               <div className="flex justify-between items-center w-full">
                 <div>
                   <AlertTitle>{t('marketAnalyst.client.recommendation')}</AlertTitle>
                   <AlertDescription>{result.recommendation}</AlertDescription>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => playAudio(result.recommendation, 'recommendation')} disabled={isGeneratingSpeech}>
-                    {activeAudio?.id === 'recommendation' && activeAudio.isPlaying ? <Pause className="h-5 w-5 text-accent"/> : <Volume2 className="h-5 w-5 text-accent"/>}
+                    {activeAudio?.id === 'recommendation' && activeAudio.isPlaying ? <Pause className="h-5 w-5"/> : <Volume2 className="h-5 w-5"/>}
                 </Button>
               </div>
             </Alert>
