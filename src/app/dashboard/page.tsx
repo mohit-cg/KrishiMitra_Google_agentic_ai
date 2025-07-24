@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  CardFooter,
 } from "@/components/ui/card";
 import Link from "next/link";
 import {
@@ -26,12 +27,17 @@ import {
   BookOpen,
   Wallet,
   Leaf,
+  ArrowRight,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getWeatherForecast, type GetWeatherForecastOutput } from "@/ai/flows/get-weather-forecast";
+import { recommendCrops, type RecommendCropsOutput } from "@/ai/flows/recommend-crops";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useTranslation } from "@/contexts/language-context";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Icons } from "@/components/icons";
 
 const iconMap = {
   Cloud,
@@ -44,9 +50,11 @@ const iconMap = {
 
 export default function DashboardPage() {
   const { user, userProfile } = useAuth();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [weatherData, setWeatherData] = useState<GetWeatherForecastOutput | null>(null);
   const [loadingWeather, setLoadingWeather] = useState(true);
+  const [recommendations, setRecommendations] = useState<RecommendCropsOutput | null>(null);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(true);
 
   const quickLinks = [
     {
@@ -88,21 +96,50 @@ export default function DashboardPage() {
   ];
 
   useEffect(() => {
-    const fetchWeather = async () => {
+    const getCurrentSeason = () => {
+        const month = new Date().getMonth(); // 0-11
+        if (month >= 5 && month <= 9) return 'kharif'; // June to October
+        if (month >= 10 || month <= 2) return 'rabi'; // November to March
+        return 'zaid'; // April, May
+    };
+
+    const fetchDashboardData = async () => {
+      const city = userProfile?.location?.split(',')[0] || "Pune";
+      
+      // Fetch Weather
+      setLoadingWeather(true);
       try {
-        setLoadingWeather(true);
-        // In a real app, user's location would be used here. Defaulting to Pune.
-        const city = userProfile?.location?.split(',')[0] || "Pune";
-        const data = await getWeatherForecast({ city });
-        setWeatherData(data);
+        const weather = await getWeatherForecast({ city });
+        setWeatherData(weather);
       } catch (error) {
         console.error("Failed to fetch weather", error);
       } finally {
         setLoadingWeather(false);
       }
+
+      // Fetch Recommendations
+      setLoadingRecommendations(true);
+      try {
+        const season = getCurrentSeason();
+        const recommendationResult = await recommendCrops({
+            location: userProfile?.location || "Pune, Maharashtra",
+            farmType: 'irrigated',
+            landSize: '1 acre',
+            season: season,
+            language: language,
+        });
+        setRecommendations(recommendationResult);
+      } catch(error) {
+         console.error("Failed to fetch recommendations", error);
+      } finally {
+        setLoadingRecommendations(false);
+      }
     };
-    fetchWeather();
-  }, [userProfile]);
+    
+    if (userProfile) {
+        fetchDashboardData();
+    }
+  }, [userProfile, language]);
   
   const getIcon = (iconName: keyof typeof iconMap) => {
     const IconComponent = iconMap[iconName] || Cloud;
@@ -138,47 +175,106 @@ export default function DashboardPage() {
         ))}
       </div>
       
-      <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('dashboard.currentWeather')}</CardTitle>
-            <Cloud className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="flex items-center space-x-4">
-            {loadingWeather ? (
-              <div className="flex items-center space-x-4 w-full">
-                <Skeleton className="h-16 w-16 rounded-full" />
-                <div className="space-y-2">
-                    <Skeleton className="h-8 w-24" />
-                    <Skeleton className="h-4 w-32" />
-                </div>
-                 <div className="space-y-2 pl-4">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-4 w-20" />
-                </div>
-              </div>
-            ) : weatherData ? (
-                <>
-                    {getIcon(weatherData.current.icon as keyof typeof iconMap, "h-16 w-16 text-accent")}
-                    <div>
-                        <div className="text-3xl font-bold">{weatherData.current.temperature}</div>
-                        <p className="text-sm text-muted-foreground">
-                        {t(`weather.conditions.${weatherData.current.condition}`)} in {weatherData.city}
-                        </p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm pl-4">
-                        <div className="flex items-center gap-1">
-                            <Wind className="h-4 w-4" /> <span>{weatherData.current.wind}</span>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div className="lg:col-span-3 space-y-6">
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">{t('dashboard.currentWeather')}</CardTitle>
+                        <Cloud className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent className="flex items-center space-x-4">
+                        {loadingWeather ? (
+                        <div className="flex items-center space-x-4 w-full">
+                            <Skeleton className="h-16 w-16 rounded-full" />
+                            <div className="space-y-2">
+                                <Skeleton className="h-8 w-24" />
+                                <Skeleton className="h-4 w-32" />
+                            </div>
+                            <div className="space-y-2 pl-4">
+                                <Skeleton className="h-4 w-24" />
+                                <Skeleton className="h-4 w-20" />
+                            </div>
                         </div>
-                        <div className="flex items-center gap-1">
-                            <Droplets className="h-4 w-4" /> <span>{weatherData.current.humidity}</span>
+                        ) : weatherData ? (
+                            <>
+                                {getIcon(weatherData.current.icon as keyof typeof iconMap)}
+                                <div>
+                                    <div className="text-3xl font-bold">{weatherData.current.temperature}</div>
+                                    <p className="text-sm text-muted-foreground">
+                                    {t(`weather.conditions.${weatherData.current.condition}`)} in {weatherData.city}
+                                    </p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm pl-4">
+                                    <div className="flex items-center gap-1">
+                                        <Wind className="h-4 w-4" /> <span>{weatherData.current.wind}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <Droplets className="h-4 w-4" /> <span>{weatherData.current.humidity}</span>
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                        <p className="text-sm text-muted-foreground">{t('dashboard.weatherUnavailable')}</p>
+                        )}
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <div className="flex items-center gap-2">
+                           <Icons.sprout className="h-6 w-6 text-primary"/>
+                           <CardTitle>Seasonal Crop Recommendations</CardTitle>
                         </div>
-                    </div>
-                </>
-            ) : (
-               <p className="text-sm text-muted-foreground">{t('dashboard.weatherUnavailable')}</p>
-            )}
-          </CardContent>
-        </Card>
+                        <CardDescription>Crops suggested for the current season based on your location and weather.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {loadingRecommendations ? (
+                             Array.from({length: 2}).map((_, i) => (
+                                <div key={i} className="flex items-center gap-4 p-2 border-b last:border-b-0">
+                                    <Skeleton className="h-16 w-16 rounded-md"/>
+                                    <div className="space-y-2 flex-1">
+                                        <Skeleton className="h-5 w-1/3"/>
+                                        <Skeleton className="h-4 w-full"/>
+                                        <Skeleton className="h-4 w-2/3"/>
+                                    </div>
+                                </div>
+                             ))
+                        ) : recommendations && recommendations.recommendations.length > 0 ? (
+                           recommendations.recommendations.map(rec => (
+                            <div key={rec.cropName} className="flex items-start gap-4 p-2 border-b last:border-b-0">
+                                <Image src="https://placehold.co/100x100.png" alt={rec.cropName} width={64} height={64} className="rounded-md" data-ai-hint={rec.imageHint}/>
+                                <div className="flex-1">
+                                    <h4 className="font-semibold">{rec.cropName}</h4>
+                                    <p className="text-sm text-muted-foreground">{rec.reasoning}</p>
+                                </div>
+                                <Button asChild size="sm" variant="ghost" className="shrink-0">
+                                    <Link href={`/dashboard/learn?q=${encodeURIComponent(rec.cropName)}`}>
+                                        Learn More <ArrowRight className="ml-2 h-4 w-4"/>
+                                    </Link>
+                                </Button>
+                            </div>
+                           ))
+                        ) : (
+                             <p className="text-sm text-muted-foreground text-center py-4">Could not load recommendations at this time.</p>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
+            <div className="lg:col-span-2">
+                 <Card className="h-full">
+                    <CardHeader>
+                        <CardTitle>Notifications</CardTitle>
+                         <CardDescription>Important updates and alerts for your farm.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex flex-col items-center justify-center text-center text-muted-foreground h-64">
+                            <Icons.wheat className="h-12 w-12 mb-4"/>
+                            <p className="font-semibold">No new notifications</p>
+                            <p className="text-sm">Check back later for updates on weather, market prices, and more.</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
     </div>
   );
 }
