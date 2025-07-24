@@ -50,13 +50,15 @@ const intentToRouteMap: Record<string, string> = {
     navigate_settings: '/dashboard/settings',
 };
 
+// Store messages outside the component to persist during the session
+let chatHistory: Message[] = [];
 
 export function AnnapurnaChatbot() {
   const { t, language } = useTranslation();
   const { userProfile } = useAuth();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(chatHistory);
   const [input, setInput] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -65,6 +67,7 @@ export function AnnapurnaChatbot() {
   const viewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    chatHistory = messages;
     if (viewportRef.current) {
       viewportRef.current.scrollTo({
         top: viewportRef.current.scrollHeight,
@@ -91,11 +94,11 @@ export function AnnapurnaChatbot() {
   }, []);
 
   const playAudio = async (text: string, messageId: number) => {
-    if (isSpeaking) {
-      audioRef.current?.pause();
+    if (audioRef.current && !audioRef.current.paused) {
+      audioRef.current.pause();
       setIsSpeaking(null);
     }
-    
+
     // Stop any currently playing audio before starting a new one
     if (audioRef.current && !audioRef.current.paused) {
       audioRef.current.pause();
@@ -123,18 +126,23 @@ export function AnnapurnaChatbot() {
 
   const handleAction = (messageId: number, confirm: boolean) => {
     const messageToUpdate = messages.find(msg => msg.id === messageId);
+    let routeToNavigate: string | undefined;
 
     if (messageToUpdate && 'actions' in messageToUpdate && messageToUpdate.actions) {
         if (confirm && messageToUpdate.actions.route) {
-            router.push(messageToUpdate.actions.route);
-            setIsOpen(false);
+            routeToNavigate = messageToUpdate.actions.route;
         }
-        
-        setMessages(prev => prev.map(msg => 
-            msg.id === messageId 
-            ? { ...msg, actions: { ...(msg as ActionableMessage).actions!, responded: true } }
-            : msg
-        ));
+    }
+
+    setMessages(prev => prev.map(msg => 
+        msg.id === messageId && 'actions' in msg && msg.actions
+        ? { ...msg, actions: { ...msg.actions, responded: true } }
+        : msg
+    ));
+    
+    if (routeToNavigate) {
+        router.push(routeToNavigate);
+        setIsOpen(false);
     }
   }
 
