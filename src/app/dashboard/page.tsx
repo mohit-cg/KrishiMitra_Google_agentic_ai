@@ -24,6 +24,7 @@ import {
   ShoppingCart,
   Users,
   BookOpen,
+  Wallet,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getWeatherForecast, type GetWeatherForecastOutput } from "@/ai/flows/get-weather-forecast";
@@ -47,6 +48,12 @@ export default function DashboardPage() {
   const [loadingWeather, setLoadingWeather] = useState(true);
 
   const quickLinks = [
+    {
+      title: t('nav.tracker'),
+      description: t('dashboard.quickLinks.tracker'),
+      href: "/dashboard/tracker",
+      icon: Wallet,
+    },
     {
       title: t('nav.cropDoctor'),
       description: t('dashboard.quickLinks.cropDoctor'),
@@ -106,7 +113,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         {quickLinks.map((link) => (
           <Link href={link.href} key={link.href} className="group">
             <Card className="h-full transition-all duration-300 group-hover:bg-secondary/50 group-hover:shadow-lg group-hover:-translate-y-1">

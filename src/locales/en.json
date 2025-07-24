@@ -49,7 +49,8 @@
             "cropDoctor": "Diagnose crop diseases instantly.",
             "marketAnalyst": "Get real-time price analysis.",
             "govtSchemes": "Find government schemes for you.",
-            "eLearning": "Browse guides and tutorials."
+            "eLearning": "Browse guides and tutorials.",
+            "tracker": "Track your farm expenses and profits."
         },
         "weeklyForecast": "Weekly Forecast",
         "currentWeather": "Current Weather",
