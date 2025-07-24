@@ -1,24 +1,25 @@
+
 'use server';
 
 /**
- * @fileOverview The main AI flow for the Seira chatbot assistant.
+ * @fileOverview The main AI flow for the Annapurna chatbot assistant.
  *
- * - seiraChat - Analyzes user query to determine intent and entities.
- * - SeiraChatInput - The input type for the seiraChat function.
- * - SeiraChatOutput - The return type for the seiraChat function.
+ * - annapurnaChat - Analyzes user query to determine intent and entities.
+ * - AnnapurnaChatInput - The input type for the annapurnaChat function.
+ * - AnnapurnaChatOutput - The return type for the annapurnaChat function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-const SeiraChatInputSchema = z.object({
+const AnnapurnaChatInputSchema = z.object({
   query: z.string().describe('The user\'s message to the chatbot.'),
   language: z.string().describe('The language of the user\'s query (e.g., "en", "hi", "kn").'),
 });
-export type SeiraChatInput = z.infer<typeof SeiraChatInputSchema>;
+export type AnnapurnaChatInput = z.infer<typeof AnnapurnaChatInputSchema>;
 
 
-const SeiraChatOutputSchema = z.object({
+const AnnapurnaChatOutputSchema = z.object({
   response: z.string().describe("A helpful, conversational response to the user's query, in their specified language."),
   intent: z.enum([
       'navigate_dashboard',
@@ -46,17 +47,17 @@ const SeiraChatOutputSchema = z.object({
       topic: z.string().optional().describe("The general topic mentioned, e.g., 'fertilizer'."),
   }).optional().describe("A map of extracted entities from the query."),
 });
-export type SeiraChatOutput = z.infer<typeof SeiraChatOutputSchema>;
+export type AnnapurnaChatOutput = z.infer<typeof AnnapurnaChatOutputSchema>;
 
-export async function seiraChat(input: SeiraChatInput): Promise<SeiraChatOutput> {
-  return seiraChatFlow(input);
+export async function annapurnaChat(input: AnnapurnaChatInput): Promise<AnnapurnaChatOutput> {
+  return annapurnaChatFlow(input);
 }
 
-const seiraPrompt = ai.definePrompt({
-  name: 'seiraPrompt',
-  input: {schema: SeiraChatInputSchema},
-  output: {schema: SeiraChatOutputSchema},
-  prompt: `You are Seira, a friendly and helpful AI farming assistant for KrishiMitra AI. Your goal is to understand what the user wants to do and provide a helpful response.
+const annapurnaPrompt = ai.definePrompt({
+  name: 'annapurnaPrompt',
+  input: {schema: AnnapurnaChatInputSchema},
+  output: {schema: AnnapurnaChatOutputSchema},
+  prompt: `You are Annapurna, a friendly and helpful AI farming assistant for KrishiMitra AI. Your goal is to understand what the user wants to do and provide a helpful response.
 
   The user is interacting with you in '{{language}}'. Your response must be in this language.
 
@@ -92,14 +93,14 @@ const seiraPrompt = ai.definePrompt({
   `,
 });
 
-const seiraChatFlow = ai.defineFlow(
+const annapurnaChatFlow = ai.defineFlow(
   {
-    name: 'seiraChatFlow',
-    inputSchema: SeiraChatInputSchema,
-    outputSchema: SeiraChatOutputSchema,
+    name: 'annapurnaChatFlow',
+    inputSchema: AnnapurnaChatInputSchema,
+    outputSchema: AnnapurnaChatOutputSchema,
   },
   async input => {
-    const {output} = await seiraPrompt(input);
+    const {output} = await annapurnaPrompt(input);
     return output!;
   }
 );

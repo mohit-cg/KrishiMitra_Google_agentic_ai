@@ -627,11 +627,11 @@
         }
     },
     "chatbot": {
-        "title": "Seira Assistant",
+        "title": "Annapurna Assistant",
         "description": "Your personal farming assistant. Ask me anything!",
         "open": "Open Chatbot",
-        "placeholder": "Ask Seira a question...",
-        "welcomeMessage": "Hi {{name}}! I'm Seira. How can I help you today? You can ask me to show you market prices, diagnose a crop, or find a government scheme.",
+        "placeholder": "Ask Annapurna a question...",
+        "welcomeMessage": "Hi {{name}}! I'm Annapurna. How can I help you today? You can ask me to show you market prices, diagnose a crop, or find a government scheme.",
         "errorMessage": "I'm sorry, I'm having trouble connecting right now. Please try again in a moment."
     }
 }

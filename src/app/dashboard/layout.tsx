@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Image from "next/image";
 import { useTranslation } from "@/contexts/language-context";
-import { SeiraChatbot } from "@/components/seira-chatbot";
+import { AnnapurnaChatbot } from "@/components/annapurna-chatbot";
 
 export default function DashboardLayout({
   children,
@@ -103,7 +103,7 @@ export default function DashboardLayout({
             </header>
             <main className="flex-1 p-4 sm:px-6 sm:py-0 bg-card/50 backdrop-blur-sm m-4 rounded-lg border">{children}</main>
           </div>
-          <SeiraChatbot />
+          <AnnapurnaChatbot />
         </div>
       </SidebarProvider>
     </TooltipProvider>

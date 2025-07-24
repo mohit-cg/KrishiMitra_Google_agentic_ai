@@ -2,13 +2,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bot, Mic, Send, Square, User } from "lucide-react";
-import { seiraChat } from "@/ai/flows/seira-chat-flow";
+import { annapurnaChat } from "@/ai/flows/annapurna-chat-flow";
 import { useTranslation } from "@/contexts/language-context";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "@/hooks/use-toast";
@@ -22,7 +23,7 @@ interface Message {
 const SpeechRecognition =
   (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
 
-export function SeiraChatbot() {
+export function AnnapurnaChatbot() {
   const { t, language } = useTranslation();
   const { userProfile } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +58,7 @@ export function SeiraChatbot() {
     setIsLoading(true);
 
     try {
-      const result = await seiraChat({ query: input, language });
+      const result = await annapurnaChat({ query: input, language });
       const botMessage: Message = { sender: 'bot', text: result.response };
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
@@ -92,7 +93,7 @@ export function SeiraChatbot() {
         setInput('');
         setIsLoading(true);
 
-        seiraChat({ query: transcript, language })
+        annapurnaChat({ query: transcript, language })
             .then(result => {
                 const botMessage: Message = { sender: 'bot', text: result.response };
                 setMessages(prev => [...prev, botMessage]);
@@ -119,8 +120,8 @@ export function SeiraChatbot() {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg z-50" size="icon">
-          <Bot className="h-8 w-8" />
+        <Button className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg z-50 p-0 overflow-hidden" size="icon">
+          <Image src="https://storage.googleapis.com/studiostack-public-dev/annapurna-chatbot.png" alt="Annapurna Chatbot" width={64} height={64} />
           <span className="sr-only">{t('chatbot.open')}</span>
         </Button>
       </SheetTrigger>
