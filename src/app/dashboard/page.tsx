@@ -245,7 +245,7 @@ export default function DashboardPage() {
                                     <Image src="https://placehold.co/100x100.png" alt={rec.cropName} width={80} height={80} className="rounded-lg object-cover" data-ai-hint={rec.imageHint}/>
                                     <div className="flex-1">
                                         <h4 className="font-semibold text-base">{rec.cropName}</h4>
-                                        <p className="text-xs text-muted-foreground mt-1 mb-2">{rec.reasoning}</p>
+                                        <p className="text-xs text-muted-foreground mt-1 mb-2 truncate">{rec.reasoning}</p>
                                         <Button asChild size="sm" variant="secondary" className="text-xs">
                                             <Link href={`/dashboard/learn?q=${encodeURIComponent(rec.cropName)}`}>
                                                 Learn More <ArrowRight className="ml-1 h-3 w-3"/>
