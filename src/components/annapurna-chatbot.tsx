@@ -8,14 +8,16 @@ import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetT
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Mic, Send, Square, User } from "lucide-react";
-import { annapurnaChat } from "@/ai/flows/annapurna-chat-flow";
+import { Bot, Mic, Send, Square, User, Volume2, Waves } from "lucide-react";
+import { annapurnaChat, AnnapurnaChatOutput } from "@/ai/flows/annapurna-chat-flow";
+import { generateSpeech } from "@/ai/flows/text-to-speech";
 import { useTranslation } from "@/contexts/language-context";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "./ui/skeleton";
 
 interface Message {
+  id: number;
   sender: 'user' | 'bot';
   text: string;
 }
@@ -48,6 +50,8 @@ export function AnnapurnaChatbot() {
   const [input, setInput] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -61,38 +65,83 @@ export function AnnapurnaChatbot() {
   
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      setMessages([{ sender: 'bot', text: t('chatbot.welcomeMessage', { name: userProfile?.displayName?.split(' ')[0] || t('dashboard.farmer') }) }]);
+      const welcomeMessage = t('chatbot.welcomeMessage', { name: userProfile?.displayName?.split(' ')[0] || t('dashboard.farmer') });
+      setMessages([{ id: Date.now(), sender: 'bot', text: welcomeMessage }]);
     }
   }, [isOpen, messages.length, t, userProfile]);
 
-  const handleBotResponse = (result: any) => {
-    const botMessage: Message = { sender: 'bot', text: result.response };
+  useEffect(() => {
+    // Audio cleanup
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const playAudio = async (text: string, messageId: number) => {
+    if (audioRef.current && !audioRef.current.paused) {
+      audioRef.current.pause();
+      setIsSpeaking(null);
+    }
+    
+    try {
+      const response = await generateSpeech({ text, language });
+      if (response.media) {
+        if (!audioRef.current) {
+          audioRef.current = new Audio();
+          audioRef.current.onended = () => setIsSpeaking(null);
+          audioRef.current.onpause = () => setIsSpeaking(null);
+        }
+        audioRef.current.src = response.media;
+        audioRef.current.play();
+        setIsSpeaking(messageId);
+      }
+    } catch (error) {
+      console.error("Speech generation failed", error);
+    }
+  };
+
+  const handleBotResponse = (result: AnnapurnaChatOutput) => {
+    const messageId = Date.now();
+    const botMessage: Message = { id: messageId, sender: 'bot', text: result.response };
     setMessages(prev => [...prev, botMessage]);
+
+    // Play TTS response
+    playAudio(result.response, messageId);
 
     const route = intentToRouteMap[result.intent];
     if (route) {
         setTimeout(() => {
             router.push(route);
             setIsOpen(false);
-        }, 1000); // Add a small delay so the user can read the bot's response
+        }, 2000); // Add a small delay so the user can hear the bot's response
     }
   }
 
-  const handleSendMessage = async (e?: React.FormEvent) => {
+  const handleSendMessage = async (e?: React.FormEvent, messageText?: string) => {
     e?.preventDefault();
-    if (input.trim() === '') return;
+    const currentMessage = messageText || input;
+    if (currentMessage.trim() === '') return;
 
-    const userMessage: Message = { sender: 'user', text: input };
+    const userMessage: Message = { id: Date.now(), sender: 'user', text: currentMessage };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
+    // Stop any currently playing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsSpeaking(null);
+    }
+
     try {
-      const result = await annapurnaChat({ query: input, language });
+      const result = await annapurnaChat({ query: currentMessage, language });
       handleBotResponse(result);
     } catch (error) {
       console.error("Chatbot error:", error);
-      const errorMessage: Message = { sender: 'bot', text: t('chatbot.errorMessage') };
+      const errorMessage: Message = { id: Date.now(), sender: 'bot', text: t('chatbot.errorMessage') };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -114,23 +163,7 @@ export function AnnapurnaChatbot() {
     recognition.onstart = () => setIsRecording(true);
     recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
-        setInput(transcript);
-        
-        const userMessage: Message = { sender: 'user', text: transcript };
-        setMessages(prev => [...prev, userMessage]);
-        setInput('');
-        setIsLoading(true);
-
-        annapurnaChat({ query: transcript, language })
-            .then(result => {
-                handleBotResponse(result);
-            })
-            .catch(error => {
-                console.error("Chatbot error:", error);
-                const errorMessage: Message = { sender: 'bot', text: t('chatbot.errorMessage') };
-                setMessages(prev => [...prev, errorMessage]);
-            })
-            .finally(() => setIsLoading(false));
+        handleSendMessage(undefined, transcript);
     };
     recognition.onerror = (event) => {
       if (event.error === 'no-speech') {
@@ -159,11 +192,16 @@ export function AnnapurnaChatbot() {
         </SheetHeader>
         <ScrollArea className="flex-1" viewportRef={viewportRef}>
           <div className="space-y-4 p-4">
-            {messages.map((message, index) => (
-              <div key={index} className={`flex items-start gap-3 ${message.sender === 'user' ? 'justify-end' : ''}`}>
+            {messages.map((message) => (
+              <div key={message.id} className={`flex items-start gap-3 ${message.sender === 'user' ? 'justify-end' : ''}`}>
                 {message.sender === 'bot' && <Avatar className="bg-primary text-primary-foreground"><AvatarFallback><Bot className="h-5 w-5"/></AvatarFallback></Avatar>}
                 <div className={`rounded-lg p-3 max-w-[80%] text-sm ${message.sender === 'user' ? 'bg-secondary text-secondary-foreground' : 'bg-muted'}`}>
-                  {message.text}
+                  <div className="flex items-center gap-2">
+                    <span>{message.text}</span>
+                    {message.sender === 'bot' && isSpeaking === message.id && (
+                       <Waves className="h-4 w-4 text-primary animate-pulse" />
+                    )}
+                  </div>
                 </div>
                  {message.sender === 'user' && <Avatar className="border"><AvatarFallback><User className="h-5 w-5"/></AvatarFallback></Avatar>}
               </div>
@@ -189,7 +227,7 @@ export function AnnapurnaChatbot() {
              <Button variant={isRecording ? "destructive" : "outline"} size="icon" type="button" onClick={handleMicClick} disabled={isLoading}>
                 {isRecording ? <Square className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
              </Button>
-            <Button type="submit" size="icon" disabled={isLoading || isRecording}>
+            <Button type="submit" size="icon" disabled={isLoading || isRecording || !input.trim()}>
               <Send className="h-5 w-5" />
             </Button>
           </form>
