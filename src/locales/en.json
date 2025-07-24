@@ -632,6 +632,8 @@
         "open": "Open Chatbot",
         "placeholder": "Ask Annapurna a question...",
         "welcomeMessage": "Hi {{name}}! I'm Annapurna. How can I help you today? You can ask me to show you market prices, diagnose a crop, or find a government scheme.",
-        "errorMessage": "I'm sorry, I'm having trouble connecting right now. Please try again in a moment."
+        "errorMessage": "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.",
+        "yes": "Yes",
+        "no": "No"
     }
 }

@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetT
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Mic, Send, Square, User, Volume2, Waves } from "lucide-react";
+import { Bot, Mic, Send, Square, User, Volume2, Waves, ThumbsUp, ThumbsDown } from "lucide-react";
 import { annapurnaChat, AnnapurnaChatOutput } from "@/ai/flows/annapurna-chat-flow";
 import { generateSpeech } from "@/ai/flows/text-to-speech";
 import { useTranslation } from "@/contexts/language-context";
@@ -16,11 +16,21 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "./ui/skeleton";
 
-interface Message {
+interface BaseMessage {
   id: number;
   sender: 'user' | 'bot';
   text: string;
 }
+
+interface ActionableMessage extends BaseMessage {
+    actions?: {
+        intent: string;
+        route?: string;
+        responded: boolean;
+    }
+}
+
+type Message = BaseMessage | ActionableMessage;
 
 const SpeechRecognition =
   (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
@@ -103,21 +113,35 @@ export function AnnapurnaChatbot() {
     }
   };
 
+  const handleAction = (messageId: number, confirm: boolean) => {
+     setMessages(prev => prev.map(msg => {
+        if (msg.id === messageId && 'actions' in msg && msg.actions) {
+            if (confirm && msg.actions.route) {
+                router.push(msg.actions.route);
+                setIsOpen(false);
+            }
+            return {...msg, actions: {...msg.actions, responded: true}};
+        }
+        return msg;
+    }));
+  }
+
   const handleBotResponse = (result: AnnapurnaChatOutput) => {
     const messageId = Date.now();
-    const botMessage: Message = { id: messageId, sender: 'bot', text: result.response };
+    const route = intentToRouteMap[result.intent];
+    const isNavIntent = result.intent.startsWith('navigate_');
+
+    const botMessage: ActionableMessage = { 
+        id: messageId, 
+        sender: 'bot', 
+        text: result.response,
+        actions: isNavIntent && route ? { intent: result.intent, route, responded: false } : undefined
+    };
+    
     setMessages(prev => [...prev, botMessage]);
 
     // Play TTS response
     playAudio(result.response, messageId);
-
-    const route = intentToRouteMap[result.intent];
-    if (route) {
-        setTimeout(() => {
-            router.push(route);
-            setIsOpen(false);
-        }, 2000); // Add a small delay so the user can hear the bot's response
-    }
   }
 
   const handleSendMessage = async (e?: React.FormEvent, messageText?: string) => {
@@ -195,13 +219,23 @@ export function AnnapurnaChatbot() {
             {messages.map((message) => (
               <div key={message.id} className={`flex items-start gap-3 ${message.sender === 'user' ? 'justify-end' : ''}`}>
                 {message.sender === 'bot' && <Avatar className="bg-primary text-primary-foreground"><AvatarFallback><Bot className="h-5 w-5"/></AvatarFallback></Avatar>}
-                <div className={`rounded-lg p-3 max-w-[80%] text-sm ${message.sender === 'user' ? 'bg-secondary text-secondary-foreground' : 'bg-muted'}`}>
+                <div className="rounded-lg p-3 max-w-[80%] text-sm bg-muted">
                   <div className="flex items-center gap-2">
                     <span>{message.text}</span>
                     {message.sender === 'bot' && isSpeaking === message.id && (
                        <Waves className="h-4 w-4 text-primary animate-pulse" />
                     )}
                   </div>
+                  {'actions' in message && message.actions && !message.actions.responded && (
+                    <div className="mt-2 pt-2 border-t border-muted-foreground/20 flex gap-2">
+                        <Button size="sm" variant="outline" onClick={() => handleAction(message.id, true)}>
+                            <ThumbsUp className="mr-2 h-4 w-4"/> {t('chatbot.yes')}
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleAction(message.id, false)}>
+                            <ThumbsDown className="mr-2 h-4 w-4"/> {t('chatbot.no')}
+                        </Button>
+                    </div>
+                  )}
                 </div>
                  {message.sender === 'user' && <Avatar className="border"><AvatarFallback><User className="h-5 w-5"/></AvatarFallback></Avatar>}
               </div>
