@@ -126,8 +126,8 @@ export default function ProfilePage() {
             const cropsToTranslate = crops || '';
 
             const [nameRes, cropsRes] = await Promise.all([
-              nameToTranslate ? translateText({ text: nameToTranslate, targetLanguage: currentLanguage as 'hi' | 'kn' }) : Promise.resolve({ translatedText: '' }),
-              cropsToTranslate ? translateText({ text: cropsToTranslate, targetLanguage: currentLanguage as 'hi' | 'kn' }) : Promise.resolve({ translatedText: '' }),
+              nameToTranslate ? translateText({ text: nameToTranslate, targetLanguage: currentLanguage as 'hi' | 'kn' | 'bn' | 'bho' }) : Promise.resolve({ translatedText: '' }),
+              cropsToTranslate ? translateText({ text: cropsToTranslate, targetLanguage: currentLanguage as 'hi' | 'kn' | 'bn' | 'bho' }) : Promise.resolve({ translatedText: '' }),
             ]);
             setTranslatedDisplayName(nameRes.translatedText);
             setTranslatedCrops(cropsRes.translatedText);
@@ -165,7 +165,7 @@ export default function ProfilePage() {
         crops,
       });
       // Also update language in context
-      setAppLanguage(language as 'en' | 'hi' | 'kn');
+      setAppLanguage(language as 'en' | 'hi' | 'kn' | 'bn' | 'bho');
 
       toast({
         title: t('toast.profileUpdated'),
@@ -307,7 +307,7 @@ export default function ProfilePage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="language">{t('profile.language')}</Label>
-              <Select value={language} onValueChange={(value) => setLanguage(value as 'en' | 'hi' | 'kn')}>
+              <Select value={language} onValueChange={(value) => setLanguage(value)}>
                 <SelectTrigger id="language">
                   <SelectValue placeholder={t('profile.selectLanguage')} />
                 </SelectTrigger>
@@ -315,6 +315,8 @@ export default function ProfilePage() {
                   <SelectItem value="en">English</SelectItem>
                   <SelectItem value="hi">Hindi (हिंदी)</SelectItem>
                   <SelectItem value="kn">Kannada (ಕನ್ನಡ)</SelectItem>
+                  <SelectItem value="bn">Bangla (বাংলা)</SelectItem>
+                  <SelectItem value="bho">Bhojpuri (भोजपुरी)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -387,3 +389,5 @@ const ProfileSkeleton = () => {
     </div>
   );
 }
+
+    

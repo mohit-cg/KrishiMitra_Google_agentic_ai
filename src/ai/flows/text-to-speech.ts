@@ -15,13 +15,15 @@ const voiceMap = {
   en: 'Achernar', // Female
   hi: 'Algenib', // Female - Changed from Miaplacidus
   kn: 'Schedar', // Female - Changed from Miaplacidus
+  bn: 'Algenib', // Using Hindi female voice for Bangla as a fallback
+  bho: 'Miaplacidus', // Using Hindi male voice for Bhojpuri as a fallback
 };
 type Language = keyof typeof voiceMap;
 
 
 const TextToSpeechInputSchema = z.object({
     text: z.string().describe("The text to convert to speech."),
-    language: z.string().describe("The language of the text (e.g., 'en', 'hi', 'kn').").optional().default('en'),
+    language: z.string().describe("The language of the text (e.g., 'en', 'hi', 'kn', 'bn', 'bho').").optional().default('en'),
 });
 export type TextToSpeechInput = z.infer<typeof TextToSpeechInputSchema>;
 
@@ -115,3 +117,5 @@ const textToSpeechFlow = ai.defineFlow(
     }
   }
 );
+
+    

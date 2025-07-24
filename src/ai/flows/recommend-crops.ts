@@ -21,7 +21,7 @@ const RecommendCropsInputSchema = z.object({
   previousCrop: z.string().optional().describe('The crop grown in the previous season.'),
   budget: z.string().optional().describe('The approximate budget for cultivation.'),
   cropPreference: z.string().optional().describe('Any specific crop preference the user might have.'),
-  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn", "bn", "bho").'),
 });
 export type RecommendCropsInput = z.infer<typeof RecommendCropsInputSchema>;
 
@@ -88,3 +88,4 @@ const recommendCropsFlow = ai.defineFlow(
   }
 );
 
+    

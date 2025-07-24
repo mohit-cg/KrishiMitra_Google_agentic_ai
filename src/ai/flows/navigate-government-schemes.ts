@@ -1,3 +1,4 @@
+
 // This is an AI-powered function to help farmers navigate government schemes.
 'use server';
 
@@ -14,7 +15,7 @@ import {z} from 'genkit';
 
 const NavigateGovernmentSchemesInputSchema = z.object({
   query: z.string().describe('The question about government schemes.'),
-  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn", "bn", "bho").'),
 });
 export type NavigateGovernmentSchemesInput = z.infer<
   typeof NavigateGovernmentSchemesInputSchema
@@ -64,3 +65,5 @@ const navigateGovernmentSchemesFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    

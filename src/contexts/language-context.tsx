@@ -6,11 +6,13 @@ import { useAuth } from '@/hooks/use-auth';
 import en from '@/locales/en.json';
 import hi from '@/locales/hi.json';
 import kn from '@/locales/kn.json';
+import bn from '@/locales/bn.json';
+import bho from '@/locales/bho.json';
 import { SplashScreen } from '@/components/splash-screen';
 
-const translations = { en, hi, kn };
+const translations = { en, hi, kn, bn, bho };
 
-type Language = 'en' | 'hi' | 'kn';
+type Language = 'en' | 'hi' | 'kn' | 'bn' | 'bho';
 
 interface LanguageContextType {
   language: Language;
@@ -28,7 +30,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!authLoading) {
       const preferredLanguage = userProfile?.language as Language | undefined;
-      if (preferredLanguage && ['en', 'hi', 'kn'].includes(preferredLanguage)) {
+      if (preferredLanguage && ['en', 'hi', 'kn', 'bn', 'bho'].includes(preferredLanguage)) {
         setLanguage(preferredLanguage);
       } else {
         setLanguage('en');

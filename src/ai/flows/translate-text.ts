@@ -1,3 +1,4 @@
+
 // translate-text.ts
 'use server';
 /**
@@ -13,7 +14,7 @@ import {z} from 'genkit';
 
 const TranslateTextInputSchema = z.object({
   text: z.string().describe('The text to be translated.'),
-  targetLanguage: z.enum(['en', 'hi', 'kn']).describe('The target language for translation (e.g., "en", "hi", "kn").'),
+  targetLanguage: z.enum(['en', 'hi', 'kn', 'bn', 'bho']).describe('The target language for translation (e.g., "en", "hi", "kn", "bn", "bho").'),
 });
 export type TranslateTextInput = z.infer<typeof TranslateTextInputSchema>;
 
@@ -54,3 +55,5 @@ const translateTextFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    

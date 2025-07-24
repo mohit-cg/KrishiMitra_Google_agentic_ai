@@ -1,0 +1,646 @@
+
+{
+    "common": {
+        "loading": "Loading",
+        "initializing": "Initializing your dashboard..."
+    },
+    "nav": {
+        "dashboard": "Dashboard",
+        "cropDoctor": "Crop Doctor",
+        "marketAnalyst": "Market Analyst",
+        "govtSchemes": "Govt Schemes",
+        "weather": "Weather",
+        "community": "Community",
+        "shop": "Shop",
+        "eLearning": "E-Learning",
+        "tracker": "Tracker",
+        "cropRecommender": "Crop Recommender",
+        "profile": "Profile",
+        "settings": "Settings"
+    },
+    "userNav": {
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Log out"
+    },
+    "dashboardLayout": {
+        "toggleMenu": "Toggle Menu",
+        "menuTitle": "Navigation Menu",
+        "menuDescription": "Main navigation links for the application."
+    },
+    "login": {
+        "imageAlt": "Image of a lush farm",
+        "tagline": "Empowering Agriculture Through Technology",
+        "subTagline": "Join a community of modern farmers leveraging AI for better yields and sustainable practices.",
+        "createAccountPrompt": "Create your account to get started.",
+        "signInPrompt": "Welcome back! Sign in to your dashboard.",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "processing": "Processing...",
+        "createAccountButton": "Create Account",
+        "signInButton": "Sign In",
+        "alreadyHaveAccount": "Already have an account?",
+        "dontHaveAccount": "Don't have an account?",
+        "signInLink": "Sign In",
+        "signUpLink": "Sign Up"
+    },
+    "dashboard": {
+        "welcome": "Welcome back, {{name}}!",
+        "description": "Here's a quick overview of your farm and market.",
+        "farmer": "Farmer",
+        "quickLinks": {
+            "cropDoctor": "Diagnose crop diseases instantly.",
+            "cropRecommender": "Get AI-powered crop suggestions.",
+            "marketAnalyst": "Get real-time price analysis.",
+            "govtSchemes": "Find government schemes for you.",
+            "tracker": "Track your farm expenses and profits.",
+            "eLearning": "Browse guides and tutorials."
+        },
+        "currentWeather": "Current Weather",
+        "weatherUnavailable": "Weather data unavailable."
+    },
+    "cropDoctor": {
+        "title": "AI Crop Doctor",
+        "description": "Upload a clear image of an affected crop leaf to get an instant diagnosis and suggested solutions.",
+        "client": {
+            "uploadTitle": "Diagnose Your Crop",
+            "uploadDescription": "Upload an image, describe the issue, or both for the most accurate diagnosis.",
+            "imageLabel": "Upload Image",
+            "changeFile": "Change File",
+            "chooseFile": "Choose File",
+            "cropPreview": "Crop preview",
+            "descriptionLabel": "Describe the Issue",
+            "descriptionPlaceholder": "e.g., 'My tomato leaves have yellow spots with brown centers.' or click the mic to speak.",
+            "diagnosing": "Diagnosing...",
+            "diagnoseButton": "Diagnose Disease",
+            "resultTitle": "Diagnosis Result",
+            "diagnosis": "Diagnosis",
+            "solutions": "Suggested Solutions",
+            "readDocs": "Read Docs",
+            "watchVideo": "Watch Video",
+            "resultPlaceholder": "Your diagnosis result will appear here."
+        }
+    },
+    "marketAnalyst": {
+        "title": "Market Analyst",
+        "description": "Get real-time market price analysis and recommendations. Ask a question like \"What is the price of onions in Pune Mandi?\"",
+        "faqTitle": "Frequently Asked Questions",
+        "faqs": {
+            "q1": "What kind of questions can I ask?",
+            "a1": "You can ask about current crop prices in specific locations, price trends, and get recommendations on whether to sell or hold your produce. For example: 'What is the price of tomatoes in Pune?' or 'Should I sell my wheat stock now?'",
+            "q2": "How accurate is the price information?",
+            "a2": "The price information is based on real-time data from various agricultural markets (mandis). While we strive for accuracy, prices can fluctuate rapidly. Use the information as a guide for your decisions.",
+            "q3": "Can I ask about future price predictions?",
+            "a3": "Yes, you can ask for price trend analysis and predictions. The AI will provide insights based on historical data and current market conditions, but please note that these are forecasts and not guarantees.",
+            "q4": "What locations and crops are supported?",
+            "a4": "The assistant covers a wide range of major crops and markets across India. You can ask about vegetables, grains, fruits, and more in various cities and their main agricultural markets."
+        },
+        "client": {
+            "askTitle": "Ask Your Market Question",
+            "placeholder": "e.g., What are the chances of tomato prices increasing in the next week in Bangalore? Or click the mic to speak.",
+            "analyzing": "Analyzing...",
+            "getAnalysis": "Get Analysis",
+            "stopRecording": "Stop Recording",
+            "useVoice": "Use Voice",
+            "resultTitle": "Analysis Result",
+            "recommendation": "Recommendation",
+            "marketAnalysis": "Market Analysis",
+            "resultPlaceholder": "Your market analysis will appear here."
+        }
+    },
+    "schemes": {
+        "title": "Scheme & Information Hub",
+        "description": "Discover key government schemes, stay updated with the latest news, and find information tailored for you.",
+        "keySchemesTitle": "Key Government Schemes",
+        "latestNewsTitle": "Latest News & Updates",
+        "visitSite": "Visit Site",
+        "readMore": "Read More",
+        "keySchemes": {
+            "pmkisan": {
+                "title": "PM-KISAN Scheme",
+                "description": "Financial support of ₹6,000 per year for small and marginal farmer families."
+            },
+            "pmfby": {
+                "title": "Pradhan Mantri Fasal Bima Yojana",
+                "description": "Insurance coverage against crop failure due to natural calamities, pests or diseases."
+            },
+            "kcc": {
+                "title": "Kisan Credit Card (KCC)",
+                "description": "Provides farmers with timely access to credit for their cultivation and other needs."
+            }
+        },
+        "latestNews": {
+            "kharifMsp": {
+                "title": "Government increases MSP for Kharif crops",
+                "description": "The Cabinet has approved a significant hike in the Minimum Support Price for all mandated Kharif crops for the upcoming marketing season."
+            },
+            "subsidyPortal": {
+                "title": "New portal launched for farm subsidy disbursal",
+                "description": "A new unified portal has been launched to streamline the process of subsidy application and disbursal for various farming equipment."
+            },
+            "horticultureMission": {
+                "title": "Guidelines issued for National Horticulture Mission",
+                "description": "The Department of Agriculture has released updated guidelines for the NHM to boost the horticulture sector, with a focus on post-harvest management."
+            },
+            "enamMilestone": {
+                "title": "e-NAM reaches new milestone with 1,000 mandis integrated",
+                "description": "The electronic National Agriculture Market (e-NAM) platform has now connected over 1,000 agricultural produce markets across the country."
+            },
+            "solarPump": {
+                "title": "Solar pump scheme extended for another year",
+                "description": "The PM-KUSUM scheme, aimed at providing solar-powered irrigation pumps to farmers, has been extended until March 2025."
+            }
+        },
+        "client": {
+            "title": "Find a Specific Scheme",
+            "description": "Use our AI assistant to get details on any government scheme by asking a question.",
+            "placeholder": "e.g., Tell me about PM-KISAN scheme",
+            "searching": "Searching...",
+            "findScheme": "Find Scheme",
+            "stopRecording": "Stop Recording",
+            "useVoice": "Use Voice",
+            "eligibility": "Eligibility",
+            "applyNow": "Apply Now",
+            "resultPlaceholder": "Ask a question to see scheme details here."
+        }
+    },
+    "weather": {
+        "title": "Live Weather Forecast",
+        "description": "Plan your farming activities accordingly.",
+        "enterCity": "Enter city name...",
+        "currentWeather": "Current Weather",
+        "rightNowIn": "Right now in {{city}}",
+        "wind": "Wind",
+        "humidity": "Humidity",
+        "weeklyForecast": "Weekly Forecast",
+        "noData": "No weather data available. Please try a different location.",
+        "conditions": {
+            "sunny": "Sunny",
+            "partlyCloudy": "Partly Cloudy",
+            "cloudy": "Cloudy",
+            "showers": "Showers",
+            "rainy": "Rainy",
+            "humidAndCloudy": "Humid & Cloudy",
+            "thunderstorms": "Thunderstorms"
+        },
+        "days": {
+            "today": "Today",
+            "monday": "Monday",
+            "tuesday": "Tuesday",
+            "wednesday": "Wednesday",
+            "thursday": "Thursday",
+            "friday": "Friday",
+            "saturday": "Saturday",
+            "sunday": "Sunday"
+        }
+    },
+    "community": {
+        "title": "Community Forum",
+        "description": "Connect with other farmers, share knowledge, and grow together.",
+        "chatRooms": "Chat Rooms",
+        "you": "You",
+        "attachmentPreview": "Attachment Preview:",
+        "removeAttachment": "Remove attachment",
+        "typeMessage": "Type a message...",
+        "stopRecording": "Stop recording",
+        "startRecording": "Start recording",
+        "sendPhoto": "Send Photo",
+        "send": "Send",
+        "rooms": {
+            "general": "General Discussion",
+            "tomato": "Tomato Farming",
+            "pest": "Pest Control",
+            "organic": "Organic Methods",
+            "market": "Market Prices"
+        },
+        "users": {
+            "ramesh": "Ramesh",
+            "suresh": "Suresh",
+            "geeta": "Geeta",
+            "ravi": "Ravi",
+            "priya": "Priya",
+            "amit": "Amit"
+        },
+        "messages": {
+            "general": {
+                "0": "Has anyone tried the new organic fertilizer? Seeing good results here.",
+                "1": "Yes, I have! My tomato yield has increased by almost 15%.",
+                "2": "That's great to hear! I was thinking of buying it. Is it good for leafy greens?",
+                "3": "Absolutely! My spinach has never been healthier."
+            },
+            "tomato": {
+                "0": "My tomato plants are showing some yellow leaves. Any advice?",
+                "1": "Could be a nitrogen deficiency. Have you tested your soil recently?"
+            },
+            "pest": {
+                "0": "Whiteflies are a major issue in my cotton crop. What's the best way to handle them?"
+            },
+            "organic": {
+                "0": "I'm looking for good organic composting techniques. Any resources?",
+                "1": "The E-Learning Hub has some great articles on vermicomposting!"
+            },
+            "market": {
+                "0": "Onion prices in Pune seem to be dropping. Should I sell now or wait?"
+            }
+        }
+    },
+    "shop": {
+        "title": "Krishi Store",
+        "description": "Choose where you want to buy your farming supplies from.",
+        "govStoreAlt": "Government Store",
+        "govStoreTitle": "Government Stores",
+        "govStoreDescription": "Purchase subsidized seeds, fertilizers, and equipment directly from government-approved outlets. Ensures quality and fair pricing.",
+        "govStoreButton": "Explore Government Portals",
+        "privateMarketplaceAlt": "Private Marketplace",
+        "privateMarketplaceTitle": "Private Marketplace",
+        "privateMarketplaceDescription": "Browse a wide variety of products from different sellers. Find competitive prices and a larger selection of brands and items.",
+        "privateMarketplaceButton": "Go to Marketplace",
+        "government": {
+            "title": "Government Portal",
+            "showingContentFrom": "Showing content from",
+            "backToStore": "Back to Store",
+            "openInNewTab": "Open in New Tab",
+            "embedNote": "Note: Some government websites may not work correctly when embedded. If you experience issues, please use the \"Open in New Tab\" button.",
+            "iframeTitle": "Government Agri Coop Portal"
+        },
+        "marketplace": {
+            "title": "Private Marketplace",
+            "description": "Quality products for all your farming needs from various sellers.",
+            "backToStore": "Back to Store",
+            "addToCart": "Add to Cart",
+            "comingSoonTitle": "Coming Soon!",
+            "comingSoonMessage": "We couldn't find a product matching '{{query}}'. We are constantly expanding our inventory, so please check back later!",
+            "irrelevantProductTitle": "Unrelated Product Search",
+            "irrelevantProductMessage": "What you are looking for is not available. Only agriculture-related products are sold here.",
+            "products": {
+                "organicFertilizer": "Organic Fertilizer",
+                "pesticideSpray": "Pesticide Spray",
+                "highYieldSeeds": "High-Yield Seeds",
+                "gardeningToolsSet": "Gardening Tools Set",
+                "dripIrrigationKit": "Drip Irrigation Kit",
+                "soilTestKit": "Soil Test Kit",
+                "protectiveGloves": "Protective Gloves",
+                "powerSprayer": "Power Sprayer",
+                "greenhousePolythene": "Greenhouse Polythene",
+                "waterPump": "Water Pump (1HP)",
+                "cowManure": "Cow Manure (50kg)",
+                "neemOil": "Neem Oil Pesticide"
+            }
+        }
+    },
+    "learn": {
+        "title": "E-Learning Hub",
+        "description": "Expand your knowledge with our collection of farming guides and tutorials.",
+        "searchPlaceholder": "Search for articles, videos, or products...",
+        "stopRecording": "Stop Recording",
+        "startVoiceSearch": "Start Voice Search",
+        "closePlayer": "Close Player",
+        "watchOnYoutube": "Watch on YouTube",
+        "tabs": {
+            "articles": "Articles & Guides",
+            "videos": "Video Tutorials"
+        },
+        "webSearchResults": "Web Search Results",
+        "irrelevantTopic": "Irrelevant Topic",
+        "irrelevantTopicMessage": "Your search for \"{{query}}\" seems to be unrelated to agriculture. Please try a different search term.",
+        "readFullArticle": "Read Full Article",
+        "ourGuides": "Our Guides",
+        "readMore": "Read More",
+        "watchNow": "Watch Now",
+        "noVideosFound": "No Videos Found",
+        "noVideosFoundMessage": "Your search for \"{{query}}\" did not return any videos. Please try a different search term.",
+        "noArticlesFound": "No Matching Guides or Web Results",
+        "noArticlesFoundMessage": "Your search for \"{{query}}\" did not match any of our guides or find any articles on the web. Please try a different search term.",
+        "searchOnGoogle": "Search on Google",
+        "articles": {
+            "dripIrrigation": {
+                "title": "Mastering Drip Irrigation",
+                "description": "A comprehensive guide to setting up and maintaining drip irrigation systems for maximizing water efficiency and boosting crop yields. Covers component selection, layout planning, and troubleshooting common issues."
+            },
+            "ipm": {
+                "title": "Integrated Pest Management (IPM)",
+                "description": "Explore sustainable, eco-friendly strategies to manage pests. This guide covers biological controls, cultural practices, and the targeted use of pesticides to protect your crops and the environment."
+            },
+            "soilHealth": {
+                "title": "Soil Health and Nutrition",
+                "description": "Unlock the secrets to rich, fertile soil. This article delves into the fundamentals of soil science, including composition, pH balance, and how to enrich your soil for healthier, more productive plants."
+            },
+            "composting": {
+                "title": "Advanced Composting Techniques",
+                "description": "Learn to transform farm waste into 'black gold'. This guide details various composting methods, including hot and cold composting, vermicomposting, and how to create balanced compost piles."
+            },
+            "cropRotation": {
+                "title": "Understanding Crop Rotation",
+                "description": "Discover the benefits of strategic crop rotation, including improved soil fertility, pest and disease cycle disruption, and increased biodiversity. Includes sample rotation plans for common crops."
+            },
+            "organicFarming": {
+                "title": "Basics of Organic Farming",
+                "description": "An essential introduction to the core principles and practices of organic agriculture. Covers certification, natural fertilization, weed control, and marketing organic produce for sustainable farming."
+            }
+        }
+    },
+    "profile": {
+        "title": "Farmer Profile",
+        "description": "Manage your personal information and preferences.",
+        "backToDashboard": "Back to Dashboard",
+        "cardTitle": "Personal Information",
+        "cardDescription": "Keep your details up to date to receive personalized recommendations.",
+        "uploading": "Uploading...",
+        "changePhoto": "Change Photo",
+        "fullName": "Full Name",
+        "email": "Email Address",
+        "location": "Location (District)",
+        "selectDistrict": "Select district...",
+        "searchDistrict": "Search district...",
+        "noDistrictFound": "No district found.",
+        "language": "Preferred Language",
+        "selectLanguage": "Select language",
+        "myCrops": "My Crops",
+        "myCropsDescription": "Add crops you cultivate to get relevant alerts and advice (comma-separated).",
+        "saving": "Saving...",
+        "saveChanges": "Save Changes"
+    },
+    "settings": {
+        "title": "Application Settings",
+        "description": "Customize the look and feel of the application.",
+        "theme": {
+            "title": "Theme",
+            "description": "Select a theme for the application.",
+            "light": "Light",
+            "dark": "Dark",
+            "system": "System"
+        },
+        "about": {
+            "title": "About KrishiMitra",
+            "description": "KrishiMitra is an AI-powered farming assistant designed to support small-scale Indian farmers with real-time crop diagnosis, mandi prices, government schemes, and personalized farming advice in local languages."
+        },
+        "version": {
+            "title": "App Version"
+        },
+        "poweredBy": {
+            "title": "Powered By",
+            "tech1": "Google Cloud Vertex AI",
+            "tech2": "Firebase",
+            "tech3": "Gemini Multimodal Models"
+        },
+        "developedBy": {
+            "title": "Developed By",
+            "teamName": "Team Codogram"
+        },
+        "contact": {
+            "title": "Contact Us",
+            "emailLabel": "Email",
+            "whatsappLabel": "WhatsApp"
+        },
+        "legal": {
+            "privacy": "Privacy Policy",
+            "terms": "Terms of Use"
+        }
+    },
+    "privacy": {
+        "description": "Our commitment to your privacy.",
+        "backToSettings": "Back to Settings",
+        "lastUpdated": {
+            "title": "Last Updated",
+            "date": "July 26, 2024"
+        },
+        "introduction": {
+            "title": "Introduction",
+            "content": "Welcome to KrishiMitra AI. We are committed to protecting your privacy and handling your data in an open and transparent manner. This privacy policy sets out how we collect, use, and protect your information."
+        },
+        "information": {
+            "title": "Information We Collect",
+            "personal": {
+                "title": "Personal Information",
+                "content": "When you register, we collect your name, email, and location to create and manage your account."
+            },
+            "usage": {
+                "title": "Usage Data",
+                "content": "We collect information on how you interact with our services, such as features used and frequency of access."
+            },
+            "image": {
+                "title": "Image Data",
+                "content": "For our Crop Doctor feature, we collect images you upload. These are used solely for diagnosis and are not shared with third parties."
+            }
+        },
+        "useOfInfo": {
+            "title": "How We Use Your Information",
+            "content": "We use your information to provide and improve our services, personalize your experience, and communicate with you."
+        },
+        "dataSharing": {
+            "title": "Data Sharing",
+            "content": "We do not sell your personal data. We may share anonymized data with partners for research purposes, but never your personal identifiable information without your consent."
+        },
+        "dataSecurity": {
+            "title": "Data Security",
+            "content": "We implement a variety of security measures to maintain the safety of your personal information."
+        },
+        "yourRights": {
+            "title": "Your Rights",
+            "content": "You have the right to access, correct, or delete your personal data at any time through your profile settings or by contacting us."
+        },
+        "changes": {
+            "title": "Changes to This Policy",
+            "content": "We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page."
+        },
+        "contact": {
+            "title": "Contact Us",
+            "content": "If you have any questions about this Privacy Policy, please contact us at support@krishimitra.in."
+        }
+    },
+    "terms": {
+        "description": "Rules for using our service.",
+        "backToSettings": "Back to Settings",
+        "lastUpdated": {
+            "title": "Last Updated",
+            "date": "July 26, 2024"
+        },
+        "acceptance": {
+            "title": "Acceptance of Terms",
+            "content": "By accessing and using KrishiMitra AI, you accept and agree to be bound by the terms and provision of this agreement."
+        },
+        "useOfService": {
+            "title": "Use of Service",
+            "content": "You agree to use our services for lawful purposes only and in a way that does not infringe the rights of, restrict or inhibit anyone else's use and enjoyment of the service.",
+            "item1": "You are responsible for maintaining the confidentiality of your account and password.",
+            "item2": "The advice provided by the AI is for informational purposes only and should not be considered a substitute for professional agricultural advice.",
+            "item3": "You must not misuse our services by knowingly introducing viruses or other material that is malicious or technologically harmful."
+        },
+        "disclaimer": {
+            "title": "Disclaimer of Warranties",
+            "content": "The service is provided on an 'as is' and 'as available' basis without any warranties of any kind, either express or implied."
+        },
+        "limitation": {
+            "title": "Limitation of Liability",
+            "content": "In no event shall KrishiMitra AI or its developers be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+        },
+        "termination": {
+            "title": "Termination",
+            "content": "We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms."
+        },
+        "governingLaw": {
+            "title": "Governing Law",
+            "content": "These Terms shall be governed and construed in accordance with the laws of India, without regard to its conflict of law provisions."
+        },
+        "changes": {
+            "title": "Changes",
+            "content": "We reserve the right, at our sole discretion, to modify or replace these Terms at any time."
+        }
+    },
+    "toast": {
+        "browserNotSupported": "Browser Not Supported",
+        "noVoiceSupport": "Your browser does not support voice recognition.",
+        "noSpeechDetected": "No Speech Detected",
+        "tryAgain": "Please try again and speak clearly into the microphone.",
+        "voiceError": "Voice Recognition Error",
+        "unsupportedFileType": "Unsupported File Type",
+        "selectAnImage": "Please select an image file.",
+        "speechGenerationFailed": "Speech Generation Failed",
+        "couldNotGenerateAudio": "Could not generate audio for the diagnosis.",
+        "couldNotGenerateAudioAnalysis": "Could not generate audio for the analysis.",
+        "noImageSelected": "No Image Selected",
+        "selectImageToDiagnose": "Please select an image of your crop to diagnose.",
+        "diagnosisFailed": "Diagnosis Failed",
+        "errorAnalyzingImage": "An error occurred while analyzing the image. Please try again.",
+        "emptyQuery": "Empty Query",
+        "enterMarketQuestion": "Please enter your question about market prices.",
+        "analysisFailed": "Analysis Failed",
+        "errorAnalyzingMarket": "An error occurred while analyzing the market data. Please try again.",
+        "enterSchemeQuestion": "Please enter your question about a government scheme.",
+        "searchFailed": "Search Failed",
+        "errorFetchingScheme": "An error occurred while fetching scheme details. Please try again.",
+        "errorFetchingWeather": "Error fetching weather",
+        "couldNotRetrieveWeather": "Could not retrieve weather data for the specified location.",
+        "videoSearchFailed": "Video Search Failed",
+        "couldNotRetrieveVideos": "Could not retrieve video tutorials.",
+        "summarizationFailed": "Summarization Failed",
+        "couldNotSummarize": "Could not summarize an article from the web.",
+        "signUpSuccess": "Sign Up Successful",
+        "signUpSuccessDesc": "Welcome! Please log in to continue.",
+        "unexpectedError": "An unexpected error occurred.",
+        "invalidCredentials": "Invalid email or password. Please try again.",
+        "emailInUse": "An account with this email already exists.",
+        "signUpFailed": "Sign Up Failed",
+        "signInFailed": "Sign In Failed",
+        "profileUpdated": "Profile Updated",
+        "profileUpdatedDesc": "Your information has been successfully saved.",
+        "updateFailed": "Update Failed",
+        "updateFailedDesc": "Could not save your changes. Please try again.",
+        "photoUpdated": "Photo Updated",
+        "photoUpdatedDesc": "Your profile picture has been changed.",
+        "uploadFailed": "Upload Failed",
+        "uploadFailedDesc": "Could not change your profile picture. Please try again.",
+        "recommendationFailed": "Recommendation Failed",
+        "errorGeneratingRecommendation": "Could not generate crop recommendations. Please try again.",
+        "noInput": "No Input Provided",
+        "provideImageOrDescription": "Please upload an image or provide a description of the issue."
+    },
+    "tracker": {
+        "title": "Expense & Profit Tracker",
+        "description": "Log your incomes and expenses to track crop profitability.",
+        "addTransaction": "Add Transaction",
+        "editTransaction": "Edit Transaction",
+        "transactionDetails": "Enter the details for your income or expense.",
+        "totalIncome": "Total Income",
+        "totalExpense": "Total Expense",
+        "netProfitLoss": "Net Profit / Loss",
+        "recentTransactions": "Recent Transactions",
+        "recentTransactionsDesc": "A log of your most recent incomes and expenses.",
+        "noTransactions": "No transactions yet. Click 'Add Transaction' to start.",
+        "summaryChart": "Income vs. Expense",
+        "summaryChartDesc": "A visual summary of your finances.",
+        "chart": {
+            "income": "Income",
+            "expense": "Expense"
+        },
+        "form": {
+            "description": "Description",
+            "amount": "Amount (₹)",
+            "type": "Type",
+            "selectType": "Select a type",
+            "income": "Income",
+            "expense": "Expense",
+            "category": "Category",
+            "selectCategory": "Select a category",
+            "date": "Date",
+            "pickDate": "Pick a date",
+            "cancel": "Cancel",
+            "save": "Save Transaction"
+        },
+        "categories": {
+            "seeds": "Seeds",
+            "fertilizers": "Fertilizers",
+            "pesticides": "Pesticides",
+            "labor": "Labor",
+            "equipment": "Equipment",
+            "fuel": "Fuel",
+            "rent": "Land Rent",
+            "other": "Other",
+            "cropSale": "Crop Sale",
+            "subsidy": "Subsidy"
+        },
+        "actions": {
+            "edit": "Edit",
+            "delete": "Delete"
+        }
+    },
+    "cropRecommender": {
+        "title": "AI Crop Recommender",
+        "description": "Get intelligent crop suggestions based on your location, farm type, and market trends.",
+        "client": {
+            "formTitle": "Farm Details",
+            "formDescription": "Provide details about your farm to get the best recommendations.",
+            "farmType": "Farm Type",
+            "irrigated": "Irrigated",
+            "rainfed": "Rainfed / Dry",
+            "landSize": "Land Size (e.g., 2 acres)",
+            "cropPreference": "Crop Preference (Optional)",
+            "cropPreferencePlaceholder": "e.g., Vegetables, Millets",
+            "getRecommendations": "Get Recommendations",
+            "gettingRecommendations": "Getting Recommendations...",
+            "resultsTitle": "AI-Powered Recommendations",
+            "resultsPlaceholder": "Your personalized crop recommendations will appear here.",
+            "topPicks": "Our Top Picks For You",
+            "topPicksDescription": "Based on your inputs, here are the most suitable crops for the upcoming season.",
+            "learnMore": "Learn More",
+            "soilType": "Soil Type (Optional)",
+            "selectSoilType": "Select soil type",
+            "soilTypes": {
+                "black": "Black",
+                "red": "Red",
+                "loamy": "Loamy",
+                "sandy": "Sandy",
+                "clay": "Clay"
+            },
+            "waterSource": "Water Source (Optional)",
+            "selectWaterSource": "Select water source",
+            "waterSources": {
+                "borewell": "Borewell",
+                "canal": "Canal",
+                "rain-only": "Rain-only",
+                "tank": "Tank",
+                "river": "River"
+            },
+            "currentSeason": "Current Season",
+            "seasons": {
+                "kharif": "Kharif",
+                "rabi": "Rabi",
+                "zaid": "Zaid"
+            },
+            "previousCrop": "Previous Crop (Optional)",
+            "budget": "Budget (Optional)"
+        }
+    },
+    "chatbot": {
+        "title": "Annapurna Assistant",
+        "description": "Your personal farming assistant. Ask me anything!",
+        "open": "Open Chatbot",
+        "placeholder": "Ask Annapurna a question...",
+        "welcomeMessage": "Hi {{name}}! I'm Annapurna. How can I help you today? You can ask me to show you market prices, diagnose a crop, or find a government scheme.",
+        "errorMessage": "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.",
+        "yes": "Yes",
+        "no": "No"
+    }
+}
+
+    

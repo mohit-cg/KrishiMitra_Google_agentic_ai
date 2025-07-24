@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -13,7 +14,7 @@ import {z} from 'genkit';
 
 const SummarizeArticleInputSchema = z.object({
   query: z.string().describe('The topic to search for and summarize.'),
-  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn", "bn", "bho").'),
 });
 export type SummarizeArticleInput = z.infer<typeof SummarizeArticleInputSchema>;
 
@@ -68,3 +69,5 @@ const summarizeArticleFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    

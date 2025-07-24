@@ -14,7 +14,7 @@ import {z} from 'genkit';
 
 const AnnapurnaChatInputSchema = z.object({
   query: z.string().describe('The user\'s message to the chatbot.'),
-  language: z.string().describe('The language of the user\'s query (e.g., "en", "hi", "kn").'),
+  language: z.string().describe('The language of the user\'s query (e.g., "en", "hi", "kn", "bn", "bho").'),
 });
 export type AnnapurnaChatInput = z.infer<typeof AnnapurnaChatInputSchema>;
 
@@ -104,3 +104,5 @@ const annapurnaChatFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    

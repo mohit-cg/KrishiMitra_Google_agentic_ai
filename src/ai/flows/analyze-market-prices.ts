@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -13,7 +14,7 @@ import {z} from 'genkit';
 
 const AnalyzeMarketPricesInputSchema = z.object({
   query: z.string().describe('The user query about market prices, can be voice or text. Should include crop and location.'),
-  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn", "bn", "bho").'),
 });
 export type AnalyzeMarketPricesInput = z.infer<typeof AnalyzeMarketPricesInputSchema>;
 
@@ -196,6 +197,8 @@ const analyzeMarketPricesFlow = ai.defineFlow(
             en: "The market analysis service is currently overloaded. Please try again in a few moments.",
             hi: "बाजार विश्लेषण सेवा वर्तमान में ओवरलोड है। कृपया कुछ क्षण बाद पुनः प्रयास करें।",
             kn: "ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ ಸೇವೆ ಪ್ರಸ್ತುತ ಓವರ್‌ಲೋಡ್ ಆಗಿದೆ. ದಯವಿಟ್ಟು ಕೆಲವು ಕ್ಷಣಗಳಲ್ಲಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+            bn: "বাজার বিশ্লেষণ পরিষেবা বর্তমানে ওভারলোড। অনুগ্রহ করে কয়েক মুহূর্ত পরে আবার চেষ্টা করুন।",
+            bho: "बाजार विश्लेषण सेवा अबही ओवरलोड बा। कुछ देर बाद फेर से कोसिस करीं।"
         };
 
         const message = friendlyErrorMessage[language as keyof typeof friendlyErrorMessage] || friendlyErrorMessage.en;
@@ -208,3 +211,5 @@ const analyzeMarketPricesFlow = ai.defineFlow(
     }
   }
 );
+
+    

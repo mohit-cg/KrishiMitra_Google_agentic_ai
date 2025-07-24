@@ -21,7 +21,7 @@ const DiagnoseCropDiseaseInputSchema = z.object({
       "A photo of a crop, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
   description: z.string().optional().describe('A text or voice-based description of the crop issue.'),
-  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn", "bn", "bho").'),
 });
 export type DiagnoseCropDiseaseInput = z.infer<typeof DiagnoseCropDiseaseInputSchema>;
 
@@ -107,3 +107,5 @@ const diagnoseCropDiseaseFlow = ai.defineFlow(
     };
   }
 );
+
+    
