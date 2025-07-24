@@ -65,11 +65,11 @@
         "client": {
             "uploadTitle": "Diagnose Your Crop",
             "uploadDescription": "Upload an image, describe the issue, or both for the most accurate diagnosis.",
-            "imageLabel": "1. Upload Image",
+            "imageLabel": "Upload Image",
             "changeFile": "Change File",
             "chooseFile": "Choose File",
             "cropPreview": "Crop preview",
-            "descriptionLabel": "2. Describe the Issue",
+            "descriptionLabel": "Describe the Issue",
             "descriptionPlaceholder": "e.g., 'My tomato leaves have yellow spots with brown centers.' or click the mic to speak.",
             "diagnosing": "Diagnosing...",
             "diagnoseButton": "Diagnose Disease",
@@ -642,3 +642,5 @@
         "no": "No"
     }
 }
+
+    

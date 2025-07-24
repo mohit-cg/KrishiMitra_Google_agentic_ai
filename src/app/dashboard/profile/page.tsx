@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { useTranslation } from '@/contexts/language-context';
-import { translateText, TranslateTextInput } from '@/ai/flows/translate-text';
+import { translateText } from '@/ai/flows/translate-text';
 
 
 const districts = [
@@ -77,73 +77,67 @@ export default function ProfilePage() {
   const { t, language: currentLanguage, setLanguage: setAppLanguage } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // State for form inputs (untranslated)
+  // State for form inputs (untranslated, canonical values)
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [location, setLocation] = useState('');
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(currentLanguage);
   const [crops, setCrops] = useState('');
 
-  // State for translated display values
+  // State for translated display values shown in the UI
   const [translatedDisplayName, setTranslatedDisplayName] = useState('');
   const [translatedCrops, setTranslatedCrops] = useState('');
-  const [isTranslating, setIsTranslating] = useState(false);
 
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
   const [open, setOpen] = useState(false);
 
-
-  // Effect to set initial form state from userProfile and translate it
+  // This effect runs when the component mounts or the user profile data changes.
+  // It populates the form with the canonical (usually English) data from the profile.
   useEffect(() => {
     if (userProfile) {
-      const untranslatedName = userProfile.displayName || '';
-      const untranslatedCrops = userProfile.crops || '';
-
-      setDisplayName(untranslatedName);
+      setDisplayName(userProfile.displayName || '');
       setEmail(userProfile.email || '');
       setLocation(userProfile.location || 'Pune, Maharashtra');
       setLanguage(userProfile.language || 'en');
-      setCrops(untranslatedCrops);
-      setAppLanguage(userProfile.language || 'en');
+      setCrops(userProfile.crops || '');
     } else if (user) {
         setDisplayName(user.displayName || '');
         setEmail(user.email || '');
-        setTranslatedDisplayName(user.displayName || '');
     }
-  }, [user, userProfile, setAppLanguage]);
+  }, [user, userProfile]);
 
-  useEffect(() => {
-    const translateData = async () => {
-        setIsTranslating(true);
-        try {
-          if (currentLanguage === 'en') {
-            setTranslatedDisplayName(displayName);
-            setTranslatedCrops(crops);
-          } else {
-             // Only translate if there is text to translate
-            const nameToTranslate = displayName || '';
-            const cropsToTranslate = crops || '';
+  // This callback is for translating the canonical data into the currently selected language for display.
+  const translateDataForDisplay = useCallback(async () => {
+    if (currentLanguage === 'en') {
+      setTranslatedDisplayName(displayName);
+      setTranslatedCrops(crops);
+      return;
+    }
 
-            const [nameRes, cropsRes] = await Promise.all([
-              nameToTranslate ? translateText({ text: nameToTranslate, targetLanguage: currentLanguage as 'hi' | 'kn' | 'bn' | 'bho' }) : Promise.resolve({ translatedText: '' }),
-              cropsToTranslate ? translateText({ text: cropsToTranslate, targetLanguage: currentLanguage as 'hi' | 'kn' | 'bn' | 'bho' }) : Promise.resolve({ translatedText: '' }),
-            ]);
-            setTranslatedDisplayName(nameRes.translatedText);
-            setTranslatedCrops(cropsRes.translatedText);
-          }
-        } catch (error) {
-          console.error("Failed to translate user data", error);
-          // Fallback to untranslated data on error
-          setTranslatedDisplayName(displayName);
-          setTranslatedCrops(crops);
-        } finally {
-          setIsTranslating(false);
-        }
-      };
-
-      translateData();
+    setIsTranslating(true);
+    try {
+      const [nameRes, cropsRes] = await Promise.all([
+        displayName ? translateText({ text: displayName, targetLanguage: currentLanguage as 'hi' | 'kn' | 'bn' | 'bho' }) : Promise.resolve({ translatedText: '' }),
+        crops ? translateText({ text: crops, targetLanguage: currentLanguage as 'hi' | 'kn' | 'bn' | 'bho' }) : Promise.resolve({ translatedText: '' }),
+      ]);
+      setTranslatedDisplayName(nameRes.translatedText);
+      setTranslatedCrops(cropsRes.translatedText);
+    } catch (error) {
+      console.error("Failed to translate user data for display", error);
+      // On error, fall back to showing the untranslated data.
+      setTranslatedDisplayName(displayName);
+      setTranslatedCrops(crops);
+    } finally {
+      setIsTranslating(false);
+    }
   }, [displayName, crops, currentLanguage]);
+
+  // This effect triggers the translation whenever the canonical data or the current language changes.
+  useEffect(() => {
+    translateDataForDisplay();
+  }, [translateDataForDisplay]);
 
   
   const getInitials = (name: string | null | undefined) => {
@@ -158,13 +152,14 @@ export default function ProfilePage() {
   const handleSaveChanges = async () => {
     setIsSaving(true);
     try {
+      // Always save the untranslated (canonical) values to the database.
       await updateUserProfile({
         displayName,
         location,
         language,
         crops,
       });
-      // Also update language in context
+      // Also update language in context to trigger app-wide re-render.
       setAppLanguage(language as 'en' | 'hi' | 'kn' | 'bn' | 'bho');
 
       toast({

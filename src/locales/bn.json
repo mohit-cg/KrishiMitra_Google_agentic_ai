@@ -1,645 +1,645 @@
 
 {
     "common": {
-        "loading": "Loading",
-        "initializing": "Initializing your dashboard..."
+        "loading": "লোড হচ্ছে",
+        "initializing": "আপনার ড্যাশবোর্ড শুরু হচ্ছে..."
     },
     "nav": {
-        "dashboard": "Dashboard",
-        "cropDoctor": "Crop Doctor",
-        "marketAnalyst": "Market Analyst",
-        "govtSchemes": "Govt Schemes",
-        "weather": "Weather",
-        "community": "Community",
-        "shop": "Shop",
-        "eLearning": "E-Learning",
-        "tracker": "Tracker",
-        "cropRecommender": "Crop Recommender",
-        "profile": "Profile",
-        "settings": "Settings"
+        "dashboard": "ড্যাশবোর্ড",
+        "cropDoctor": "ফসল ডাক্তার",
+        "marketAnalyst": "বাজার বিশ্লেষক",
+        "govtSchemes": "সরকারি প্রকল্প",
+        "weather": "আবহাওয়া",
+        "community": "קהילה",
+        "shop": "দোকান",
+        "eLearning": "ই-লার্নিং",
+        "tracker": "ট্র্যাকার",
+        "cropRecommender": "ফসল সুপারিশকারী",
+        "profile": "প্রোফাইল",
+        "settings": "সেটিংস"
     },
     "userNav": {
-        "profile": "Profile",
-        "settings": "Settings",
-        "logout": "Log out"
+        "profile": "প্রোফাইল",
+        "settings": "সেটিংস",
+        "logout": "লগ আউট"
     },
     "dashboardLayout": {
-        "toggleMenu": "Toggle Menu",
-        "menuTitle": "Navigation Menu",
-        "menuDescription": "Main navigation links for the application."
+        "toggleMenu": "মেনু টগল করুন",
+        "menuTitle": "নেভিগেশন মেনু",
+        "menuDescription": "অ্যাপ্লিকেশনের জন্য প্রধান নেভিগেশন লিঙ্ক।"
     },
     "login": {
-        "imageAlt": "Image of a lush farm",
-        "tagline": "Empowering Agriculture Through Technology",
-        "subTagline": "Join a community of modern farmers leveraging AI for better yields and sustainable practices.",
-        "createAccountPrompt": "Create your account to get started.",
-        "signInPrompt": "Welcome back! Sign in to your dashboard.",
-        "emailLabel": "Email",
-        "passwordLabel": "Password",
-        "processing": "Processing...",
-        "createAccountButton": "Create Account",
-        "signInButton": "Sign In",
-        "alreadyHaveAccount": "Already have an account?",
-        "dontHaveAccount": "Don't have an account?",
-        "signInLink": "Sign In",
-        "signUpLink": "Sign Up"
+        "imageAlt": "একটি সবুজ খামারের ছবি",
+        "tagline": "প্রযুক্তির মাধ্যমে কৃষিকে ক্ষমতায়ন",
+        "subTagline": "উন্নত ফলন এবং টেকসই অনুশীলনের জন্য AI ব্যবহার করে আধুনিক কৃষকদের একটি সম্প্রদায়ে যোগ দিন।",
+        "createAccountPrompt": "শুরু করতে আপনার অ্যাকাউন্ট তৈরি করুন।",
+        "signInPrompt": "আবার স্বাগতম! আপনার ড্যাশবোর্ডে সাইন ইন করুন।",
+        "emailLabel": "ইমেল",
+        "passwordLabel": "পাসওয়ার্ড",
+        "processing": "প্রসেস করা হচ্ছে...",
+        "createAccountButton": "অ্যাকাউন্ট তৈরি করুন",
+        "signInButton": "সাইন ইন করুন",
+        "alreadyHaveAccount": "ইতিমধ্যেই একটি অ্যাকাউন্ট আছে?",
+        "dontHaveAccount": "অ্যাকাউন্ট নেই?",
+        "signInLink": "সাইন ইন করুন",
+        "signUpLink": "সাইন আপ করুন"
     },
     "dashboard": {
-        "welcome": "Welcome back, {{name}}!",
-        "description": "Here's a quick overview of your farm and market.",
-        "farmer": "Farmer",
+        "welcome": "আবার স্বাগতম, {{name}}!",
+        "description": "এখানে আপনার খামার এবং বাজারের একটি দ্রুত সংক্ষিপ্ত বিবরণ রয়েছে।",
+        "farmer": "কৃষক",
         "quickLinks": {
-            "cropDoctor": "Diagnose crop diseases instantly.",
-            "cropRecommender": "Get AI-powered crop suggestions.",
-            "marketAnalyst": "Get real-time price analysis.",
-            "govtSchemes": "Find government schemes for you.",
-            "tracker": "Track your farm expenses and profits.",
-            "eLearning": "Browse guides and tutorials."
+            "cropDoctor": "ফসলের রোগ সঙ্গে সঙ্গে নির্ণয় করুন।",
+            "cropRecommender": "AI-চালিত ফসলের পরামর্শ পান।",
+            "marketAnalyst": "বাস্তব-সময়ের মূল্য বিশ্লেষণ পান।",
+            "govtSchemes": "আপনার জন্য সরকারি প্রকল্প খুঁজুন।",
+            "tracker": "আপনার খামারের খরচ এবং লাভ ট্র্যাক করুন।",
+            "eLearning": "গাইড এবং টিউটোরিয়াল ব্রাউজ করুন।"
         },
-        "currentWeather": "Current Weather",
-        "weatherUnavailable": "Weather data unavailable."
+        "currentWeather": "বর্তমান আবহাওয়া",
+        "weatherUnavailable": "আবহাওয়ার ডেটা অনুপলব্ধ।"
     },
     "cropDoctor": {
-        "title": "AI Crop Doctor",
-        "description": "Upload a clear image of an affected crop leaf to get an instant diagnosis and suggested solutions.",
+        "title": "এআই ফসল ডাক্তার",
+        "description": "একটি তাত্ক্ষণিক নির্ণয় এবং প্রস্তাবিত সমাধান পেতে একটি ক্ষতিগ্রস্ত ফসলের পাতার একটি পরিষ্কার ছবি আপলোড করুন।",
         "client": {
-            "uploadTitle": "Diagnose Your Crop",
-            "uploadDescription": "Upload an image, describe the issue, or both for the most accurate diagnosis.",
-            "imageLabel": "Upload Image",
-            "changeFile": "Change File",
-            "chooseFile": "Choose File",
-            "cropPreview": "Crop preview",
-            "descriptionLabel": "Describe the Issue",
-            "descriptionPlaceholder": "e.g., 'My tomato leaves have yellow spots with brown centers.' or click the mic to speak.",
-            "diagnosing": "Diagnosing...",
-            "diagnoseButton": "Diagnose Disease",
-            "resultTitle": "Diagnosis Result",
-            "diagnosis": "Diagnosis",
-            "solutions": "Suggested Solutions",
-            "readDocs": "Read Docs",
-            "watchVideo": "Watch Video",
-            "resultPlaceholder": "Your diagnosis result will appear here."
+            "uploadTitle": "আপনার ফসল নির্ণয় করুন",
+            "uploadDescription": "সবচেয়ে সঠিক নির্ণয়ের জন্য একটি ছবি আপলোড করুন, সমস্যাটি বর্ণনা করুন বা উভয়ই করুন।",
+            "imageLabel": "ছবি আপলোড করুন",
+            "changeFile": "ফাইল পরিবর্তন করুন",
+            "chooseFile": "ফাইল চয়ন করুন",
+            "cropPreview": "ফসলের পূর্বরূপ",
+            "descriptionLabel": "সমস্যা বর্ণনা করুন",
+            "descriptionPlaceholder": "যেমন, 'আমার টমেটো পাতায় বাদামী কেন্দ্র সহ হলুদ দাগ আছে।' অথবা কথা বলতে মাইক ক্লিক করুন।",
+            "diagnosing": "নির্ণয় করা হচ্ছে...",
+            "diagnoseButton": "রোগ নির্ণয় করুন",
+            "resultTitle": "নির্ণয়ের ফলাফল",
+            "diagnosis": "নির্ণয়",
+            "solutions": "প্রস্তাবিত সমাধান",
+            "readDocs": "ডক্স পড়ুন",
+            "watchVideo": "ভিডিও দেখুন",
+            "resultPlaceholder": "আপনার নির্ণয়ের ফলাফল এখানে প্রদর্শিত হবে।"
         }
     },
     "marketAnalyst": {
-        "title": "Market Analyst",
-        "description": "Get real-time market price analysis and recommendations. Ask a question like \"What is the price of onions in Pune Mandi?\"",
-        "faqTitle": "Frequently Asked Questions",
+        "title": "বাজার বিশ্লেষক",
+        "description": "বাস্তব-সময়ের বাজার মূল্য বিশ্লেষণ এবং সুপারিশ পান। \"পুনে মন্ডিতে পেঁয়াজের দাম কত?\" এর মতো একটি প্রশ্ন জিজ্ঞাসা করুন।",
+        "faqTitle": "সচরাচর জিজ্ঞাস্য প্রশ্নাবলী",
         "faqs": {
-            "q1": "What kind of questions can I ask?",
-            "a1": "You can ask about current crop prices in specific locations, price trends, and get recommendations on whether to sell or hold your produce. For example: 'What is the price of tomatoes in Pune?' or 'Should I sell my wheat stock now?'",
-            "q2": "How accurate is the price information?",
-            "a2": "The price information is based on real-time data from various agricultural markets (mandis). While we strive for accuracy, prices can fluctuate rapidly. Use the information as a guide for your decisions.",
-            "q3": "Can I ask about future price predictions?",
-            "a3": "Yes, you can ask for price trend analysis and predictions. The AI will provide insights based on historical data and current market conditions, but please note that these are forecasts and not guarantees.",
-            "q4": "What locations and crops are supported?",
-            "a4": "The assistant covers a wide range of major crops and markets across India. You can ask about vegetables, grains, fruits, and more in various cities and their main agricultural markets."
+            "q1": "আমি কি ধরনের প্রশ্ন করতে পারি?",
+            "a1": "আপনি নির্দিষ্ট স্থানে বর্তমান ফসলের দাম, মূল্যের প্রবণতা সম্পর্কে জিজ্ঞাসা করতে পারেন এবং আপনার পণ্য বিক্রি করবেন নাকি ধরে রাখবেন সে সম্পর্কে সুপারিশ পেতে পারেন। উদাহরণস্বরূপ: 'পুনেতে টমেটোর দাম কত?' বা 'আমার কি এখন আমার গমের স্টক বিক্রি করা উচিত?'",
+            "q2": "মূল্যের তথ্য কতটা নির্ভুল?",
+            "a2": "মূল্যের তথ্য বিভিন্ন কৃষি বাজার (মান্ডি) থেকে বাস্তব-সময়ের ডেটার উপর ভিত্তি করে। আমরা নির্ভুলতার জন্য চেষ্টা করার সময়, দাম দ্রুত ওঠানামা করতে পারে। আপনার সিদ্ধান্তের জন্য একটি গাইড হিসাবে তথ্য ব্যবহার করুন।",
+            "q3": "আমি কি ভবিষ্যতের মূল্য পূর্বাভাস সম্পর্কে জিজ্ঞাসা করতে পারি?",
+            "a3": "হ্যাঁ, আপনি মূল্য প্রবণতা বিশ্লেষণ এবং পূর্বাভাসের জন্য জিজ্ঞাসা করতে পারেন। AI ঐতিহাসিক ডেটা এবং বর্তমান বাজার পরিস্থিতির উপর ভিত্তি করে অন্তর্দৃষ্টি প্রদান করবে, কিন্তু অনুগ্রহ করে মনে রাখবেন যে এগুলি পূর্বাভাস এবং গ্যারান্টি নয়।",
+            "q4": "কোন স্থান এবং ফসল সমর্থিত?",
+            "a4": "সহকারী ভারত জুড়ে প্রধান ফসল এবং বাজারের একটি বিস্তৃত পরিসর কভার করে। আপনি বিভিন্ন শহর এবং তাদের প্রধান কৃষি বাজারে সবজি, শস্য, ফল এবং আরও অনেক কিছু সম্পর্কে জিজ্ঞাসা করতে পারেন।"
         },
         "client": {
-            "askTitle": "Ask Your Market Question",
-            "placeholder": "e.g., What are the chances of tomato prices increasing in the next week in Bangalore? Or click the mic to speak.",
-            "analyzing": "Analyzing...",
-            "getAnalysis": "Get Analysis",
-            "stopRecording": "Stop Recording",
-            "useVoice": "Use Voice",
-            "resultTitle": "Analysis Result",
-            "recommendation": "Recommendation",
-            "marketAnalysis": "Market Analysis",
-            "resultPlaceholder": "Your market analysis will appear here."
+            "askTitle": "আপনার বাজারের প্রশ্ন জিজ্ঞাসা করুন",
+            "placeholder": "যেমন, আগামী সপ্তাহে ব্যাঙ্গালোরে টমেটোর দাম বাড়ার সম্ভাবনা কী? অথবা কথা বলতে মাইক ক্লিক করুন।",
+            "analyzing": "বিশ্লেষণ করা হচ্ছে...",
+            "getAnalysis": "বিশ্লেষণ পান",
+            "stopRecording": "রেকর্ডিং বন্ধ করুন",
+            "useVoice": "ভয়েস ব্যবহার করুন",
+            "resultTitle": "বিশ্লেষণ ফলাফল",
+            "recommendation": "সুপারিশ",
+            "marketAnalysis": "বাজার বিশ্লেষণ",
+            "resultPlaceholder": "আপনার বাজার বিশ্লেষণ এখানে প্রদর্শিত হবে।"
         }
     },
     "schemes": {
-        "title": "Scheme & Information Hub",
-        "description": "Discover key government schemes, stay updated with the latest news, and find information tailored for you.",
-        "keySchemesTitle": "Key Government Schemes",
-        "latestNewsTitle": "Latest News & Updates",
-        "visitSite": "Visit Site",
-        "readMore": "Read More",
+        "title": "প্রকল্প ও তথ্য হাব",
+        "description": "মূল সরকারি প্রকল্পগুলি আবিষ্কার করুন, সর্বশেষ খবরের সাথে আপডেট থাকুন এবং আপনার জন্য উপযুক্ত তথ্য খুঁজুন।",
+        "keySchemesTitle": "মূল সরকারি প্রকল্প",
+        "latestNewsTitle": "সর্বশেষ খবর ও আপডেট",
+        "visitSite": "সাইট দেখুন",
+        "readMore": "আরও পড়ুন",
         "keySchemes": {
             "pmkisan": {
-                "title": "PM-KISAN Scheme",
-                "description": "Financial support of ₹6,000 per year for small and marginal farmer families."
+                "title": "পিএম-কিষাণ প্রকল্প",
+                "description": "ছোট ও প্রান্তিক কৃষক পরিবারকে প্রতি বছর ₹6,000 আর্থিক সহায়তা।"
             },
             "pmfby": {
-                "title": "Pradhan Mantri Fasal Bima Yojana",
-                "description": "Insurance coverage against crop failure due to natural calamities, pests or diseases."
+                "title": "প্রধানমন্ত্রী ফসল বীমা যোজনা",
+                "description": "প্রাকৃতিক দুর্যোগ, কীটপতঙ্গ বা রোগের কারণে ফসল নষ্টের বিরুদ্ধে বীমা কভারেজ।"
             },
             "kcc": {
-                "title": "Kisan Credit Card (KCC)",
-                "description": "Provides farmers with timely access to credit for their cultivation and other needs."
+                "title": "কিষাণ ক্রেডিট কার্ড (কেসিসি)",
+                "description": "কৃষকদের তাদের চাষাবাদ এবং অন্যান্য প্রয়োজনের জন্য সময়মত ঋণ পেতে সহায়তা করে।"
             }
         },
         "latestNews": {
             "kharifMsp": {
-                "title": "Government increases MSP for Kharif crops",
-                "description": "The Cabinet has approved a significant hike in the Minimum Support Price for all mandated Kharif crops for the upcoming marketing season."
+                "title": "সরকার খরিফ ফসলের এমএসপি বাড়িয়েছে",
+                "description": "আসন্ন বিপণন মরসুমের জন্য সমস্ত বাধ্যতামূলক খরিফ ফসলের জন্য ন্যূনতম সমর্থন মূল্যে একটি উল্লেখযোগ্য বৃদ্ধি মন্ত্রিসভা অনুমোদন করেছে।"
             },
             "subsidyPortal": {
-                "title": "New portal launched for farm subsidy disbursal",
-                "description": "A new unified portal has been launched to streamline the process of subsidy application and disbursal for various farming equipment."
+                "title": "খামার ভর্তুকি বিতরণের জন্য নতুন পোর্টাল চালু হয়েছে",
+                "description": "বিভিন্ন কৃষি সরঞ্জামের জন্য ভর্তুকি আবেদন এবং বিতরণের প্রক্রিয়া সহজ করার জন্য একটি নতুন সমন্বিত পোর্টাল চালু করা হয়েছে।"
             },
             "horticultureMission": {
-                "title": "Guidelines issued for National Horticulture Mission",
-                "description": "The Department of Agriculture has released updated guidelines for the NHM to boost the horticulture sector, with a focus on post-harvest management."
+                "title": "জাতীয় উদ্যানপালন মিশনের জন্য নির্দেশিকা জারি করা হয়েছে",
+                "description": "কৃষি বিভাগ ফসল-পরবর্তী ব্যবস্থাপনার উপর দৃষ্টি নিবদ্ধ করে উদ্যানপালন খাতকে উত্সাহিত করার জন্য এনএইচএম-এর জন্য আপডেট করা নির্দেশিকা প্রকাশ করেছে।"
             },
             "enamMilestone": {
-                "title": "e-NAM reaches new milestone with 1,000 mandis integrated",
-                "description": "The electronic National Agriculture Market (e-NAM) platform has now connected over 1,000 agricultural produce markets across the country."
+                "title": "ই-ন্যাম 1,000টি মান্ডি একীভূত করে নতুন মাইলফলক ছুঁয়েছে",
+                "description": "ইলেকট্রনিক ন্যাশনাল এগ্রিকালচার মার্কেট (ই-ন্যাম) প্ল্যাটফর্ম এখন সারা দেশে 1,000টিরও বেশি কৃষি পণ্য বাজারকে সংযুক্ত করেছে।"
             },
             "solarPump": {
-                "title": "Solar pump scheme extended for another year",
-                "description": "The PM-KUSUM scheme, aimed at providing solar-powered irrigation pumps to farmers, has been extended until March 2025."
+                "title": "সৌর পাম্প প্রকল্প আরও এক বছরের জন্য বাড়ানো হয়েছে",
+                "description": "পিএম-কুসুম প্রকল্প, যার লক্ষ্য কৃষকদের সৌরশক্তি চালিত সেচ পাম্প সরবরাহ করা, তা মার্চ 2025 পর্যন্ত বাড়ানো হয়েছে।"
             }
         },
         "client": {
-            "title": "Find a Specific Scheme",
-            "description": "Use our AI assistant to get details on any government scheme by asking a question.",
-            "placeholder": "e.g., Tell me about PM-KISAN scheme",
-            "searching": "Searching...",
-            "findScheme": "Find Scheme",
-            "stopRecording": "Stop Recording",
-            "useVoice": "Use Voice",
-            "eligibility": "Eligibility",
-            "applyNow": "Apply Now",
-            "resultPlaceholder": "Ask a question to see scheme details here."
+            "title": "একটি নির্দিষ্ট প্রকল্প খুঁজুন",
+            "description": "যেকোনো সরকারি প্রকল্পের বিস্তারিত জানতে আমাদের AI সহকারী ব্যবহার করুন।",
+            "placeholder": "যেমন, আমাকে পিএম-কিষাণ প্রকল্প সম্পর্কে বলুন",
+            "searching": "অনুসন্ধান করা হচ্ছে...",
+            "findScheme": "প্রকল্প খুঁজুন",
+            "stopRecording": "রেকর্ডিং বন্ধ করুন",
+            "useVoice": "ভয়েস ব্যবহার করুন",
+            "eligibility": "যোগ্যতা",
+            "applyNow": "এখন আবেদন করুন",
+            "resultPlaceholder": "প্রকল্পের বিবরণ দেখতে একটি প্রশ্ন জিজ্ঞাসা করুন।"
         }
     },
     "weather": {
-        "title": "Live Weather Forecast",
-        "description": "Plan your farming activities accordingly.",
-        "enterCity": "Enter city name...",
-        "currentWeather": "Current Weather",
-        "rightNowIn": "Right now in {{city}}",
-        "wind": "Wind",
-        "humidity": "Humidity",
-        "weeklyForecast": "Weekly Forecast",
-        "noData": "No weather data available. Please try a different location.",
+        "title": "লাইভ আবহাওয়ার পূর্বাভাস",
+        "description": "আপনার কৃষি কার্যক্রম সেই অনুযায়ী পরিকল্পনা করুন।",
+        "enterCity": "শহরের নাম লিখুন...",
+        "currentWeather": "বর্তমান আবহাওয়া",
+        "rightNowIn": "এখন {{city}} এ",
+        "wind": "বাতাস",
+        "humidity": "আর্দ্রতা",
+        "weeklyForecast": "সাপ্তাহিক পূর্বাভাস",
+        "noData": "কোনো আবহাওয়ার ডেটা উপলব্ধ নেই। অনুগ্রহ করে অন্য একটি অবস্থান চেষ্টা করুন।",
         "conditions": {
-            "sunny": "Sunny",
-            "partlyCloudy": "Partly Cloudy",
-            "cloudy": "Cloudy",
-            "showers": "Showers",
-            "rainy": "Rainy",
-            "humidAndCloudy": "Humid & Cloudy",
-            "thunderstorms": "Thunderstorms"
+            "sunny": "রৌদ্রোজ্জ্বল",
+            "partlyCloudy": "আংশিক মেঘলা",
+            "cloudy": "মেঘলা",
+            "showers": "ঝরনা",
+            "rainy": "বৃষ্টি",
+            "humidAndCloudy": "আর্দ্র ও মেঘলা",
+            "thunderstorms": "বজ্রসহ বৃষ্টি"
         },
         "days": {
-            "today": "Today",
-            "monday": "Monday",
-            "tuesday": "Tuesday",
-            "wednesday": "Wednesday",
-            "thursday": "Thursday",
-            "friday": "Friday",
-            "saturday": "Saturday",
-            "sunday": "Sunday"
+            "today": "আজ",
+            "monday": "সোমবার",
+            "tuesday": "মঙ্গলবার",
+            "wednesday": "বুধবার",
+            "thursday": "বৃহস্পতিবার",
+            "friday": "শুক্রবার",
+            "saturday": "শনিবার",
+            "sunday": "রবিবার"
         }
     },
     "community": {
-        "title": "Community Forum",
-        "description": "Connect with other farmers, share knowledge, and grow together.",
-        "chatRooms": "Chat Rooms",
-        "you": "You",
-        "attachmentPreview": "Attachment Preview:",
-        "removeAttachment": "Remove attachment",
-        "typeMessage": "Type a message...",
-        "stopRecording": "Stop recording",
-        "startRecording": "Start recording",
-        "sendPhoto": "Send Photo",
-        "send": "Send",
+        "title": "קהילה ফোরাম",
+        "description": "অন্যান্য কৃষকদের সাথে সংযোগ স্থাপন করুন, জ্ঞান ভাগ করুন এবং একসাথে বেড়ে উঠুন।",
+        "chatRooms": "চ্যাট রুম",
+        "you": "আপনি",
+        "attachmentPreview": "সংযুক্তি পূর্বরূপ:",
+        "removeAttachment": "সংযুক্তি সরান",
+        "typeMessage": "একটি বার্তা টাইপ করুন...",
+        "stopRecording": "রেকর্ডিং বন্ধ করুন",
+        "startRecording": "রেকর্ডিং শুরু করুন",
+        "sendPhoto": "ছবি পাঠান",
+        "send": "পাঠান",
         "rooms": {
-            "general": "General Discussion",
-            "tomato": "Tomato Farming",
-            "pest": "Pest Control",
-            "organic": "Organic Methods",
-            "market": "Market Prices"
+            "general": "সাধারণ আলোচনা",
+            "tomato": "টমেটো চাষ",
+            "pest": "কীটপতঙ্গ নিয়ন্ত্রণ",
+            "organic": "জৈব পদ্ধতি",
+            "market": "বাজার দর"
         },
         "users": {
-            "ramesh": "Ramesh",
-            "suresh": "Suresh",
-            "geeta": "Geeta",
-            "ravi": "Ravi",
-            "priya": "Priya",
-            "amit": "Amit"
+            "ramesh": "রমেশ",
+            "suresh": "সুরেশ",
+            "geeta": "গীতা",
+            "ravi": "রবি",
+            "priya": "প্রিয়া",
+            "amit": "অমিত"
         },
         "messages": {
             "general": {
-                "0": "Has anyone tried the new organic fertilizer? Seeing good results here.",
-                "1": "Yes, I have! My tomato yield has increased by almost 15%.",
-                "2": "That's great to hear! I was thinking of buying it. Is it good for leafy greens?",
-                "3": "Absolutely! My spinach has never been healthier."
+                "0": "কেউ কি নতুন জৈব সার চেষ্টা করেছেন? এখানে ভালো ফল দেখা যাচ্ছে।",
+                "1": "হ্যাঁ, আমি করেছি! আমার টমেটোর ফলন প্রায় 15% বেড়েছে।",
+                "2": "এটা শুনে খুব ভালো লাগলো! আমি এটা কেনার কথা ভাবছিলাম। এটা কি শাকের জন্য ভালো?",
+                "3": "অবশ্যই! আমার পালং শাক এর আগে কখনো এত স্বাস্থ্যকর ছিল না।"
             },
             "tomato": {
-                "0": "My tomato plants are showing some yellow leaves. Any advice?",
-                "1": "Could be a nitrogen deficiency. Have you tested your soil recently?"
+                "0": "আমার টমেটো গাছে কিছু হলুদ পাতা দেখা যাচ্ছে। কোনো পরামর্শ আছে?",
+                "1": "নাইট্রোজেনের অভাব হতে পারে। আপনি কি সম্প্রতি আপনার মাটি পরীক্ষা করিয়েছেন?"
             },
             "pest": {
-                "0": "Whiteflies are a major issue in my cotton crop. What's the best way to handle them?"
+                "0": "আমার তুলো ফসলে সাদা মাছি একটি বড় সমস্যা। তাদের মোকাবেলা করার সেরা উপায় কি?"
             },
             "organic": {
-                "0": "I'm looking for good organic composting techniques. Any resources?",
-                "1": "The E-Learning Hub has some great articles on vermicomposting!"
+                "0": "আমি ভালো জৈব কম্পোস্টিং কৌশল খুঁজছি। কোনো সম্পদ আছে?",
+                "1": "ই-লার্নিং হাবে ভার্মিকম্পোস্টিং নিয়ে কিছু দারুণ নিবন্ধ আছে!"
             },
             "market": {
-                "0": "Onion prices in Pune seem to be dropping. Should I sell now or wait?"
+                "0": "পুনেতে পেঁয়াজের দাম কমছে বলে মনে হচ্ছে। আমার কি এখন বিক্রি করা উচিত নাকি অপেক্ষা করা উচিত?"
             }
         }
     },
     "shop": {
-        "title": "Krishi Store",
-        "description": "Choose where you want to buy your farming supplies from.",
-        "govStoreAlt": "Government Store",
-        "govStoreTitle": "Government Stores",
-        "govStoreDescription": "Purchase subsidized seeds, fertilizers, and equipment directly from government-approved outlets. Ensures quality and fair pricing.",
-        "govStoreButton": "Explore Government Portals",
-        "privateMarketplaceAlt": "Private Marketplace",
-        "privateMarketplaceTitle": "Private Marketplace",
-        "privateMarketplaceDescription": "Browse a wide variety of products from different sellers. Find competitive prices and a larger selection of brands and items.",
-        "privateMarketplaceButton": "Go to Marketplace",
+        "title": "কৃষি দোকান",
+        "description": "আপনি আপনার কৃষি সরবরাহ কোথা থেকে কিনতে চান তা চয়ন করুন।",
+        "govStoreAlt": "সরকারি দোকান",
+        "govStoreTitle": "সরকারি দোকান",
+        "govStoreDescription": "সরাসরি সরকার-অনুমোদিত আউটলেট থেকে ভর্তুকিযুক্ত বীজ, সার এবং সরঞ্জাম কিনুন। গুণমান এবং ন্যায্য মূল্য নিশ্চিত করে।",
+        "govStoreButton": "সরকারি পোর্টাল অন্বেষণ করুন",
+        "privateMarketplaceAlt": "ব্যক্তিগত বাজার",
+        "privateMarketplaceTitle": "ব্যক্তিগত বাজার",
+        "privateMarketplaceDescription": "বিভিন্ন বিক্রেতাদের কাছ থেকে বিভিন্ন ধরণের পণ্য ব্রাউজ করুন। প্রতিযোগিতামূলক মূল্য এবং ব্র্যান্ড এবং আইটেমের একটি বৃহত্তর নির্বাচন খুঁজুন।",
+        "privateMarketplaceButton": "বাজারে যান",
         "government": {
-            "title": "Government Portal",
-            "showingContentFrom": "Showing content from",
-            "backToStore": "Back to Store",
-            "openInNewTab": "Open in New Tab",
-            "embedNote": "Note: Some government websites may not work correctly when embedded. If you experience issues, please use the \"Open in New Tab\" button.",
-            "iframeTitle": "Government Agri Coop Portal"
+            "title": "সরকারি পোর্টাল",
+            "showingContentFrom": "থেকে বিষয়বস্তু দেখানো হচ্ছে",
+            "backToStore": "দোকানে ফিরে যান",
+            "openInNewTab": "নতুন ট্যাবে খুলুন",
+            "embedNote": "দ্রষ্টব্য: কিছু সরকারি ওয়েবসাইট এমবেড করা হলে সঠিকভাবে কাজ নাও করতে পারে। যদি আপনি সমস্যার সম্মুখীন হন, অনুগ্রহ করে \"নতুন ট্যাবে খুলুন\" বোতামটি ব্যবহার করুন।",
+            "iframeTitle": "সরকারি কৃষি সমবায় পোর্টাল"
         },
         "marketplace": {
-            "title": "Private Marketplace",
-            "description": "Quality products for all your farming needs from various sellers.",
-            "backToStore": "Back to Store",
-            "addToCart": "Add to Cart",
-            "comingSoonTitle": "Coming Soon!",
-            "comingSoonMessage": "We couldn't find a product matching '{{query}}'. We are constantly expanding our inventory, so please check back later!",
-            "irrelevantProductTitle": "Unrelated Product Search",
-            "irrelevantProductMessage": "What you are looking for is not available. Only agriculture-related products are sold here.",
+            "title": "ব্যক্তিগত বাজার",
+            "description": "বিভিন্ন বিক্রেতাদের কাছ থেকে আপনার সমস্ত কৃষি প্রয়োজনের জন্য মানসম্পন্ন পণ্য।",
+            "backToStore": "দোকানে ফিরে যান",
+            "addToCart": "কার্টে যোগ করুন",
+            "comingSoonTitle": "শীঘ্রই আসছে!",
+            "comingSoonMessage": "আমরা '{{query}}' এর সাথে মিলে যাওয়া কোনো পণ্য খুঁজে পাইনি। আমরা ক্রমাগত আমাদের ইনভেন্টরি প্রসারিত করছি, তাই অনুগ্রহ করে পরে আবার দেখুন!",
+            "irrelevantProductTitle": "অপ্রাসঙ্গিক পণ্য অনুসন্ধান",
+            "irrelevantProductMessage": "আপনি যা খুঁজছেন তা উপলব্ধ নেই। এখানে শুধুমাত্র কৃষি-সম্পর্কিত পণ্য বিক্রি হয়।",
             "products": {
-                "organicFertilizer": "Organic Fertilizer",
-                "pesticideSpray": "Pesticide Spray",
-                "highYieldSeeds": "High-Yield Seeds",
-                "gardeningToolsSet": "Gardening Tools Set",
-                "dripIrrigationKit": "Drip Irrigation Kit",
-                "soilTestKit": "Soil Test Kit",
-                "protectiveGloves": "Protective Gloves",
-                "powerSprayer": "Power Sprayer",
-                "greenhousePolythene": "Greenhouse Polythene",
-                "waterPump": "Water Pump (1HP)",
-                "cowManure": "Cow Manure (50kg)",
-                "neemOil": "Neem Oil Pesticide"
+                "organicFertilizer": "জৈব সার",
+                "pesticideSpray": "কীটনাশক স্প্রে",
+                "highYieldSeeds": "উচ্চ ফলনশীল বীজ",
+                "gardeningToolsSet": "বাগান করার সরঞ্জাম সেট",
+                "dripIrrigationKit": "ড্রিপ সেচ কিট",
+                "soilTestKit": "মাটি পরীক্ষা কিট",
+                "protectiveGloves": "প্রতিরক্ষামূলক গ্লাভস",
+                "powerSprayer": "পাওয়ার স্প্রেয়ার",
+                "greenhousePolythene": "গ্রীনহাউস পলিথিন",
+                "waterPump": "জল পাম্প (1HP)",
+                "cowManure": "গোবর (50 কেজি)",
+                "neemOil": "নিম তেল কীটনাশক"
             }
         }
     },
     "learn": {
-        "title": "E-Learning Hub",
-        "description": "Expand your knowledge with our collection of farming guides and tutorials.",
-        "searchPlaceholder": "Search for articles, videos, or products...",
-        "stopRecording": "Stop Recording",
-        "startVoiceSearch": "Start Voice Search",
-        "closePlayer": "Close Player",
-        "watchOnYoutube": "Watch on YouTube",
+        "title": "ই-লার্নিং হাব",
+        "description": "আমাদের কৃষি গাইড এবং টিউটোরিয়াল সংগ্রহের মাধ্যমে আপনার জ্ঞান প্রসারিত করুন।",
+        "searchPlaceholder": "কৃষি বিষয়গুলিতে নিবন্ধ, ভিডিও বা পণ্য অনুসন্ধান করুন...",
+        "stopRecording": "রেকর্ডিং বন্ধ করুন",
+        "startVoiceSearch": "ভয়েস অনুসন্ধান শুরু করুন",
+        "closePlayer": "প্লেয়ার বন্ধ করুন",
+        "watchOnYoutube": "YouTube এ দেখুন",
         "tabs": {
-            "articles": "Articles & Guides",
-            "videos": "Video Tutorials"
+            "articles": "নিবন্ধ ও গাইড",
+            "videos": "ভিডিও টিউটোরিয়াল"
         },
-        "webSearchResults": "Web Search Results",
-        "irrelevantTopic": "Irrelevant Topic",
-        "irrelevantTopicMessage": "Your search for \"{{query}}\" seems to be unrelated to agriculture. Please try a different search term.",
-        "readFullArticle": "Read Full Article",
-        "ourGuides": "Our Guides",
-        "readMore": "Read More",
-        "watchNow": "Watch Now",
-        "noVideosFound": "No Videos Found",
-        "noVideosFoundMessage": "Your search for \"{{query}}\" did not return any videos. Please try a different search term.",
-        "noArticlesFound": "No Matching Guides or Web Results",
-        "noArticlesFoundMessage": "Your search for \"{{query}}\" did not match any of our guides or find any articles on the web. Please try a different search term.",
-        "searchOnGoogle": "Search on Google",
+        "webSearchResults": "ওয়েব অনুসন্ধান ফলাফল",
+        "irrelevantTopic": "অপ্রাসঙ্গিক বিষয়",
+        "irrelevantTopicMessage": "আপনার অনুসন্ধান \"{{query}}\" কৃষি সম্পর্কিত বলে মনে হচ্ছে না। অনুগ্রহ করে একটি ভিন্ন অনুসন্ধান শব্দ চেষ্টা করুন।",
+        "readFullArticle": "সম্পূর্ণ নিবন্ধ পড়ুন",
+        "ourGuides": "আমাদের গাইড",
+        "readMore": "আরও পড়ুন",
+        "watchNow": "এখন দেখুন",
+        "noVideosFound": "কোনো ভিডিও পাওয়া যায়নি",
+        "noVideosFoundMessage": "আপনার অনুসন্ধান \"{{query}}\" কোনো ভিডিও ফিরিয়ে দেয়নি। অনুগ্রহ করে একটি ভিন্ন অনুসন্ধান শব্দ চেষ্টা করুন।",
+        "noArticlesFound": "কোনো মিলে যাওয়া গাইড বা ওয়েব ফলাফল নেই",
+        "noArticlesFoundMessage": "আপনার অনুসন্ধান \"{{query}}\" আমাদের কোনো গাইডের সাথে মেলেনি বা ওয়েবে কোনো নিবন্ধ খুঁজে পায়নি। অনুগ্রহ করে একটি ভিন্ন অনুসন্ধান শব্দ চেষ্টা করুন।",
+        "searchOnGoogle": "Google এ অনুসন্ধান করুন",
         "articles": {
             "dripIrrigation": {
-                "title": "Mastering Drip Irrigation",
-                "description": "A comprehensive guide to setting up and maintaining drip irrigation systems for maximizing water efficiency and boosting crop yields. Covers component selection, layout planning, and troubleshooting common issues."
+                "title": "ড্রিপ সেচ আয়ত্ত করা",
+                "description": "জল দক্ষতা সর্বাধিক করার এবং ফসলের ফলন বাড়ানোর জন্য ড্রিপ সেচ ব্যবস্থা স্থাপন এবং রক্ষণাবেক্ষণের জন্য একটি ব্যাপক গাইড। উপাদান নির্বাচন, লেআউট পরিকল্পনা এবং সাধারণ সমস্যা সমাধান কভার করে।"
             },
             "ipm": {
-                "title": "Integrated Pest Management (IPM)",
-                "description": "Explore sustainable, eco-friendly strategies to manage pests. This guide covers biological controls, cultural practices, and the targeted use of pesticides to protect your crops and the environment."
+                "title": "সমন্বিত কীটপতঙ্গ ব্যবস্থাপনা (IPM)",
+                "description": "কীটপতঙ্গ পরিচালনা করার জন্য টেকসই, পরিবেশ-বান্ধব কৌশলগুলি অন্বেষণ করুন। এই গাইডটি জৈবিক নিয়ন্ত্রণ, সাংস্কৃতিক অনুশীলন এবং আপনার ফসল এবং পরিবেশ রক্ষা করার জন্য কীটনাশকের লক্ষ্যযুক্ত ব্যবহার কভার করে।"
             },
             "soilHealth": {
-                "title": "Soil Health and Nutrition",
-                "description": "Unlock the secrets to rich, fertile soil. This article delves into the fundamentals of soil science, including composition, pH balance, and how to enrich your soil for healthier, more productive plants."
+                "title": "মাটির স্বাস্থ্য এবং পুষ্টি",
+                "description": "সমৃদ্ধ, উর্বর মাটির রহস্য উন্মোচন করুন। এই নিবন্ধটি মাটির বিজ্ঞানের মৌলিক বিষয়গুলির মধ্যে delve করে, যার মধ্যে রয়েছে রচনা, pH ভারসাম্য এবং কীভাবে স্বাস্থ্যকর, আরও উত্পাদনশীল উদ্ভিদের জন্য আপনার মাটিকে সমৃদ্ধ করা যায়।"
             },
             "composting": {
-                "title": "Advanced Composting Techniques",
-                "description": "Learn to transform farm waste into 'black gold'. This guide details various composting methods, including hot and cold composting, vermicomposting, and how to create balanced compost piles."
+                "title": "উন্নত কম্পোস্টিং কৌশল",
+                "description": "খামারের বর্জ্যকে 'কালো সোনা'তে রূপান্তর করতে শিখুন। এই গাইডটি গরম এবং ঠান্ডা কম্পোস্টিং, ভার্মিকম্পোস্টিং এবং কীভাবে ভারসাম্যপূর্ণ কম্পোস্টের স্তূপ তৈরি করা যায় সহ বিভিন্ন কম্পোস্টিং পদ্ধতির বিবরণ দেয়।"
             },
             "cropRotation": {
-                "title": "Understanding Crop Rotation",
-                "description": "Discover the benefits of strategic crop rotation, including improved soil fertility, pest and disease cycle disruption, and increased biodiversity. Includes sample rotation plans for common crops."
+                "title": "ফসল ঘূর্ণন বোঝা",
+                "description": "উন্নত মাটির উর্বরতা, কীটপতঙ্গ এবং রোগ চক্রের ব্যাঘাত এবং বর্ধিত জীববৈচিত্র্য সহ কৌশলগত ফসল ঘূর্ণনের সুবিধাগুলি আবিষ্কার করুন। সাধারণ ফসলের জন্য নমুনা ঘূর্ণন পরিকল্পনা অন্তর্ভুক্ত করে।"
             },
             "organicFarming": {
-                "title": "Basics of Organic Farming",
-                "description": "An essential introduction to the core principles and practices of organic agriculture. Covers certification, natural fertilization, weed control, and marketing organic produce for sustainable farming."
+                "title": "জৈব চাষের মূল বিষয়",
+                "description": "জৈব কৃষির মূল নীতি এবং অনুশীলনের একটি অপরিহার্য ভূমিকা। সার্টিফিকেশন, প্রাকৃতিক নিষেক, আগাছা নিয়ন্ত্রণ এবং টেকসই চাষের জন্য জৈব পণ্য বিপণন কভার করে।"
             }
         }
     },
     "profile": {
-        "title": "Farmer Profile",
-        "description": "Manage your personal information and preferences.",
-        "backToDashboard": "Back to Dashboard",
-        "cardTitle": "Personal Information",
-        "cardDescription": "Keep your details up to date to receive personalized recommendations.",
-        "uploading": "Uploading...",
-        "changePhoto": "Change Photo",
-        "fullName": "Full Name",
-        "email": "Email Address",
-        "location": "Location (District)",
-        "selectDistrict": "Select district...",
-        "searchDistrict": "Search district...",
-        "noDistrictFound": "No district found.",
-        "language": "Preferred Language",
-        "selectLanguage": "Select language",
-        "myCrops": "My Crops",
-        "myCropsDescription": "Add crops you cultivate to get relevant alerts and advice (comma-separated).",
-        "saving": "Saving...",
-        "saveChanges": "Save Changes"
+        "title": "কৃষক প্রোফাইল",
+        "description": "আপনার ব্যক্তিগত তথ্য এবং পছন্দগুলি পরিচালনা করুন।",
+        "backToDashboard": "ড্যাশবোর্ডে ফিরে যান",
+        "cardTitle": "ব্যক্তিগত তথ্য",
+        "cardDescription": "ব্যক্তিগতকৃত সুপারিশ পেতে আপনার বিবরণ আপ টু ডেট রাখুন।",
+        "uploading": "আপলোড করা হচ্ছে...",
+        "changePhoto": "ছবি পরিবর্তন করুন",
+        "fullName": "পুরো নাম",
+        "email": "ইমেল ঠিকানা",
+        "location": "অবস্থান (জেলা)",
+        "selectDistrict": "জেলা নির্বাচন করুন...",
+        "searchDistrict": "জেলা অনুসন্ধান করুন...",
+        "noDistrictFound": "কোনো জেলা পাওয়া যায়নি।",
+        "language": "পছন্দের ভাষা",
+        "selectLanguage": "ভাষা নির্বাচন করুন",
+        "myCrops": "আমার ফসল",
+        "myCropsDescription": "প্রাসঙ্গিক সতর্কতা এবং পরামর্শ পেতে আপনি যে ফসল চাষ করেন তা যোগ করুন (কমা দ্বারা পৃথক করা)।",
+        "saving": "সংরক্ষণ করা হচ্ছে...",
+        "saveChanges": "পরিবর্তনগুলি সংরক্ষণ করুন"
     },
     "settings": {
-        "title": "Application Settings",
-        "description": "Customize the look and feel of the application.",
+        "title": "অ্যাপ্লিকেশন সেটিংস",
+        "description": "অ্যাপ্লিকেশনের চেহারা এবং অনুভূতি কাস্টমাইজ করুন।",
         "theme": {
-            "title": "Theme",
-            "description": "Select a theme for the application.",
-            "light": "Light",
-            "dark": "Dark",
-            "system": "System"
+            "title": "থিম",
+            "description": "অ্যাপ্লিকেশনের জন্য একটি থিম নির্বাচন করুন।",
+            "light": "হালকা",
+            "dark": "অন্ধকার",
+            "system": "সিস্টেম"
         },
         "about": {
-            "title": "About KrishiMitra",
-            "description": "KrishiMitra is an AI-powered farming assistant designed to support small-scale Indian farmers with real-time crop diagnosis, mandi prices, government schemes, and personalized farming advice in local languages."
+            "title": "কৃষিমিত্র সম্পর্কে",
+            "description": "কৃষিমিত্র হল একটি এআই-চালিত কৃষি সহকারী যা ক্ষুদ্রাকার ভারতীয় কৃষকদের বাস্তব-সময়ের ফসল নির্ণয়, মান্ডি মূল্য, সরকারি প্রকল্প এবং স্থানীয় ভাষায় ব্যক্তিগতকৃত কৃষি পরামর্শ দিয়ে সহায়তা করার জন্য ডিজাইন করা হয়েছে।"
         },
         "version": {
-            "title": "App Version"
+            "title": "অ্যাপ সংস্করণ"
         },
         "poweredBy": {
-            "title": "Powered By",
-            "tech1": "Google Cloud Vertex AI",
-            "tech2": "Firebase",
-            "tech3": "Gemini Multimodal Models"
+            "title": "দ্বারা চালিত",
+            "tech1": "গুগল ক্লাউড ভার্টেক্স এআই",
+            "tech2": "ফায়ারবেস",
+            "tech3": "জেমিনি মাল্টিমোডাল মডেল"
         },
         "developedBy": {
-            "title": "Developed By",
-            "teamName": "Team Codogram"
+            "title": "দ্বারা উন্নত",
+            "teamName": "টিম কোডোগ্রাম"
         },
         "contact": {
-            "title": "Contact Us",
-            "emailLabel": "Email",
-            "whatsappLabel": "WhatsApp"
+            "title": "যোগাযোগ করুন",
+            "emailLabel": "ইমেল",
+            "whatsappLabel": "হোয়াটসঅ্যাপ"
         },
         "legal": {
-            "privacy": "Privacy Policy",
-            "terms": "Terms of Use"
+            "privacy": "গোপনীয়তা নীতি",
+            "terms": "ব্যবহারের শর্তাবলী"
         }
     },
     "privacy": {
-        "description": "Our commitment to your privacy.",
-        "backToSettings": "Back to Settings",
+        "description": "আপনার গোপনীয়তার প্রতি আমাদের প্রতিশ্রুতি।",
+        "backToSettings": "সেটিংসে ফিরে যান",
         "lastUpdated": {
-            "title": "Last Updated",
-            "date": "July 26, 2024"
+            "title": "সর্বশেষ আপডেট করা হয়েছে",
+            "date": "জুলাই 26, 2024"
         },
         "introduction": {
-            "title": "Introduction",
-            "content": "Welcome to KrishiMitra AI. We are committed to protecting your privacy and handling your data in an open and transparent manner. This privacy policy sets out how we collect, use, and protect your information."
+            "title": "ভূমিকা",
+            "content": "কৃষিমিত্র এআই-তে স্বাগতম। আমরা আপনার গোপনীয়তা রক্ষা করতে এবং আপনার ডেটা একটি উন্মুক্ত এবং স্বচ্ছ উপায়ে পরিচালনা করতে প্রতিশ্রুতিবদ্ধ। এই গোপনীয়তা নীতিটি আমরা কীভাবে আপনার তথ্য সংগ্রহ, ব্যবহার এবং রক্ষা করি তা নির্ধারণ করে।"
         },
         "information": {
-            "title": "Information We Collect",
+            "title": "আমরা যে তথ্য সংগ্রহ করি",
             "personal": {
-                "title": "Personal Information",
-                "content": "When you register, we collect your name, email, and location to create and manage your account."
+                "title": "ব্যক্তিগত তথ্য",
+                "content": "আপনি যখন নিবন্ধন করেন, আমরা আপনার অ্যাকাউন্ট তৈরি এবং পরিচালনা করতে আপনার নাম, ইমেল এবং অবস্থান সংগ্রহ করি।"
             },
             "usage": {
-                "title": "Usage Data",
-                "content": "We collect information on how you interact with our services, such as features used and frequency of access."
+                "title": "ব্যবহারের ডেটা",
+                "content": "ব্যবহৃত বৈশিষ্ট্য এবং অ্যাক্সেসের ফ্রিকোয়েন্সির মতো আমাদের পরিষেবাগুলির সাথে আপনি কীভাবে যোগাযোগ করেন সে সম্পর্কে আমরা তথ্য সংগ্রহ করি।"
             },
             "image": {
-                "title": "Image Data",
-                "content": "For our Crop Doctor feature, we collect images you upload. These are used solely for diagnosis and are not shared with third parties."
+                "title": "চিত্র ডেটা",
+                "content": "আমাদের ফসল ডাক্তার বৈশিষ্ট্যের জন্য, আমরা আপনার আপলোড করা ছবি সংগ্রহ করি। এগুলি শুধুমাত্র নির্ণয়ের জন্য ব্যবহৃত হয় এবং তৃতীয় পক্ষের সাথে ভাগ করা হয় না।"
             }
         },
         "useOfInfo": {
-            "title": "How We Use Your Information",
-            "content": "We use your information to provide and improve our services, personalize your experience, and communicate with you."
+            "title": "আমরা কীভাবে আপনার তথ্য ব্যবহার করি",
+            "content": "আমরা আমাদের পরিষেবাগুলি সরবরাহ এবং উন্নত করতে, আপনার অভিজ্ঞতা ব্যক্তিগতকৃত করতে এবং আপনার সাথে যোগাযোগ করতে আপনার তথ্য ব্যবহার করি।"
         },
         "dataSharing": {
-            "title": "Data Sharing",
-            "content": "We do not sell your personal data. We may share anonymized data with partners for research purposes, but never your personal identifiable information without your consent."
+            "title": "ডেটা ভাগ করা",
+            "content": "আমরা আপনার ব্যক্তিগত ডেটা বিক্রি করি না। আমরা গবেষণার উদ্দেশ্যে অংশীদারদের সাথে বেনামী ডেটা ভাগ করতে পারি, তবে আপনার সম্মতি ছাড়া আপনার ব্যক্তিগতভাবে শনাক্তযোগ্য তথ্য কখনই নয়।"
         },
         "dataSecurity": {
-            "title": "Data Security",
-            "content": "We implement a variety of security measures to maintain the safety of your personal information."
+            "title": "ডেটা নিরাপত্তা",
+            "content": "আপনার ব্যক্তিগত তথ্যের নিরাপত্তা বজায় রাখতে আমরা বিভিন্ন নিরাপত্তা ব্যবস্থা বাস্তবায়ন করি।"
         },
         "yourRights": {
-            "title": "Your Rights",
-            "content": "You have the right to access, correct, or delete your personal data at any time through your profile settings or by contacting us."
+            "title": "আপনার অধিকার",
+            "content": "আপনার প্রোফাইল সেটিংসের মাধ্যমে বা আমাদের সাথে যোগাযোগ করে যেকোনো সময় আপনার ব্যক্তিগত ডেটা অ্যাক্সেস, সংশোধন বা মুছে ফেলার অধিকার আপনার আছে।"
         },
         "changes": {
-            "title": "Changes to This Policy",
-            "content": "We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page."
+            "title": "এই নীতিতে পরিবর্তন",
+            "content": "আমরা সময়ে সময়ে এই গোপনীয়তা নীতি আপডেট করতে পারি। আমরা এই পৃষ্ঠায় নতুন নীতি পোস্ট করে কোনো পরিবর্তনের বিষয়ে আপনাকে অবহিত করব।"
         },
         "contact": {
-            "title": "Contact Us",
-            "content": "If you have any questions about this Privacy Policy, please contact us at support@krishimitra.in."
+            "title": "যোগাযোগ করুন",
+            "content": "এই গোপনীয়তা নীতি সম্পর্কে আপনার কোনো প্রশ্ন থাকলে, অনুগ্রহ করে support@krishimitra.in এ আমাদের সাথে যোগাযোগ করুন।"
         }
     },
     "terms": {
-        "description": "Rules for using our service.",
-        "backToSettings": "Back to Settings",
+        "description": "আমাদের পরিষেবা ব্যবহারের নিয়ম।",
+        "backToSettings": "সেটিংসে ফিরে যান",
         "lastUpdated": {
-            "title": "Last Updated",
-            "date": "July 26, 2024"
+            "title": "সর্বশেষ আপডেট করা হয়েছে",
+            "date": "জুলাই 26, 2024"
         },
         "acceptance": {
-            "title": "Acceptance of Terms",
-            "content": "By accessing and using KrishiMitra AI, you accept and agree to be bound by the terms and provision of this agreement."
+            "title": "শর্তাবলীর স্বীকৃতি",
+            "content": "কৃষিমিত্র এআই অ্যাক্সেস এবং ব্যবহার করে, আপনি এই চুক্তির শর্তাবলী এবং বিধান দ্বারা আবদ্ধ হতে স্বীকার করেন এবং সম্মত হন।"
         },
         "useOfService": {
-            "title": "Use of Service",
-            "content": "You agree to use our services for lawful purposes only and in a way that does not infringe the rights of, restrict or inhibit anyone else's use and enjoyment of the service.",
-            "item1": "You are responsible for maintaining the confidentiality of your account and password.",
-            "item2": "The advice provided by the AI is for informational purposes only and should not be considered a substitute for professional agricultural advice.",
-            "item3": "You must not misuse our services by knowingly introducing viruses or other material that is malicious or technologically harmful."
+            "title": "পরিষেবার ব্যবহার",
+            "content": "আপনি আমাদের পরিষেবাগুলি শুধুমাত্র আইনসম্মত উদ্দেশ্যে এবং এমনভাবে ব্যবহার করতে সম্মত হন যা অন্য কারো ব্যবহার এবং পরিষেবার আনন্দকে লঙ্ঘন, সীমাবদ্ধ বা বাধা দেয় না।",
+            "item1": "আপনার অ্যাকাউন্ট এবং পাসওয়ার্ডের গোপনীয়তা বজায় রাখার জন্য আপনি দায়ী।",
+            "item2": "AI দ্বারা প্রদত্ত পরামর্শ শুধুমাত্র তথ্যগত উদ্দেশ্যে এবং পেশাদার কৃষি পরামর্শের বিকল্প হিসাবে বিবেচনা করা উচিত নয়।",
+            "item3": "জেনে-শুনে ভাইরাস বা দূষিত বা প্রযুক্তিগতভাবে ক্ষতিকারক অন্যান্য উপাদান প্রবেশ করিয়ে আপনি আমাদের পরিষেবাগুলির অপব্যবহার করবেন না।"
         },
         "disclaimer": {
-            "title": "Disclaimer of Warranties",
-            "content": "The service is provided on an 'as is' and 'as available' basis without any warranties of any kind, either express or implied."
+            "title": "ওয়ারেন্টিগুলির অস্বীকৃতি",
+            "content": "পরিষেবাটি 'যেমন আছে' এবং 'যেমন উপলব্ধ' ভিত্তিতে কোনো ধরনের ওয়ারেন্টি ছাড়াই প্রদান করা হয়, তা প্রকাশ্য বা উহ্য যাই হোক না কেন।"
         },
         "limitation": {
-            "title": "Limitation of Liability",
-            "content": "In no event shall KrishiMitra AI or its developers be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+            "title": "দায়বদ্ধতার সীমাবদ্ধতা",
+            "content": "কোনো অবস্থাতেই কৃষিমিত্র এআই বা এর ডেভেলপাররা কোনো পরোক্ষ, আনুষঙ্গিক, বিশেষ, ফলস্বরূপ বা শাস্তিমূলক ক্ষতির জন্য দায়ী থাকবে না, যার মধ্যে সীমাবদ্ধতা ছাড়াই, লাভ, ডেটা, ব্যবহার, সদিচ্ছা বা অন্যান্য অস্পষ্ট ক্ষতি অন্তর্ভুক্ত রয়েছে।"
         },
         "termination": {
-            "title": "Termination",
-            "content": "We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms."
+            "title": "সমাপ্তি",
+            "content": "আপনি শর্তাবলী লঙ্ঘন করলে, কোনো কারণ ছাড়াই, কোনো পূর্ব বিজ্ঞপ্তি বা দায়বদ্ধতা ছাড়াই আমরা আপনার অ্যাকাউন্টটি অবিলম্বে বন্ধ বা স্থগিত করতে পারি।"
         },
         "governingLaw": {
-            "title": "Governing Law",
-            "content": "These Terms shall be governed and construed in accordance with the laws of India, without regard to its conflict of law provisions."
+            "title": "সরকারি আইন",
+            "content": "এই শর্তাবলী ভারতের আইন অনুসারে নিয়ন্ত্রিত এবং ব্যাখ্যা করা হবে, এর আইনের বিধানগুলির দ্বন্দ্ব বিবেচনা না করে।"
         },
         "changes": {
-            "title": "Changes",
-            "content": "We reserve the right, at our sole discretion, to modify or replace these Terms at any time."
+            "title": "পরিবর্তন",
+            "content": "আমরা আমাদের নিজস্ব বিবেচনার ভিত্তিতে, যেকোনো সময় এই শর্তাবলী পরিবর্তন বা প্রতিস্থাপন করার অধিকার সংরক্ষণ করি।"
         }
     },
     "toast": {
-        "browserNotSupported": "Browser Not Supported",
-        "noVoiceSupport": "Your browser does not support voice recognition.",
-        "noSpeechDetected": "No Speech Detected",
-        "tryAgain": "Please try again and speak clearly into the microphone.",
-        "voiceError": "Voice Recognition Error",
-        "unsupportedFileType": "Unsupported File Type",
-        "selectAnImage": "Please select an image file.",
-        "speechGenerationFailed": "Speech Generation Failed",
-        "couldNotGenerateAudio": "Could not generate audio for the diagnosis.",
-        "couldNotGenerateAudioAnalysis": "Could not generate audio for the analysis.",
-        "noImageSelected": "No Image Selected",
-        "selectImageToDiagnose": "Please select an image of your crop to diagnose.",
-        "diagnosisFailed": "Diagnosis Failed",
-        "errorAnalyzingImage": "An error occurred while analyzing the image. Please try again.",
-        "emptyQuery": "Empty Query",
-        "enterMarketQuestion": "Please enter your question about market prices.",
-        "analysisFailed": "Analysis Failed",
-        "errorAnalyzingMarket": "An error occurred while analyzing the market data. Please try again.",
-        "enterSchemeQuestion": "Please enter your question about a government scheme.",
-        "searchFailed": "Search Failed",
-        "errorFetchingScheme": "An error occurred while fetching scheme details. Please try again.",
-        "errorFetchingWeather": "Error fetching weather",
-        "couldNotRetrieveWeather": "Could not retrieve weather data for the specified location.",
-        "videoSearchFailed": "Video Search Failed",
-        "couldNotRetrieveVideos": "Could not retrieve video tutorials.",
-        "summarizationFailed": "Summarization Failed",
-        "couldNotSummarize": "Could not summarize an article from the web.",
-        "signUpSuccess": "Sign Up Successful",
-        "signUpSuccessDesc": "Welcome! Please log in to continue.",
-        "unexpectedError": "An unexpected error occurred.",
-        "invalidCredentials": "Invalid email or password. Please try again.",
-        "emailInUse": "An account with this email already exists.",
-        "signUpFailed": "Sign Up Failed",
-        "signInFailed": "Sign In Failed",
-        "profileUpdated": "Profile Updated",
-        "profileUpdatedDesc": "Your information has been successfully saved.",
-        "updateFailed": "Update Failed",
-        "updateFailedDesc": "Could not save your changes. Please try again.",
-        "photoUpdated": "Photo Updated",
-        "photoUpdatedDesc": "Your profile picture has been changed.",
-        "uploadFailed": "Upload Failed",
-        "uploadFailedDesc": "Could not change your profile picture. Please try again.",
-        "recommendationFailed": "Recommendation Failed",
-        "errorGeneratingRecommendation": "Could not generate crop recommendations. Please try again.",
-        "noInput": "No Input Provided",
-        "provideImageOrDescription": "Please upload an image or provide a description of the issue."
+        "browserNotSupported": "ব্রাউজার সমর্থিত নয়",
+        "noVoiceSupport": "আপনার ব্রাউজার ভয়েস স্বীকৃতি সমর্থন করে না।",
+        "noSpeechDetected": "কোনো বক্তৃতা সনাক্ত করা হয়নি",
+        "tryAgain": "অনুগ্রহ করে আবার চেষ্টা করুন এবং মাইক্রোফোনে স্পষ্টভাবে কথা বলুন।",
+        "voiceError": "ভয়েস স্বীকৃতি ত্রুটি",
+        "unsupportedFileType": "অসমর্থিত ফাইলের ধরন",
+        "selectAnImage": "অনুগ্রহ করে একটি ছবি ফাইল নির্বাচন করুন।",
+        "speechGenerationFailed": "বক্তৃতা তৈরি ব্যর্থ হয়েছে",
+        "couldNotGenerateAudio": "নির্ণয়ের জন্য অডিও তৈরি করা যায়নি।",
+        "couldNotGenerateAudioAnalysis": "বিশ্লেষণের জন্য অডিও তৈরি করা যায়নি।",
+        "noImageSelected": "কোনো ছবি নির্বাচন করা হয়নি",
+        "selectImageToDiagnose": "নির্ণয় করার জন্য অনুগ্রহ করে আপনার ফসলের একটি ছবি নির্বাচন করুন।",
+        "diagnosisFailed": "নির্ণয় ব্যর্থ হয়েছে",
+        "errorAnalyzingImage": "ছবি বিশ্লেষণ করার সময় একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+        "emptyQuery": "খালি প্রশ্ন",
+        "enterMarketQuestion": "অনুগ্রহ করে বাজার দর সম্পর্কে আপনার প্রশ্ন লিখুন।",
+        "analysisFailed": "বিশ্লেষণ ব্যর্থ হয়েছে",
+        "errorAnalyzingMarket": "বাজার ডেটা বিশ্লেষণ করার সময় একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+        "enterSchemeQuestion": "অনুগ্রহ করে একটি সরকারি প্রকল্প সম্পর্কে আপনার প্রশ্ন লিখুন।",
+        "searchFailed": "অনুসন্ধান ব্যর্থ হয়েছে",
+        "errorFetchingScheme": "প্রকল্পের বিবরণ আনার সময় একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+        "errorFetchingWeather": "আবহাওয়া আনতে ত্রুটি",
+        "couldNotRetrieveWeather": "নির্দিষ্ট অবস্থানের জন্য আবহাওয়ার ডেটা পুনরুদ্ধার করা যায়নি।",
+        "videoSearchFailed": "ভিডিও অনুসন্ধান ব্যর্থ হয়েছে",
+        "couldNotRetrieveVideos": "ভিডিও টিউটোরিয়াল পুনরুদ্ধার করা যায়নি।",
+        "summarizationFailed": "সারাংশ ব্যর্থ হয়েছে",
+        "couldNotSummarize": "ওয়েব থেকে একটি নিবন্ধের সারাংশ দেওয়া যায়নি।",
+        "signUpSuccess": "সাইন আপ সফল",
+        "signUpSuccessDesc": "স্বাগতম! চালিয়ে যেতে অনুগ্রহ করে লগ ইন করুন।",
+        "unexpectedError": "একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।",
+        "invalidCredentials": "অবৈধ ইমেল বা পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।",
+        "emailInUse": "এই ইমেল সহ একটি অ্যাকাউন্ট ইতিমধ্যেই বিদ্যমান।",
+        "signUpFailed": "সাইন আপ ব্যর্থ হয়েছে",
+        "signInFailed": "সাইন ইন ব্যর্থ হয়েছে",
+        "profileUpdated": "প্রোফাইল আপডেট করা হয়েছে",
+        "profileUpdatedDesc": "আপনার তথ্য সফলভাবে সংরক্ষিত হয়েছে।",
+        "updateFailed": "আপডেট ব্যর্থ হয়েছে",
+        "updateFailedDesc": "আপনার পরিবর্তনগুলি সংরক্ষণ করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+        "photoUpdated": "ছবি আপডেট করা হয়েছে",
+        "photoUpdatedDesc": "আপনার প্রোফাইল ছবি পরিবর্তন করা হয়েছে।",
+        "uploadFailed": "আপলোড ব্যর্থ হয়েছে",
+        "uploadFailedDesc": "আপনার প্রোফাইল ছবি পরিবর্তন করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+        "recommendationFailed": "সুপারিশ ব্যর্থ হয়েছে",
+        "errorGeneratingRecommendation": "ফসলের সুপারিশ তৈরি করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+        "noInput": "কোনো ইনপুট দেওয়া হয়নি",
+        "provideImageOrDescription": "অনুগ্রহ করে একটি ছবি আপলোড করুন বা সমস্যার একটি বিবরণ দিন।"
     },
     "tracker": {
-        "title": "Expense & Profit Tracker",
-        "description": "Log your incomes and expenses to track crop profitability.",
-        "addTransaction": "Add Transaction",
-        "editTransaction": "Edit Transaction",
-        "transactionDetails": "Enter the details for your income or expense.",
-        "totalIncome": "Total Income",
-        "totalExpense": "Total Expense",
-        "netProfitLoss": "Net Profit / Loss",
-        "recentTransactions": "Recent Transactions",
-        "recentTransactionsDesc": "A log of your most recent incomes and expenses.",
-        "noTransactions": "No transactions yet. Click 'Add Transaction' to start.",
-        "summaryChart": "Income vs. Expense",
-        "summaryChartDesc": "A visual summary of your finances.",
+        "title": "খরচ ও লাভ ট্র্যাকার",
+        "description": "ফসলের লাভজনকতা ট্র্যাক করতে আপনার আয় এবং ব্যয় লগ করুন।",
+        "addTransaction": "লেনদেন যোগ করুন",
+        "editTransaction": "লেনদেন সম্পাদনা করুন",
+        "transactionDetails": "আপনার আয় বা ব্যয়ের জন্য বিবরণ লিখুন।",
+        "totalIncome": "মোট আয়",
+        "totalExpense": "মোট ব্যয়",
+        "netProfitLoss": "নিট লাভ / ক্ষতি",
+        "recentTransactions": "সাম্প্রতিক লেনদেন",
+        "recentTransactionsDesc": "আপনার সবচেয়ে সাম্প্রতিক আয় এবং ব্যয়ের একটি লগ।",
+        "noTransactions": "এখনও কোনো লেনদেন নেই। শুরু করতে 'লেনদেন যোগ করুন' ক্লিক করুন।",
+        "summaryChart": "আয় বনাম ব্যয়",
+        "summaryChartDesc": "আপনার ಹಣಕಾಸಿನ ಒಂದು ದೃಶ್ಯ ಸಾರಾಂಶ.",
         "chart": {
-            "income": "Income",
-            "expense": "Expense"
+            "income": "আয়",
+            "expense": "ব্যয়"
         },
         "form": {
-            "description": "Description",
-            "amount": "Amount (₹)",
-            "type": "Type",
-            "selectType": "Select a type",
-            "income": "Income",
-            "expense": "Expense",
-            "category": "Category",
-            "selectCategory": "Select a category",
-            "date": "Date",
-            "pickDate": "Pick a date",
-            "cancel": "Cancel",
-            "save": "Save Transaction"
+            "description": "বিবরণ",
+            "amount": "পরিমাণ (₹)",
+            "type": "প্রকার",
+            "selectType": "একটি প্রকার নির্বাচন করুন",
+            "income": "আয়",
+            "expense": "ব্যয়",
+            "category": "বিভাগ",
+            "selectCategory": "একটি বিভাগ নির্বাচন করুন",
+            "date": "তারিখ",
+            "pickDate": "একটি তারিখ বাছুন",
+            "cancel": "বাতিল করুন",
+            "save": "লেনদেন সংরক্ষণ করুন"
         },
         "categories": {
-            "seeds": "Seeds",
-            "fertilizers": "Fertilizers",
-            "pesticides": "Pesticides",
-            "labor": "Labor",
-            "equipment": "Equipment",
-            "fuel": "Fuel",
-            "rent": "Land Rent",
-            "other": "Other",
-            "cropSale": "Crop Sale",
-            "subsidy": "Subsidy"
+            "seeds": "বীজ",
+            "fertilizers": "সার",
+            "pesticides": "কীটনাশক",
+            "labor": "শ্রম",
+            "equipment": "সরঞ্জাম",
+            "fuel": "জ্বালানি",
+            "rent": "জমি ভাড়া",
+            "other": "অন্যান্য",
+            "cropSale": "ফসল বিক্রয়",
+            "subsidy": "ভর্তুকি"
         },
         "actions": {
-            "edit": "Edit",
-            "delete": "Delete"
+            "edit": "সম্পাদনা করুন",
+            "delete": "মুছে ফেলুন"
         }
     },
     "cropRecommender": {
-        "title": "AI Crop Recommender",
-        "description": "Get intelligent crop suggestions based on your location, farm type, and market trends.",
+        "title": "এআই ফসল সুপারিশকারী",
+        "description": "আপনার অবস্থান, খামারের ধরন এবং বাজারের প্রবণতার উপর ভিত্তি করে বুদ্ধিমান ফসলের পরামর্শ পান।",
         "client": {
-            "formTitle": "Farm Details",
-            "formDescription": "Provide details about your farm to get the best recommendations.",
-            "farmType": "Farm Type",
-            "irrigated": "Irrigated",
-            "rainfed": "Rainfed / Dry",
-            "landSize": "Land Size (e.g., 2 acres)",
-            "cropPreference": "Crop Preference (Optional)",
-            "cropPreferencePlaceholder": "e.g., Vegetables, Millets",
-            "getRecommendations": "Get Recommendations",
-            "gettingRecommendations": "Getting Recommendations...",
-            "resultsTitle": "AI-Powered Recommendations",
-            "resultsPlaceholder": "Your personalized crop recommendations will appear here.",
-            "topPicks": "Our Top Picks For You",
-            "topPicksDescription": "Based on your inputs, here are the most suitable crops for the upcoming season.",
-            "learnMore": "Learn More",
-            "soilType": "Soil Type (Optional)",
-            "selectSoilType": "Select soil type",
+            "formTitle": "খামারের বিবরণ",
+            "formDescription": "সেরা সুপারিশ পেতে আপনার খামার সম্পর্কে বিস্তারিত দিন।",
+            "farmType": "খামারের ধরন",
+            "irrigated": "সেচযুক্ত",
+            "rainfed": "বৃষ্টি-নির্ভর / শুকনো",
+            "landSize": "জমির আকার (যেমন, 2 একর)",
+            "cropPreference": "ফসলের পছন্দ (ঐচ্ছিক)",
+            "cropPreferencePlaceholder": "যেমন, সবজি, বাজরা",
+            "getRecommendations": "সুপারিশ পান",
+            "gettingRecommendations": "সুপারিশ পাওয়া যাচ্ছে...",
+            "resultsTitle": "এআই-চালিত সুপারিশ",
+            "resultsPlaceholder": "আপনার ব্যক্তিগতকৃত ফসলের সুপারিশ এখানে প্রদর্শিত হবে।",
+            "topPicks": "আপনার জন্য আমাদের শীর্ষ বাছাই",
+            "topPicksDescription": "আপনার ইনপুটগুলির উপর ভিত্তি করে, আসন্ন মরসুমের জন্য সবচেয়ে উপযুক্ত ফসলগুলি এখানে দেওয়া হল।",
+            "learnMore": "আরও জানুন",
+            "soilType": "মাটির ধরন (ঐচ্ছিক)",
+            "selectSoilType": "মাটির ধরন নির্বাচন করুন",
             "soilTypes": {
-                "black": "Black",
-                "red": "Red",
-                "loamy": "Loamy",
-                "sandy": "Sandy",
-                "clay": "Clay"
+                "black": "কালো",
+                "red": "লাল",
+                "loamy": "দোআঁশ",
+                "sandy": "বেলে",
+                "clay": "কাঁকর"
             },
-            "waterSource": "Water Source (Optional)",
-            "selectWaterSource": "Select water source",
+            "waterSource": "জলের উৎস (ঐচ্ছিক)",
+            "selectWaterSource": "জলের উৎস নির্বাচন করুন",
             "waterSources": {
-                "borewell": "Borewell",
-                "canal": "Canal",
-                "rain-only": "Rain-only",
-                "tank": "Tank",
-                "river": "River"
+                "borewell": "বোরওয়েল",
+                "canal": "খাল",
+                "rain-only": "শুধুমাত্র বৃষ্টি",
+                "tank": "ট্যাঙ্ক",
+                "river": "নদী"
             },
-            "currentSeason": "Current Season",
+            "currentSeason": "বর্তমান ঋতু",
             "seasons": {
-                "kharif": "Kharif",
-                "rabi": "Rabi",
-                "zaid": "Zaid"
+                "kharif": "খরিফ",
+                "rabi": "রবি",
+                "zaid": "জাইদ"
             },
-            "previousCrop": "Previous Crop (Optional)",
-            "budget": "Budget (Optional)"
+            "previousCrop": "পূর্ববর্তী ফসল (ঐচ্ছিক)",
+            "budget": "বাজেট (ঐচ্ছিক)"
         }
     },
     "chatbot": {
-        "title": "Annapurna Assistant",
-        "description": "Your personal farming assistant. Ask me anything!",
-        "open": "Open Chatbot",
-        "placeholder": "Ask Annapurna a question...",
-        "welcomeMessage": "Hi {{name}}! I'm Annapurna. How can I help you today? You can ask me to show you market prices, diagnose a crop, or find a government scheme.",
-        "errorMessage": "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.",
-        "yes": "Yes",
-        "no": "No"
+        "title": "অন্নপূর্ণা সহকারী",
+        "description": "আপনার ব্যক্তিগত কৃষি সহকারী। আমাকে কিছু জিজ্ঞাসা করুন!",
+        "open": "চ্যাটবট খুলুন",
+        "placeholder": "অন্নপূর্ণাকে একটি প্রশ্ন জিজ্ঞাসা করুন...",
+        "welcomeMessage": "নমস্কার {{name}}! আমি অন্নপূর্ণা। আজ আমি আপনাকে কীভাবে সাহায্য করতে পারি? আপনি আমাকে বাজার দর দেখাতে, ফসল নির্ণয় করতে বা সরকারি প্রকল্প খুঁজে পেতে বলতে পারেন।",
+        "errorMessage": "আমি দুঃখিত, আমি এই মুহূর্তে সংযোগ করতে সমস্যায় পড়ছি। অনুগ্রহ করে এক মুহূর্ত পরে আবার চেষ্টা করুন।",
+        "yes": "হ্যাঁ",
+        "no": "না"
     }
 }
 
