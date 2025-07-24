@@ -2,10 +2,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bot, Mic, Send, Square, User } from "lucide-react";
@@ -120,8 +119,8 @@ export function AnnapurnaChatbot() {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg z-50 p-0 overflow-hidden" size="icon">
-          <Image src="https://storage.googleapis.com/studiostack-public-dev/annapurna-chatbot.png" alt="Annapurna Chatbot" width={64} height={64} />
+        <Button className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg z-50" size="icon">
+          <Bot className="h-8 w-8" />
           <span className="sr-only">{t('chatbot.open')}</span>
         </Button>
       </SheetTrigger>
