@@ -166,23 +166,45 @@ const analyzeMarketPricesFlow = ai.defineFlow(
     outputSchema: AnalyzeMarketPricesOutputSchema,
   },
   async ({query, language}) => {
-    // 1. Extract structured data (crop, city) from the user's query.
-    const { output: priceInfo } = await extractPriceInfoPrompt({query});
-    if (!priceInfo) {
-        throw new Error("Could not determine the crop and city from your query.");
-    }
-    
-    // 2. Call the tool to get the price for the extracted crop and city.
-    const { price } = await getMarketPriceTool(priceInfo);
+    try {
+        // 1. Extract structured data (crop, city) from the user's query.
+        const { output: priceInfo } = await extractPriceInfoPrompt({query});
+        if (!priceInfo) {
+            throw new Error("Could not determine the crop and city from your query.");
+        }
+        
+        // 2. Call the tool to get the price for the extracted crop and city.
+        const { price } = await getMarketPriceTool(priceInfo);
 
-    // 3. Call the final analysis prompt with all the necessary information.
-    const { output: analysisResult } = await analysisPrompt({
-        query,
-        ...priceInfo,
-        price,
-        language,
-    });
-    
-    return analysisResult!;
+        // 3. Call the final analysis prompt with all the necessary information.
+        const { output: analysisResult } = await analysisPrompt({
+            query,
+            ...priceInfo,
+            price,
+            language,
+        });
+        
+        if (!analysisResult) {
+            throw new Error("Analysis result was empty.");
+        }
+
+        return analysisResult;
+    } catch (error) {
+        console.error("Error in analyzeMarketPricesFlow: ", error);
+        
+        const friendlyErrorMessage = {
+            en: "The market analysis service is currently overloaded. Please try again in a few moments.",
+            hi: "बाजार विश्लेषण सेवा वर्तमान में ओवरलोड है। कृपया कुछ क्षण बाद पुनः प्रयास करें।",
+            kn: "ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ ಸೇವೆ ಪ್ರಸ್ತುತ ಓವರ್‌ಲೋಡ್ ಆಗಿದೆ. ದಯವಿಟ್ಟು ಕೆಲವು ಕ್ಷಣಗಳಲ್ಲಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+        };
+
+        const message = friendlyErrorMessage[language as keyof typeof friendlyErrorMessage] || friendlyErrorMessage.en;
+        
+        // Return a user-friendly error message within the expected schema
+        return {
+            recommendation: "Service Unavailable",
+            analysis: message,
+        };
+    }
   }
 );
