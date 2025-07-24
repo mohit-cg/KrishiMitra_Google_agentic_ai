@@ -588,7 +588,7 @@
             "farmType": "खेत का प्रकार",
             "irrigated": "सिंचित",
             "rainfed": "वर्षा आधारित / सूखा",
-            "landSize": "भूमि का आकार (एकड़ में)",
+            "landSize": "भूमि का आकार (जैसे, 2 एकड़)",
             "cropPreference": "फसल वरीयता (वैकल्पिक)",
             "cropPreferencePlaceholder": "जैसे, सब्जियां, बाजरा",
             "getRecommendations": "सिफारिशें प्राप्त करें",
@@ -597,7 +597,33 @@
             "resultsPlaceholder": "आपकी व्यक्तिगत फसल सिफारिशें यहां दिखाई देंगी।",
             "topPicks": "आपके लिए हमारी शीर्ष पसंद",
             "topPicksDescription": "आपके इनपुट के आधार पर, आगामी सीजन के लिए सबसे उपयुक्त फसलें यहां दी गई हैं।",
-            "learnMore": "और जानें"
+            "learnMore": "और जानें",
+            "soilType": "मिट्टी का प्रकार (वैकल्पिक)",
+            "selectSoilType": "मिट्टी का प्रकार चुनें",
+            "soilTypes": {
+                "black": "काली",
+                "red": "लाल",
+                "loamy": "दोमट",
+                "sandy": "रेतीली",
+                "clay": "चिकनी"
+            },
+            "waterSource": "जल स्रोत (वैकल्पिक)",
+            "selectWaterSource": "जल स्रोत चुनें",
+            "waterSources": {
+                "borewell": "बोरवेल",
+                "canal": "नहर",
+                "rain-only": "केवल वर्षा",
+                "tank": "टैंक",
+                "river": "नदी"
+            },
+            "currentSeason": "वर्तमान मौसम",
+            "seasons": {
+                "kharif": "खरीफ",
+                "rabi": "रबी",
+                "zaid": "ज़ैद"
+            },
+            "previousCrop": "पिछली फसल (वैकल्पिक)",
+            "budget": "बजट (वैकल्पिक)"
         }
     }
 }

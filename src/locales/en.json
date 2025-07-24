@@ -588,7 +588,7 @@
             "farmType": "Farm Type",
             "irrigated": "Irrigated",
             "rainfed": "Rainfed / Dry",
-            "landSize": "Land Size (in acres)",
+            "landSize": "Land Size (e.g., 2 acres)",
             "cropPreference": "Crop Preference (Optional)",
             "cropPreferencePlaceholder": "e.g., Vegetables, Millets",
             "getRecommendations": "Get Recommendations",
@@ -597,7 +597,33 @@
             "resultsPlaceholder": "Your personalized crop recommendations will appear here.",
             "topPicks": "Our Top Picks For You",
             "topPicksDescription": "Based on your inputs, here are the most suitable crops for the upcoming season.",
-            "learnMore": "Learn More"
+            "learnMore": "Learn More",
+            "soilType": "Soil Type (Optional)",
+            "selectSoilType": "Select soil type",
+            "soilTypes": {
+                "black": "Black",
+                "red": "Red",
+                "loamy": "Loamy",
+                "sandy": "Sandy",
+                "clay": "Clay"
+            },
+            "waterSource": "Water Source (Optional)",
+            "selectWaterSource": "Select water source",
+            "waterSources": {
+                "borewell": "Borewell",
+                "canal": "Canal",
+                "rain-only": "Rain-only",
+                "tank": "Tank",
+                "river": "River"
+            },
+            "currentSeason": "Current Season",
+            "seasons": {
+                "kharif": "Kharif",
+                "rabi": "Rabi",
+                "zaid": "Zaid"
+            },
+            "previousCrop": "Previous Crop (Optional)",
+            "budget": "Budget (Optional)"
         }
     }
 }

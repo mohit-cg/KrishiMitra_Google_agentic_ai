@@ -588,7 +588,7 @@
             "farmType": "ಕೃಷಿ ಪ್ರಕಾರ",
             "irrigated": "ನೀರಾವರಿ",
             "rainfed": "ಮಳೆ ಆಶ್ರಿತ / ಒಣ",
-            "landSize": "ಭೂಮಿಯ ಗಾತ್ರ (ಎಕರೆಗಳಲ್ಲಿ)",
+            "landSize": "ಭೂಮಿಯ ಗಾತ್ರ (ಉದಾ., 2 ಎಕರೆ)",
             "cropPreference": "ಬೆಳೆ ಆದ್ಯತೆ (ಐಚ್ಛಿಕ)",
             "cropPreferencePlaceholder": "ಉದಾ., ತರಕಾರಿಗಳು, ರಾಗಿ",
             "getRecommendations": "ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ",
@@ -597,7 +597,33 @@
             "resultsPlaceholder": "ನಿಮ್ಮ ವೈಯಕ್ತಿಕಗೊಳಿಸಿದ ಬೆಳೆ ಶಿಫಾರಸುಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
             "topPicks": "ನಿಮಗಾಗಿ ನಮ್ಮ ಉನ್ನತ ಆಯ್ಕೆಗಳು",
             "topPicksDescription": "ನಿಮ್ಮ ಇನ್‌ಪುಟ್‌ಗಳ ಆಧಾರದ ಮೇಲೆ, ಮುಂಬರುವ ಋತುವಿಗೆ ಅತ್ಯಂತ ಸೂಕ್ತವಾದ ಬೆಳೆಗಳು ಇಲ್ಲಿವೆ.",
-            "learnMore": "ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ"
+            "learnMore": "ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ",
+            "soilType": "ಮಣ್ಣಿನ ಪ್ರಕಾರ (ಐಚ್ಛಿಕ)",
+            "selectSoilType": "ಮಣ್ಣಿನ ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+            "soilTypes": {
+                "black": "ಕಪ್ಪು",
+                "red": "ಕೆಂಪು",
+                "loamy": "ಜೇಡಿ",
+                "sandy": "ಮರಳು",
+                "clay": "ಆವೆ"
+            },
+            "waterSource": "ನೀರಿನ ಮೂಲ (ಐಚ್ಛಿಕ)",
+            "selectWaterSource": "ನೀರಿನ ಮೂಲವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+            "waterSources": {
+                "borewell": "ಬೋರ್‌ವೆಲ್",
+                "canal": "ನಾಲೆ",
+                "rain-only": "ಮಳೆ ಮಾತ್ರ",
+                "tank": "ಕೆರೆ",
+                "river": "ನದಿ"
+            },
+            "currentSeason": "ಪ್ರಸ್ತುತ ಋತು",
+            "seasons": {
+                "kharif": "ಖಾರಿಫ್",
+                "rabi": "ರಬಿ",
+                "zaid": "ಜೈದ್"
+            },
+            "previousCrop": "ಹಿಂದಿನ ಬೆಳೆ (ಐಚ್ಛಿಕ)",
+            "budget": "ಬಜೆಟ್ (ಐಚ್ಛಿಕ)"
         }
     }
 }
