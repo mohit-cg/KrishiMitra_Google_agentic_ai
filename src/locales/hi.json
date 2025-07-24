@@ -12,7 +12,8 @@
         "weather": "मौसम",
         "community": "समुदाय",
         "shop": "दुकान",
-        "eLearning": "ई-लर्निंग"
+        "eLearning": "ई-लर्निंग",
+        "tracker": "ट्रैकर"
     },
     "userNav": {
         "profile": "प्रोफ़ाइल",
@@ -532,5 +533,54 @@
         "photoUpdatedDesc": "आपकी प्रोफ़ाइल तस्वीर बदल दी गई है।",
         "uploadFailed": "अपलोड विफल",
         "uploadFailedDesc": "आपकी प्रोफ़ाइल तस्वीर नहीं बदली जा सकी। कृपया फिर से प्रयास करें।"
+    },
+    "tracker": {
+        "title": "व्यय और लाभ ट्रैकर",
+        "description": "फसल की लाभप्रदता को ट्रैक करने के लिए अपनी आय और व्यय लॉग करें।",
+        "addTransaction": "लेन-देन जोड़ें",
+        "editTransaction": "लेन-देन संपादित करें",
+        "transactionDetails": "अपनी आय या व्यय के लिए विवरण दर्ज करें।",
+        "totalIncome": "कुल आय",
+        "totalExpense": "कुल व्यय",
+        "netProfitLoss": "शुद्ध लाभ / हानि",
+        "recentTransactions": "हाल के लेन-देन",
+        "recentTransactionsDesc": "आपकी सबसे हाल की आय और व्यय का एक लॉग।",
+        "noTransactions": "अभी तक कोई लेन-देन नहीं हुआ है। शुरू करने के लिए 'लेन-देन जोड़ें' पर क्लिक करें।",
+        "summaryChart": "आय बनाम व्यय",
+        "summaryChartDesc": "आपके वित्त का एक दृश्य सारांश।",
+        "chart": {
+            "income": "आय",
+            "expense": "व्यय"
+        },
+        "form": {
+            "description": "विवरण",
+            "amount": "राशि (₹)",
+            "type": "प्रकार",
+            "selectType": "एक प्रकार चुनें",
+            "income": "आय",
+            "expense": "व्यय",
+            "category": "श्रेणी",
+            "selectCategory": "एक श्रेणी चुनें",
+            "date": "दिनांक",
+            "pickDate": "एक तारीख चुनें",
+            "cancel": "रद्द करें",
+            "save": "लेन-देन सहेजें"
+        },
+        "categories": {
+            "seeds": "बीज",
+            "fertilizers": "उर्वरक",
+            "pesticides": "कीटनाशक",
+            "labor": "श्रम",
+            "equipment": "उपकरण",
+            "fuel": "ईंधन",
+            "rent": "भूमि किराया",
+            "other": "अन्य",
+            "cropSale": "फसल बिक्री",
+            "subsidy": "सब्सिडी"
+        },
+        "actions": {
+            "edit": "संपादित करें",
+            "delete": "हटाएं"
+        }
     }
 }

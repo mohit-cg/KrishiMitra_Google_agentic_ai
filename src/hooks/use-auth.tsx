@@ -3,7 +3,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, Timestamp, query, orderBy } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth, db, storage } from "@/lib/firebase-config";
 import { SplashScreen } from "@/components/splash-screen";
@@ -18,10 +18,28 @@ export interface UserProfile extends Record<string, any> {
   crops?: string;
 }
 
+export interface Transaction {
+    id: string;
+    description: string;
+    amount: number;
+    type: 'income' | 'expense';
+    category: string;
+    date: Timestamp;
+}
+
+export interface TransactionData {
+    description: string;
+    amount: number;
+    type: 'income' | 'expense';
+    category: string;
+    date: Date;
+}
+
 
 interface AuthContextType {
   user: User | null;
   userProfile: UserProfile | null;
+  transactions: Transaction[];
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<void>;
@@ -29,6 +47,9 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
   uploadProfileImage: (file: File) => Promise<void>;
+  addTransaction: (data: TransactionData) => Promise<void>;
+  updateTransaction: (id: string, data: Partial<TransactionData>) => Promise<void>;
+  deleteTransaction: (id: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,6 +57,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,6 +73,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => unsubscribe();
   }, []);
+  
+   useEffect(() => {
+    if (user) {
+      const q = query(collection(db, "users", user.uid, "transactions"), orderBy("date", "desc"));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const txs: Transaction[] = [];
+        querySnapshot.forEach((doc) => {
+          txs.push({ id: doc.id, ...doc.data() } as Transaction);
+        });
+        setTransactions(txs);
+      });
+      return () => unsubscribe();
+    }
+  }, [user]);
+
 
   const getUserProfile = async (firebaseUser: User) => {
     const docRef = doc(db, "users", firebaseUser.uid);
@@ -137,7 +174,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
        throw new Error("No user is currently signed in.");
     }
     
-    // Data to update in Firebase Auth
     const authUpdateData: { displayName?: string; photoURL?: string } = {};
     if (data.displayName !== undefined && data.displayName !== currentUser.displayName) {
         authUpdateData.displayName = data.displayName;
@@ -146,21 +182,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         authUpdateData.photoURL = data.photoURL;
     }
 
-    // Update Firebase Auth profile if there's anything to update
     if (Object.keys(authUpdateData).length > 0) {
         await updateProfile(currentUser, authUpdateData);
     }
 
-    // Update Firestore document
     const docRef = doc(db, "users", currentUser.uid);
-    // Fetch existing profile to merge, ensuring we don't overwrite fields unintentionally
     const currentProfileSnap = await getDoc(docRef);
     const existingProfile = currentProfileSnap.exists() ? currentProfileSnap.data() : {};
     
     await setDoc(docRef, { ...existingProfile, ...data }, { merge: true });
 
-    // We must re-fetch the user and profile to ensure UI consistency
-    const updatedUser = { ...auth.currentUser }; // Create a fresh copy
+    const updatedUser = { ...auth.currentUser }; 
     setUser(updatedUser as User); 
     await getUserProfile(updatedUser as User);
   };
@@ -179,9 +211,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     await updateUserProfile({ photoURL: downloadURL });
   };
+  
+  // Transaction Management
+  const addTransaction = async (data: TransactionData) => {
+    if (!user) throw new Error("User not authenticated");
+    const txData = { ...data, date: Timestamp.fromDate(data.date) };
+    await addDoc(collection(db, "users", user.uid, "transactions"), txData);
+  };
+
+  const updateTransaction = async (id: string, data: Partial<TransactionData>) => {
+    if (!user) throw new Error("User not authenticated");
+    const txRef = doc(db, "users", user.uid, "transactions", id);
+    const txData = data.date ? { ...data, date: Timestamp.fromDate(data.date) } : data;
+    await updateDoc(txRef, txData);
+  };
+
+  const deleteTransaction = async (id: string) => {
+    if (!user) throw new Error("User not authenticated");
+    await deleteDoc(doc(db, "users", user.uid, "transactions", id));
+  };
 
 
-  const value = { user, userProfile, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut, updateUserProfile, uploadProfileImage };
+  const value = { user, userProfile, transactions, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut, updateUserProfile, uploadProfileImage, addTransaction, updateTransaction, deleteTransaction };
 
   if (loading) {
     return <SplashScreen />;

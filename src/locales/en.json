@@ -12,7 +12,8 @@
         "weather": "Weather",
         "community": "Community",
         "shop": "Shop",
-        "eLearning": "E-Learning"
+        "eLearning": "E-Learning",
+        "tracker": "Tracker"
     },
     "userNav": {
         "profile": "Profile",
@@ -532,5 +533,54 @@
         "photoUpdatedDesc": "Your profile picture has been changed.",
         "uploadFailed": "Upload Failed",
         "uploadFailedDesc": "Could not change your profile picture. Please try again."
+    },
+    "tracker": {
+        "title": "Expense & Profit Tracker",
+        "description": "Log your incomes and expenses to track crop profitability.",
+        "addTransaction": "Add Transaction",
+        "editTransaction": "Edit Transaction",
+        "transactionDetails": "Enter the details for your income or expense.",
+        "totalIncome": "Total Income",
+        "totalExpense": "Total Expense",
+        "netProfitLoss": "Net Profit / Loss",
+        "recentTransactions": "Recent Transactions",
+        "recentTransactionsDesc": "A log of your most recent incomes and expenses.",
+        "noTransactions": "No transactions yet. Click 'Add Transaction' to start.",
+        "summaryChart": "Income vs. Expense",
+        "summaryChartDesc": "A visual summary of your finances.",
+        "chart": {
+            "income": "Income",
+            "expense": "Expense"
+        },
+        "form": {
+            "description": "Description",
+            "amount": "Amount (₹)",
+            "type": "Type",
+            "selectType": "Select a type",
+            "income": "Income",
+            "expense": "Expense",
+            "category": "Category",
+            "selectCategory": "Select a category",
+            "date": "Date",
+            "pickDate": "Pick a date",
+            "cancel": "Cancel",
+            "save": "Save Transaction"
+        },
+        "categories": {
+            "seeds": "Seeds",
+            "fertilizers": "Fertilizers",
+            "pesticides": "Pesticides",
+            "labor": "Labor",
+            "equipment": "Equipment",
+            "fuel": "Fuel",
+            "rent": "Land Rent",
+            "other": "Other",
+            "cropSale": "Crop Sale",
+            "subsidy": "Subsidy"
+        },
+        "actions": {
+            "edit": "Edit",
+            "delete": "Delete"
+        }
     }
 }
