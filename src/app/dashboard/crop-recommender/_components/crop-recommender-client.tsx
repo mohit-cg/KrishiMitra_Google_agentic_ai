@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useForm, Controller } from 'react-hook-form';
@@ -28,16 +28,22 @@ export function CropRecommenderClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<RecommendCropsOutput | null>(null);
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm<RecommendationFormValues>({
+  const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<RecommendationFormValues>({
     resolver: zodResolver(RecommendCropsInputSchema),
     defaultValues: {
-      location: userProfile?.location || 'Pune, Maharashtra',
+      location: '',
       farmType: 'irrigated',
       landSize: '2 acres',
       cropPreference: '',
       language: language,
     }
   });
+
+  useEffect(() => {
+    if (userProfile?.location) {
+      setValue('location', userProfile.location);
+    }
+  }, [userProfile, setValue]);
 
   const onSubmit = async (data: RecommendationFormValues) => {
     setIsLoading(true);
