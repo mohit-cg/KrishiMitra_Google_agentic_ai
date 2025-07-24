@@ -52,7 +52,6 @@ const intentToRouteMap: Record<string, string> = {
 
 // Store messages and session state outside the component to persist during the session
 let chatHistory: Message[] = [];
-let hasOpenedOnce = false;
 
 export function AnnapurnaChatbot() {
   const { t, language } = useTranslation();
@@ -94,14 +93,6 @@ export function AnnapurnaChatbot() {
   }, [language]);
 
   useEffect(() => {
-    // Open the chatbot on the first load of the session
-    if (!hasOpenedOnce && !isOpen) {
-      setIsOpen(true);
-      hasOpenedOnce = true;
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
     chatHistory = messages;
     if (viewportRef.current) {
       viewportRef.current.scrollTo({
@@ -118,7 +109,7 @@ export function AnnapurnaChatbot() {
       const welcomeMessage: Message = { id: messageId, sender: 'bot', text: welcomeMessageText };
       setMessages([welcomeMessage]);
     }
-  }, [isOpen, messages.length, t, userProfile, playAudio]);
+  }, [isOpen, messages.length, t, userProfile]);
 
   useEffect(() => {
     // Audio cleanup
@@ -297,5 +288,7 @@ export function AnnapurnaChatbot() {
     </Sheet>
   );
 }
+
+    
 
     
