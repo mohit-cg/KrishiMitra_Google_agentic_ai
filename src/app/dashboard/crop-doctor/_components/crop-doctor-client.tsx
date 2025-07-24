@@ -156,7 +156,7 @@ export function CropDoctorClient() {
     }
     try {
       const requestData: DiagnoseCropDiseaseInput = {
-        description,
+        description: description.trim(),
         language,
       };
       if (imageData) {
