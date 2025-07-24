@@ -75,7 +75,16 @@ const recommendCropsFlow = ai.defineFlow(
     outputSchema: RecommendCropsOutputSchema,
   },
   async input => {
-    const {output} = await recommendCropsPrompt(input);
-    return output!;
+    try {
+        const {output} = await recommendCropsPrompt(input);
+        // Ensure output is not null, and recommendations is an array.
+        // Return a default empty array if the output is not as expected.
+        return output || { recommendations: [] };
+    } catch (error) {
+        console.error("Error in recommendCropsFlow: ", error);
+        // Return a friendly error response within the expected schema
+        return { recommendations: [] };
+    }
   }
 );
+
