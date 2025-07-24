@@ -1,6 +1,7 @@
 
 "use client";
 
+import React from "react";
 import { Bell, Info, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
