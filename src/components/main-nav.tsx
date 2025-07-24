@@ -28,7 +28,11 @@ import { SheetClose } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslation } from "@/contexts/language-context";
 
-export function MainNav() {
+interface MainNavProps {
+  isSheet?: boolean;
+}
+
+export function MainNav({ isSheet = false }: MainNavProps) {
   const pathname = usePathname();
   const { state } = useSidebar();
   const isMobile = useIsMobile();
@@ -57,33 +61,28 @@ export function MainNav() {
         // A special case for the shop parent route
         const isShopActive = (pathname.startsWith("/dashboard/shop") && item.href === "/dashboard/shop");
 
-        const linkContent = (
-            <>
-                <item.icon className="h-5 w-5" />
-                <span
-                  className={cn(
-                    "truncate",
-                    state === "collapsed" && !isMobile ? "hidden" : "block"
-                  )}
-                >
-                  {item.label}
-                </span>
-            </>
-        );
-
-        const linkClassName = cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-            (isActive || isShopActive) && "bg-muted text-primary",
-            state === "collapsed" && !isMobile && "justify-center"
-        );
-        
         const NavLink = (
-            <Link href={item.href} className={linkClassName}>
-                {linkContent}
+            <Link 
+              href={item.href}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                (isActive || isShopActive) && "bg-muted text-primary",
+                state === "collapsed" && !isMobile && "justify-center"
+              )}
+            >
+              <item.icon className="h-5 w-5" />
+              <span
+                className={cn(
+                  "truncate",
+                  state === "collapsed" && !isMobile ? "hidden" : "block"
+                )}
+              >
+                {item.label}
+              </span>
             </Link>
         );
 
-        if (isMobile) {
+        if (isSheet) {
              return (
                  <SheetClose asChild key={item.href}>
                      {NavLink}

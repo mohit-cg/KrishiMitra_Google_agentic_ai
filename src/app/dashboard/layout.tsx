@@ -94,7 +94,7 @@ export default function DashboardLayout({
                       <span className="">KrishiMitra AI</span>
                     </Link>
                   </div>
-                  <MainNav />
+                  <MainNav isSheet={true} />
                 </SheetContent>
               </Sheet>
               <div className="flex-1">
