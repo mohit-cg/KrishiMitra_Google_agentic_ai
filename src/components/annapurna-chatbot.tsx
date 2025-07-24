@@ -48,6 +48,9 @@ const intentToRouteMap: Record<string, string> = {
     navigate_recommender: '/dashboard/crop-recommender',
     navigate_profile: '/dashboard/profile',
     navigate_settings: '/dashboard/settings',
+    query_market_prices: '/dashboard/market-analyst',
+    query_schemes: '/dashboard/schemes',
+    query_crop_recommendation: '/dashboard/crop-recommender'
 };
 
 // Store messages and session state outside the component to persist during the session
@@ -145,13 +148,12 @@ export function AnnapurnaChatbot() {
   const handleBotResponse = (result: AnnapurnaChatOutput) => {
     const messageId = Date.now();
     const route = intentToRouteMap[result.intent];
-    const isNavIntent = result.intent.startsWith('navigate_');
 
     const botMessage: ActionableMessage = { 
         id: messageId, 
         sender: 'bot', 
         text: result.response,
-        actions: isNavIntent && route ? { intent: result.intent, route, responded: false } : undefined
+        actions: route ? { intent: result.intent, route, responded: false } : undefined
     };
     
     setMessages(prev => [...prev, botMessage]);
@@ -288,7 +290,3 @@ export function AnnapurnaChatbot() {
     </Sheet>
   );
 }
-
-    
-
-    

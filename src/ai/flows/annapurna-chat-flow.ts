@@ -87,7 +87,7 @@ const annapurnaPrompt = ai.definePrompt({
 
   Based on the intent, formulate a helpful and VERY SHORT response.
   - For navigation intents, confirm you understand and then ask if the user wants to go to that page. For example: "I can take you to the Crop Doctor page. Shall I take you there?".
-  - For specific queries, provide a direct, brief answer.
+  - For specific queries (like query_market_prices), provide a direct, ONE-LINE answer and then ask if they want to go to the relevant section for more details. For example: "The price of tomatoes in Pune is currently around ₹30/kg. Would you like to go to the Market Analyst page for more details?".
   - For general questions, provide a friendly, helpful answer.
   - If the intent is unknown, politely say you can't help with that and list some things you can do.
   `,
