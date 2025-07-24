@@ -40,7 +40,11 @@ const SeiraChatOutputSchema = z.object({
       'form_filling_help',
       'unknown'
   ]).describe("The user's primary goal or intent."),
-  entities: z.record(z.string()).optional().describe("A map of extracted entities from the query, like {'crop': 'tomato', 'city': 'pune'}."),
+  entities: z.object({
+      crop: z.string().optional().describe("The crop name mentioned, e.g., 'tomato'."),
+      city: z.string().optional().describe("The city name mentioned, e.g., 'pune'."),
+      topic: z.string().optional().describe("The general topic mentioned, e.g., 'fertilizer'."),
+  }).optional().describe("A map of extracted entities from the query."),
 });
 export type SeiraChatOutput = z.infer<typeof SeiraChatOutputSchema>;
 
