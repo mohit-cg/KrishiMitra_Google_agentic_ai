@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Button } from "@/components/ui/button"
-import { PanelLeft } from "lucide-react"
+import { PanelLeft, PanelRight } from "lucide-react"
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed"
@@ -80,10 +80,22 @@ Sidebar.displayName = "Sidebar"
 const SidebarHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex h-[57px] items-center border-b p-4 justify-between", className)} {...props} />
-))
+>(({ className, ...props }, ref) => {
+  const { state } = useSidebar();
+  return (
+    <div 
+      ref={ref} 
+      className={cn(
+        "flex h-[57px] items-center border-b px-4", 
+        state === "expanded" ? "justify-between" : "justify-center",
+        className
+      )} 
+      {...props} 
+    />
+  )
+})
 SidebarHeader.displayName = "SidebarHeader"
+
 
 const SidebarContent = React.forwardRef<
   HTMLDivElement,
@@ -118,19 +130,22 @@ const SidebarTrigger = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, ...props }, ref) => {
   const { state, setState } = useSidebar()
+  const isMobile = useIsMobile()
+
+  if (isMobile) return null;
 
   return (
     <Button
       ref={ref}
       variant="ghost"
       size="icon"
-      className={cn("h-9 w-9 hidden lg:flex", className)}
+      className={cn("h-9 w-9", className)}
       onClick={() =>
         setState(state === "expanded" ? "collapsed" : "expanded")
       }
       {...props}
     >
-      <PanelLeft className="h-5 w-5" />
+      {state === 'expanded' ? <PanelLeft className="h-5 w-5" /> : <PanelRight className="h-5 w-5" />}
       <span className="sr-only">Toggle sidebar</span>
     </Button>
   )
