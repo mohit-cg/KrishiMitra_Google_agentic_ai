@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, getDoc, setDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, Timestamp, query, orderBy } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { auth, db, storage } from "@/lib/firebase-config";
+import { auth, db, storage, allConfigured } from "@/lib/firebase-config";
 import { SplashScreen } from "@/components/splash-screen";
 import { toast } from "./use-toast";
 
@@ -199,6 +199,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const uploadProfileImage = async (file: File): Promise<void> => {
+    if (!allConfigured) {
+       toast({
+        variant: "destructive",
+        title: "Firebase Not Configured",
+        description:
+          "Image upload requires a configured Firebase project. Please set up your .env file.",
+      });
+      throw new Error("Firebase not configured");
+    }
+
     const currentUser = auth.currentUser;
     if (!currentUser) {
       throw new Error("No user is currently signed in.");
@@ -216,9 +226,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         toast({
             variant: "destructive",
             title: "Upload Failed",
-            description: "Could not upload profile image. Please ensure your Firebase Storage rules are set up correctly.",
+            description: "Could not upload profile image. Please ensure your Firebase Storage rules are set up correctly to allow writes.",
         });
-        throw error; // Re-throw the error to be handled by the caller
+        throw error;
     }
   };
   

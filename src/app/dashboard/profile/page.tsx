@@ -182,6 +182,7 @@ export default function ProfilePage() {
     const file = event.target.files?.[0];
     if (file) {
       setIsUploading(true);
+      console.log('ddddddd',file)
       try {
         await uploadProfileImage(file);
         toast({
