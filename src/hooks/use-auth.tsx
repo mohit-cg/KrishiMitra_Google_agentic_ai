@@ -221,13 +221,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await uploadBytes(storageRef, file);
         const downloadURL = await getDownloadURL(storageRef);
         await updateUserProfile({ photoURL: downloadURL });
-    } catch(error) {
+    } catch(error: any) {
         console.error("Error uploading profile image:", error);
-        toast({
-            variant: "destructive",
-            title: "Upload Failed",
-            description: "Could not upload profile image. Please ensure your Firebase Storage rules are set up correctly to allow writes.",
-        });
+        if (error.code === 'storage/retry-limit-exceeded') {
+             toast({
+                variant: "destructive",
+                title: "Storage Rules Error",
+                description: "The upload failed due to storage security rules. Please go to the Firebase Console, navigate to Storage -> Rules, and ensure they allow authenticated users to write to their own 'profile-images' directory. Refer to the 'storage.rules' file in the project for the correct rules.",
+             });
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Upload Failed",
+                description: "Could not upload profile image. Please try again later.",
+            });
+        }
         throw error;
     }
   };
