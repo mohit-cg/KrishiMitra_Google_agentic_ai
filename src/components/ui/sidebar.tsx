@@ -39,7 +39,7 @@ const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 const sidebarVariants = cva(
-  "hidden lg:flex flex-col border-r h-full bg-background/70 backdrop-blur-sm transition-all duration-300 ease-in-out",
+  "hidden lg:flex flex-col border-r bg-background/70 backdrop-blur-sm transition-all duration-300 ease-in-out",
   {
     variants: {
       state: {
