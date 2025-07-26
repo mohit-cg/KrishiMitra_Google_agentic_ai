@@ -58,6 +58,7 @@ export default function DashboardLayout({
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 filter: 'blur(8px) brightness(0.6)',
+                backgroundAttachment:'fixed'
               }}
               data-ai-hint="abstract ai agriculture"
             />

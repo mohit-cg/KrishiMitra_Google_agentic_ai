@@ -7,6 +7,7 @@ import { doc, getDoc, setDoc, collection, onSnapshot, addDoc, updateDoc, deleteD
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth, db, storage } from "@/lib/firebase-config";
 import { SplashScreen } from "@/components/splash-screen";
+import { toast } from "./use-toast";
 
 export interface UserProfile extends Record<string, any> {
   uid: string;
@@ -206,10 +207,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const filePath = `profile-images/${currentUser.uid}/${file.name}`;
     const storageRef = ref(storage, filePath);
     
-    await uploadBytes(storageRef, file);
-    const downloadURL = await getDownloadURL(storageRef);
-    
-    await updateUserProfile({ photoURL: downloadURL });
+    try {
+        await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(storageRef);
+        await updateUserProfile({ photoURL: downloadURL });
+    } catch(error) {
+        console.error("Error uploading profile image:", error);
+        toast({
+            variant: "destructive",
+            title: "Upload Failed",
+            description: "Could not upload profile image. Please ensure your Firebase Storage rules are set up correctly.",
+        })
+    }
   };
   
   // Transaction Management
