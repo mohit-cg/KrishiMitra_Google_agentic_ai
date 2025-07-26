@@ -146,7 +146,7 @@ export default function MarketplacePage() {
             <Card key={index} className="overflow-hidden">
               <CardHeader className="p-0">
                 <div className="aspect-square relative">
-                  <Image src={`https://source.unsplash.com/400x400/?${product.hint?.replace(/\s/g, ',')}`} alt={product.name} layout="fill" objectFit="cover" />
+                  <Image src={`https://placehold.co/400x400.png`} alt={product.name} layout="fill" objectFit="cover" data-ai-hint={product.hint} />
                 </div>
               </CardHeader>
               <CardContent className="p-4">

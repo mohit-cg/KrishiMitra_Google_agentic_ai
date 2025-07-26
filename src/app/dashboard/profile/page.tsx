@@ -231,7 +231,7 @@ export default function ProfilePage() {
         <CardContent className="space-y-6">
            <div className="flex flex-col items-center space-y-4">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={userProfile?.photoURL || `https://source.unsplash.com/100x100/?farmer,portrait`} alt={displayName} />
+                <AvatarImage src={userProfile?.photoURL || `https://placehold.co/100x100.png`} alt={displayName} data-ai-hint="farmer portrait"/>
                 <AvatarFallback className="text-3xl">{getInitials(displayName)}</AvatarFallback>
               </Avatar>
               <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading}/>

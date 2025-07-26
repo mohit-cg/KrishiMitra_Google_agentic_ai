@@ -312,11 +312,12 @@ export default function LearnPage() {
                                     <div className="flex flex-col sm:flex-row gap-4 p-4">
                                         <div className="relative w-full sm:w-48 sm:h-32 shrink-0 aspect-video sm:aspect-auto">
                                             <Image 
-                                                src={`https://source.unsplash.com/600x400/?${article.imageHint?.replace(/\s/g, ',')}`} 
+                                                src={`https://placehold.co/600x400.png`} 
                                                 alt={article.title} 
                                                 layout="fill" 
                                                 objectFit="cover" 
                                                 className="rounded-md"
+                                                data-ai-hint={article.imageHint}
                                             />
                                         </div>
                                         <div className="flex-1 flex flex-col justify-between">
@@ -346,7 +347,7 @@ export default function LearnPage() {
                     <Card key={index} className="flex flex-col">
                         <CardHeader className="p-0">
                         <div className="aspect-video relative">
-                            <Image src={`https://source.unsplash.com/600x400/?${article.hint?.replace(/\s/g, ',')}`} alt={article.title} layout="fill" objectFit="cover" />
+                            <Image src={`https://placehold.co/600x400.png`} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint} />
                         </div>
                         </CardHeader>
                         <CardContent className="p-4 flex-grow">
@@ -378,7 +379,7 @@ export default function LearnPage() {
                     <Card key={index} className="flex flex-col group">
                         <CardHeader className="p-0">
                         <button onClick={() => playVideo(video.videoId)} className="block aspect-video relative overflow-hidden rounded-t-lg w-full">
-                            <Image src={video.thumbnailUrl} alt={video.title} layout="fill" objectFit="cover" />
+                            <Image src={video.thumbnailUrl} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint}/>
                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <PlayCircle className="h-16 w-16 text-white/80"/>
                             </div>

@@ -244,7 +244,7 @@ export default function DashboardPage() {
                            recommendations.recommendations.map(rec => (
                             <Card key={rec.cropName} className="overflow-hidden">
                                 <div className="flex items-start gap-4 p-4">
-                                    <Image src={`https://source.unsplash.com/100x100/?${rec.imageHint?.replace(/\s/g, ',')}`} alt={rec.cropName} width={80} height={80} className="rounded-lg object-cover" />
+                                    <Image src={`https://placehold.co/100x100.png`} alt={rec.cropName} width={80} height={80} className="rounded-lg object-cover" data-ai-hint={rec.imageHint}/>
                                     <div className="flex-1">
                                         <h4 className="font-semibold text-base">{rec.cropName}</h4>
                                         <p className="text-xs text-muted-foreground mt-1 mb-2 truncate">{rec.reasoning}</p>

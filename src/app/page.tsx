@@ -84,7 +84,7 @@ export default function LoginPage() {
     <div className="w-full h-screen lg:grid lg:grid-cols-2">
        <div className="hidden bg-muted lg:block relative">
         <Image
-          src="https://image.slidesdocs.com/responsive-images/background/agriculture-revolutionized-3d-illustration-of-a-tech-savvy-farmer-using-an-autonomous-tractor-in-smart-farming-powerpoint-background_3b2b3402f6__960_540.jpg"
+          src="https://placehold.co/1200x900.png"
           alt={t('login.imageAlt')}
           data-ai-hint="lush farm sunset"
           width="1200"
