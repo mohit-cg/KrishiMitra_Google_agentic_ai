@@ -10,10 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from '@/hooks/use-auth';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ArrowLeft, Check, ChevronsUpDown, Upload } from 'lucide-react';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { cn } from '@/lib/utils';
+import { ArrowLeft, Upload } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { useTranslation } from '@/contexts/language-context';
@@ -91,7 +88,6 @@ export default function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
-  const [open, setOpen] = useState(false);
 
   // This effect runs when the component mounts or the user profile data changes.
   // It populates the form with the canonical (usually English) data from the profile.
@@ -249,49 +245,18 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="location">{t('profile.location')}</Label>
-               <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="w-full justify-between"
-                    >
-                      {location
-                        ? (districts.find((district) => district.value === location)?.label || location)
-                        : t('profile.selectDistrict')}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-                    <Command>
-                      <CommandInput placeholder={t('profile.searchDistrict')} />
-                      <CommandEmpty>{t('profile.noDistrictFound')}</CommandEmpty>
-                       <CommandList>
-                        <CommandGroup>
-                            {districts.map((district) => (
-                            <CommandItem
-                                key={district.value}
-                                value={district.value}
-                                onSelect={() => {
-                                    setLocation(district.value)
-                                    setOpen(false)
-                                }}
-                            >
-                                <Check
-                                className={cn(
-                                    "mr-2 h-4 w-4",
-                                    location === district.value ? "opacity-100" : "opacity-0"
-                                )}
-                                />
-                                {district.label}
-                            </CommandItem>
-                            ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+              <Select value={location} onValueChange={setLocation}>
+                <SelectTrigger id="location">
+                  <SelectValue placeholder={t('profile.selectDistrict')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {districts.map((district) => (
+                    <SelectItem key={district.value} value={district.value}>
+                      {district.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="language">{t('profile.language')}</Label>
@@ -377,6 +342,3 @@ const ProfileSkeleton = () => {
     </div>
   );
 }
-
-
-    
