@@ -182,7 +182,6 @@ export default function ProfilePage() {
     const file = event.target.files?.[0];
     if (file) {
       setIsUploading(true);
-      console.log('ddddddd',file)
       try {
         await uploadProfileImage(file);
         toast({
@@ -190,12 +189,7 @@ export default function ProfilePage() {
           description: t('toast.photoUpdatedDesc'),
         });
       } catch (error) {
-        console.error("Failed to upload image", error);
-        toast({
-          title: t('toast.uploadFailed'),
-          description: t('toast.uploadFailedDesc'),
-          variant: "destructive",
-        });
+        // Error toast is handled in useAuth hook
       } finally {
         setIsUploading(false);
       }
@@ -278,10 +272,9 @@ export default function ProfilePage() {
                             {districts.map((district) => (
                             <CommandItem
                                 key={district.value}
-                                value={district.label}
+                                value={district.value}
                                 onSelect={(currentValue) => {
-                                  const selectedDistrict = districts.find(d => d.label.toLowerCase() === currentValue.toLowerCase());
-                                  setLocation(selectedDistrict?.value || '');
+                                  setLocation(currentValue === location ? "" : currentValue);
                                   setOpen(false);
                                 }}
                                 className="transition-all duration-200 ease-in-out hover:scale-105 hover:bg-accent"

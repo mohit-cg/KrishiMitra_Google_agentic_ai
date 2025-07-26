@@ -223,7 +223,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await updateUserProfile({ photoURL: downloadURL });
     } catch(error: any) {
         console.error("Error uploading profile image:", error);
-        if (error.code === 'storage/retry-limit-exceeded') {
+        if (error.code === 'storage/retry-limit-exceeded' || error.code === 'storage/unauthorized') {
              toast({
                 variant: "destructive",
                 title: "Storage Rules Error",
