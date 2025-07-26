@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, PanelLeft } from "lucide-react"
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed"
@@ -39,12 +39,12 @@ const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 const sidebarVariants = cva(
-  "flex flex-col bg-card transition-all duration-300 ease-in-out",
+  "relative flex flex-col bg-card transition-all duration-300 ease-in-out",
   {
     variants: {
       state: {
         expanded: "w-64",
-        collapsed: "w-16",
+        collapsed: "w-0 p-0 border-0",
       },
     },
     defaultVariants: {
@@ -60,14 +60,22 @@ interface SidebarProps
 const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
   ({ className, children, ...props }, ref) => {
     const { state } = useSidebar()
+    const isMobile = useIsMobile();
+    
+    // On mobile, the sidebar is handled by a Sheet, so we don't render the desktop one.
+    if(isMobile) return null;
 
     return (
-      <div
+       <div
         ref={ref}
         className={cn(sidebarVariants({ state }), className)}
         {...props}
       >
-        {children}
+        {/* The children prop contains the actual content of the sidebar (header, nav, etc.) */}
+        {/* We add a wrapper to control visibility based on the collapsed state */}
+        <div className={cn("transition-opacity duration-200", state === "collapsed" ? "opacity-0" : "opacity-100")}>
+           {children}
+        </div>
       </div>
     )
   }
@@ -78,7 +86,7 @@ const SidebarHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("", className)} {...props} />
+  <div ref={ref} className={cn("flex h-[57px] items-center", className)} {...props} />
 ))
 SidebarHeader.displayName = "SidebarHeader"
 
@@ -112,22 +120,19 @@ const SidebarTrigger = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, ...props }, ref) => {
   const { state, setState } = useSidebar()
-  const isMobile = useIsMobile();
-
-  if (isMobile) return null;
 
   return (
     <Button
       ref={ref}
       variant="ghost"
       size="icon"
-      className={cn("rounded-full h-7 w-7", className)}
+      className={cn("h-9 w-9", className)}
       onClick={() =>
         setState(state === "expanded" ? "collapsed" : "expanded")
       }
       {...props}
     >
-      {state === "expanded" ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+      <PanelLeft className="h-5 w-5" />
       <span className="sr-only">Toggle sidebar</span>
     </Button>
   )
