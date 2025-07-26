@@ -70,6 +70,9 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
         className={cn(sidebarVariants({ state }), className)}
         {...props}
       >
+        <SidebarHeader>
+           <SidebarTrigger />
+        </SidebarHeader>
         {children}
       </div>
     )
@@ -86,8 +89,8 @@ const SidebarHeader = React.forwardRef<
     <div 
       ref={ref} 
       className={cn(
-        "flex h-[57px] items-center border-b px-4", 
-        state === "expanded" ? "justify-between" : "justify-center",
+        "flex h-[57px] items-center border-b px-2", 
+        state === "expanded" ? "justify-end" : "justify-center",
         className
       )} 
       {...props} 
