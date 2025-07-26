@@ -273,9 +273,9 @@ export default function ProfilePage() {
                             <CommandItem
                                 key={district.value}
                                 value={district.value}
-                                onSelect={(currentValue) => {
-                                  setLocation(currentValue === location ? "" : currentValue);
-                                  setOpen(false);
+                                onSelect={() => {
+                                  setLocation(district.value === location ? "" : district.value)
+                                  setOpen(false)
                                 }}
                                 className="transition-all duration-200 ease-in-out hover:scale-105 hover:bg-accent"
                             >
@@ -378,3 +378,5 @@ const ProfileSkeleton = () => {
     </div>
   );
 }
+
+    
