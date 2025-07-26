@@ -46,7 +46,7 @@ function DashboardPageLayout({ children }: { children: React.ReactNode }) {
     <div className="grid h-screen w-full lg:grid-cols-[auto_1fr]">
       <Sidebar>
         <SidebarHeader>
-          <Link href="/dashboard" className={cn("flex items-center gap-2 font-semibold font-headline", sidebarState === "collapsed" && "justify-center")}>
+          <Link href="/dashboard" className={cn("flex items-center gap-2 font-semibold font-headline")}>
             <Icons.logo className="h-6 w-6 text-primary" />
             <span className={cn(sidebarState === "collapsed" && "hidden")}>KrishiMitra</span>
           </Link>
