@@ -217,7 +217,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             variant: "destructive",
             title: "Upload Failed",
             description: "Could not upload profile image. Please ensure your Firebase Storage rules are set up correctly.",
-        })
+        });
+        throw error; // Re-throw the error to be handled by the caller
     }
   };
   
