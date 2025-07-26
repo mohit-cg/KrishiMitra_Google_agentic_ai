@@ -106,34 +106,36 @@ export default function DashboardPage() {
     const fetchDashboardData = async () => {
       const city = userProfile?.location?.split(',')[0] || "Pune";
       
-      // Fetch Weather
       setLoadingWeather(true);
-      try {
-        const weather = await getWeatherForecast({ city });
-        setWeatherData(weather);
-      } catch (error) {
-        console.error("Failed to fetch weather", error);
-      } finally {
-        setLoadingWeather(false);
-      }
-
-      // Fetch Recommendations
       setLoadingRecommendations(true);
-      try {
-        const season = getCurrentSeason();
-        const recommendationResult = await recommendCrops({
-            location: userProfile?.location || "Pune, Maharashtra",
-            farmType: 'irrigated',
-            landSize: '1 acre',
-            season: season,
-            language: language,
-        });
-        setRecommendations(recommendationResult);
-      } catch(error) {
-         console.error("Failed to fetch recommendations", error);
-      } finally {
-        setLoadingRecommendations(false);
+
+      const weatherPromise = getWeatherForecast({ city });
+      const recommendationsPromise = recommendCrops({
+          location: userProfile?.location || "Pune, Maharashtra",
+          farmType: 'irrigated',
+          landSize: '1 acre',
+          season: getCurrentSeason(),
+          language: language,
+      });
+
+      const [weatherResult, recommendationsResult] = await Promise.allSettled([
+        weatherPromise,
+        recommendationsPromise,
+      ]);
+
+      if (weatherResult.status === 'fulfilled') {
+        setWeatherData(weatherResult.value);
+      } else {
+        console.error("Failed to fetch weather", weatherResult.reason);
       }
+      setLoadingWeather(false);
+
+      if (recommendationsResult.status === 'fulfilled') {
+        setRecommendations(recommendationsResult.value);
+      } else {
+        console.error("Failed to fetch recommendations", recommendationsResult.reason);
+      }
+      setLoadingRecommendations(false);
     };
     
     if (userProfile) {

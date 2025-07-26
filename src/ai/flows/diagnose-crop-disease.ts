@@ -83,29 +83,47 @@ const diagnoseCropDiseaseFlow = ai.defineFlow(
     inputSchema: DiagnoseCropDiseaseInputSchema,
     outputSchema: DiagnoseCropDiseaseOutputSchema,
   },
-  async input => {
-    const {output: internalOutput} = await prompt(input);
-    if (!internalOutput) {
-        throw new Error("Failed to get a diagnosis from the AI model.");
-    }
-    
-    // Construct search URLs from the generated queries only if it's a plant issue
-    const documentationLink = internalOutput.isPlant && internalOutput.documentationSearchQuery 
-      ? `https://www.google.com/search?q=${encodeURIComponent(internalOutput.documentationSearchQuery)}`
-      : undefined;
-      
-    const youtubeLink = internalOutput.isPlant && internalOutput.youtubeSearchQuery
-      ? `https://www.youtube.com/results?search_query=${encodeURIComponent(internalOutput.youtubeSearchQuery)}`
-      : undefined;
+  async (input) => {
+    try {
+        const {output: internalOutput} = await prompt(input);
+        if (!internalOutput) {
+            throw new Error("Failed to get a diagnosis from the AI model.");
+        }
+        
+        // Construct search URLs from the generated queries only if it's a plant issue
+        const documentationLink = internalOutput.isPlant && internalOutput.documentationSearchQuery 
+        ? `https://www.google.com/search?q=${encodeURIComponent(internalOutput.documentationSearchQuery)}`
+        : undefined;
+        
+        const youtubeLink = internalOutput.isPlant && internalOutput.youtubeSearchQuery
+        ? `https://www.youtube.com/results?search_query=${encodeURIComponent(internalOutput.youtubeSearchQuery)}`
+        : undefined;
 
-    return {
-        isPlant: internalOutput.isPlant,
-        diagnosis: internalOutput.diagnosis,
-        solutions: internalOutput.solutions,
-        documentationLink,
-        youtubeLink,
-    };
+        return {
+            isPlant: internalOutput.isPlant,
+            diagnosis: internalOutput.diagnosis,
+            solutions: internalOutput.solutions,
+            documentationLink,
+            youtubeLink,
+        };
+    } catch (error) {
+        console.error("Error in diagnoseCropDiseaseFlow: ", error);
+        
+        const friendlyErrorMessage = {
+            en: "We encountered an error trying to diagnose the issue. The service may be temporarily unavailable. Please try again later.",
+            hi: "समस्या का निदान करने का प्रयास करते समय हमें एक त्रुटि का सामना करना पड़ा। सेवा अस्थायी रूप से अनुपलब्ध हो सकती है। कृपया बाद में पुनः प्रयास करें।",
+            kn: "ಸಮಸ್ಯೆಯನ್ನು ಪತ್ತೆಹಚ್ಚಲು ಪ್ರಯತ್ನಿಸುವಾಗ ನಾವು ದೋಷವನ್ನು ಎದುರಿಸಿದ್ದೇವೆ. ಸೇವೆಯು ತಾತ್ಕಾಲಿಕವಾಗಿ ಲಭ್ಯವಿಲ್ಲದಿರಬಹುದು. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+            bn: "সমস্যা নির্ণয় করার চেষ্টা করার সময় আমরা একটি ত্রুটির সম্মুখীন হয়েছি। পরিষেবা অস্থায়ীভাবে অনুপলব্ধ হতে পারে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
+            bho: "समस्या के निदान करे के प्रयास में हमनी के एगो त्रुटि के सामना करे के पड़ल। सेवा अस्थायी रूप से अनुपलब्ध हो सकेला। कृपया बाद में फेर से कोसिस करीं।"
+        };
+
+        const message = friendlyErrorMessage[input.language as keyof typeof friendlyErrorMessage] || friendlyErrorMessage.en;
+
+        return {
+            isPlant: false,
+            diagnosis: "Diagnosis Failed",
+            solutions: message,
+        };
+    }
   }
 );
-
-    

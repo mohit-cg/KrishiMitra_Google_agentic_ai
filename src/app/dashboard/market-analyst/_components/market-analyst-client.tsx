@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { analyzeMarketPrices, type AnalyzeMarketPricesOutput } from '@/ai/flows/analyze-market-prices';
 import { generateSpeech } from '@/ai/flows/text-to-speech';
-import { Bot, LineChart, Mic, TrendingUp, Volume2, Square, Pause } from 'lucide-react';
+import { Bot, LineChart, Mic, TrendingUp, Volume2, Square, Pause, AlertCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from '@/contexts/language-context';
@@ -23,6 +23,7 @@ export function MarketAnalystClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [result, setResult] = useState<AnalyzeMarketPricesOutput | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isGeneratingSpeech, setIsGeneratingSpeech] = useState(false);
   const [activeAudio, setActiveAudio] = useState<{ id: 'recommendation' | 'analysis'; isPlaying: boolean } | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -154,6 +155,7 @@ export function MarketAnalystClient() {
     }
     setIsLoading(true);
     setResult(null);
+    setError(null);
     setActiveAudio(null);
     if (audioRef.current) {
         audioRef.current.pause();
@@ -162,12 +164,19 @@ export function MarketAnalystClient() {
 
     try {
       const analysisResult = await analyzeMarketPrices({ query, language });
-      setResult(analysisResult);
+      if (analysisResult.recommendation === "Service Unavailable") {
+        setError(analysisResult.analysis);
+        setResult(null);
+      } else {
+        setResult(analysisResult);
+      }
     } catch (error) {
       console.error(error);
+      const errorMessage = t('toast.errorAnalyzingMarket');
+      setError(errorMessage);
       toast({
         title: t('toast.analysisFailed'),
-        description: t('toast.errorAnalyzingMarket'),
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -205,13 +214,23 @@ export function MarketAnalystClient() {
       <div>
         <h2 className="text-2xl font-bold mb-4 font-headline">{t('marketAnalyst.client.resultTitle')}</h2>
         {isLoading && <LoadingSkeleton />}
-        {result && !isLoading && (
+        {error && !isLoading && (
+             <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>{t('toast.analysisFailed')}</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+            </Alert>
+        )}
+        {result && !isLoading && !error && (
           <div className="space-y-4">
-            <Alert variant="destructive">
+            <Alert>
               <div className="flex justify-between items-center w-full">
-                <div>
-                  <AlertTitle>{t('marketAnalyst.client.recommendation')}</AlertTitle>
-                  <AlertDescription>{result.recommendation}</AlertDescription>
+                <div className='flex-1'>
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4" />
+                    <AlertTitle>{t('marketAnalyst.client.recommendation')}</AlertTitle>
+                  </div>
+                  <AlertDescription className='pl-6'>{result.recommendation}</AlertDescription>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => playAudio(result.recommendation, 'recommendation')} disabled={isGeneratingSpeech}>
                     {activeAudio?.id === 'recommendation' && activeAudio.isPlaying ? <Pause className="h-5 w-5"/> : <Volume2 className="h-5 w-5"/>}
@@ -220,9 +239,12 @@ export function MarketAnalystClient() {
             </Alert>
             <Alert>
               <div className="flex justify-between items-center w-full">
-                <div>
-                    <AlertTitle>{t('marketAnalyst.client.marketAnalysis')}</AlertTitle>
-                    <AlertDescription>{result.analysis}</AlertDescription>
+                <div className='flex-1'>
+                    <div className='flex items-center gap-2'>
+                        <LineChart className="h-4 w-4" />
+                        <AlertTitle>{t('marketAnalyst.client.marketAnalysis')}</AlertTitle>
+                    </div>
+                    <AlertDescription className='pl-6'>{result.analysis}</AlertDescription>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => playAudio(result.analysis, 'analysis')} disabled={isGeneratingSpeech}>
                      {activeAudio?.id === 'analysis' && activeAudio.isPlaying ? <Pause className="h-5 w-5"/> : <Volume2 className="h-5 w-5"/>}
@@ -231,7 +253,7 @@ export function MarketAnalystClient() {
             </Alert>
           </div>
         )}
-        {!result && !isLoading && (
+        {!result && !isLoading && !error && (
           <Card className="flex flex-col items-center justify-center p-8 text-center h-full">
             <CardContent>
               <Bot className="mx-auto h-12 w-12 text-muted-foreground" />

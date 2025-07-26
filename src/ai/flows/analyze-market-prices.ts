@@ -73,7 +73,7 @@ const getMarketPriceTool = ai.defineTool(
         }
         
         const data = await response.json();
-        
+        console.log('dddddd',data)
         if (data.records && data.records.length > 0) {
             // Find the most recent record with a valid modal price
             const latestRecord = data.records
