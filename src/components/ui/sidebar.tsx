@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, PanelLeft } from "lucide-react"
+import { PanelLeft } from "lucide-react"
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed"
@@ -48,7 +48,7 @@ const sidebarVariants = cva(
       },
     },
     defaultVariants: {
-      state: "expanded",
+      state: "collapsed",
     },
   }
 )
@@ -81,7 +81,7 @@ const SidebarHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex h-[57px] items-center border-b p-4", className)} {...props} />
+  <div ref={ref} className={cn("flex h-[57px] items-center border-b p-4 justify-between", className)} {...props} />
 ))
 SidebarHeader.displayName = "SidebarHeader"
 
