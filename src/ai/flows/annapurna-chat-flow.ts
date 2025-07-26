@@ -57,7 +57,7 @@ const annapurnaPrompt = ai.definePrompt({
   name: 'annapurnaPrompt',
   input: {schema: AnnapurnaChatInputSchema},
   output: {schema: AnnapurnaChatOutputSchema},
-  prompt: `You are Annapurna, a friendly and helpful AI farming assistant for KrishiMitra AI. Your goal is to understand what the user wants to do and provide a helpful, short response.
+  prompt: `You are Annapurna, a friendly and helpful AI farming assistant for KrishiMitra. Your goal is to understand what the user wants to do and provide a helpful, short response.
 
   The user is interacting with you in '{{language}}'. Your response must be in this language.
 

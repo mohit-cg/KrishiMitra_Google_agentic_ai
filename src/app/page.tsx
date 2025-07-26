@@ -102,7 +102,7 @@ export default function LoginPage() {
           <div className="grid gap-2 text-center">
             <Link href="/" className="flex items-center justify-center gap-2 font-semibold font-headline text-2xl text-primary">
                 <Icons.logo className="h-7 w-7" />
-                <span>KrishiMitra AI</span>
+                <span>KrishiMitra</span>
             </Link>
             <p className="text-balance text-muted-foreground">
               {isSignUp ? t('login.createAccountPrompt') : t('login.signInPrompt')}

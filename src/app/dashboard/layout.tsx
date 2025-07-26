@@ -60,7 +60,7 @@ export default function DashboardLayout({
             <SidebarHeader className="p-4 bg-background/70 backdrop-blur-sm border-b">
               <Link href="/dashboard" className="flex items-center gap-2 font-semibold font-headline">
                 <Icons.logo className="h-6 w-6 text-primary" />
-                <span>KrishiMitra AI</span>
+                <span>KrishiMitra</span>
               </Link>
             </SidebarHeader>
             <SidebarContent className="flex-1 bg-background/20 backdrop-blur-sm overflow-y-auto">
@@ -87,7 +87,7 @@ export default function DashboardLayout({
                       className="group flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base px-4"
                     >
                       <Icons.logo className="h-5 w-5 transition-all group-hover:scale-110" />
-                      <span>KrishiMitra AI</span>
+                      <span>KrishiMitra</span>
                     </Link>
                   </div>
                   <MainNav isSheet={true} />
