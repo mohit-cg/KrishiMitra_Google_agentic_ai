@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -22,7 +23,6 @@ const VideoSchema = z.object({
   title: z.string().describe('A relevant and engaging title for the video.'),
   description: z.string().describe('A brief, informative description of the video content.'),
   duration: z.string().describe('The video duration in MM:SS format.'),
-  thumbnailUrl: z.string().describe("A URL for the video thumbnail, e.g., 'https://placehold.co/600x400.png'."),
 });
 
 
@@ -50,9 +50,7 @@ const searchYoutubeVideosPrompt = ai.definePrompt({
   
   Based on their query, generate a list of 3 to 6 highly relevant, plausible YouTube video search results. 
   
-  For each video, provide a unique videoId selected from the provided list, a compelling title, a short description, a duration, and a placeholder thumbnail URL.
-  
-  User Query: "{{query}}"`,
+  For each video, provide a unique videoId selected from the provided list, a compelling title, a short description, and a duration.`,
 });
 
 const searchYoutubeVideosFlow = ai.defineFlow(

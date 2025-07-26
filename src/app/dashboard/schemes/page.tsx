@@ -14,19 +14,16 @@ import { useMemo } from "react";
 const keySchemesData = [
   {
     key: "pmkisan",
-    icon: "https://placehold.co/80x80.png",
     hint: "coin stack rupee",
     link: "https://pmkisan.gov.in/",
   },
   {
     key: "pmfby",
-    icon: "https://placehold.co/80x80.png",
     hint: "crop insurance document",
     link: "https://pmfby.gov.in/",
   },
   {
     key: "kcc",
-    icon: "https://placehold.co/80x80.png",
     hint: "credit card",
     link: "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-finance/kisan-credit-card",
   },
@@ -99,7 +96,7 @@ export default function SchemeNavigatorPage() {
                 {keySchemes.map(scheme => (
                     <Card key={scheme.title}>
                         <CardHeader className="flex flex-row items-start gap-4">
-                            <Image src={scheme.icon} width={50} height={50} alt={scheme.title} data-ai-hint={scheme.hint} className="rounded-lg"/>
+                            <Image src={`https://source.unsplash.com/80x80/?${scheme.hint?.replace(/\s/g, ',')}`} width={50} height={50} alt={scheme.title} className="rounded-lg"/>
                             <div>
                                <CardTitle className="text-lg">{scheme.title}</CardTitle>
                                <CardDescription className="text-xs">{scheme.description}</CardDescription>

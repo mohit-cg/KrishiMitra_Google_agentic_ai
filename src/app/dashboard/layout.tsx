@@ -54,7 +54,7 @@ export default function DashboardLayout({
             <div 
               className="absolute inset-0 -z-10" 
               style={{
-                backgroundImage: "url('https://placehold.co/600x900.png')",
+                backgroundImage: "url('https://source.unsplash.com/600x900/?abstract,agriculture')",
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 filter: 'blur(8px) brightness(0.6)',

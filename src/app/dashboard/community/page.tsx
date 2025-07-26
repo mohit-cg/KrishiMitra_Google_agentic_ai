@@ -55,7 +55,7 @@ export default function CommunityPage() {
 
   const [rooms] = useState(initialRooms.map(r => ({...r, name: t(`community.rooms.${r.id}`)})));
   const [activeRoom, setActiveRoom] = useState(rooms[0]);
-  const [messages, setMessages] = useState(allMessages[activeRoom.id].map(m => ({ ...m, avatar: "https://placehold.co/40x40.png" })));
+  const [messages, setMessages] = useState(allMessages[activeRoom.id].map(m => ({ ...m, avatar: `https://source.unsplash.com/40x40/?${m.hint?.replace(/\s/g, ',')}` })));
   const [newMessage, setNewMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
@@ -64,7 +64,7 @@ export default function CommunityPage() {
 
   const handleRoomChange = (room) => {
     setActiveRoom(room);
-    setMessages(allMessages[room.id].map(m => ({ ...m, avatar: "https://placehold.co/40x40.png" })) || []);
+    setMessages(allMessages[room.id].map(m => ({ ...m, avatar: `https://source.unsplash.com/40x40/?${m.hint?.replace(/\s/g, ',')}` })) || []);
   };
 
   const handleSendMessage = (e) => {
@@ -73,7 +73,7 @@ export default function CommunityPage() {
 
     const messageToSend = {
       user: t('community.you'),
-      avatar: "https://placehold.co/40x40.png",
+      avatar: `https://source.unsplash.com/40x40/?farmer,portrait`,
       text: newMessage,
       attachment: attachmentPreview,
       isSelf: true,
@@ -85,7 +85,7 @@ export default function CommunityPage() {
     
     // This part would be a database call in a real app
     // We update a mutable object for demo purposes
-    const translatedMessages = allMessages[activeRoom.id].map(m => ({ ...m, avatar: "https://placehold.co/40x40.png" }));
+    const translatedMessages = allMessages[activeRoom.id].map(m => ({ ...m, avatar: `https://source.unsplash.com/40x40/?${m.hint?.replace(/\s/g, ',')}` }));
     allMessages[activeRoom.id] = [...translatedMessages.slice(0, translatedMessages.length), { user: t('community.you'), text: newMessage, isSelf: true, hint: 'farmer portrait' }];
     
     setNewMessage("");
@@ -206,7 +206,7 @@ export default function CommunityPage() {
               <div className="space-y-4">
                 {messages.map((msg, index) => (
                   <div key={index} className={`flex items-start gap-3 ${msg.isSelf ? "justify-end" : ""}`}>
-                    {!msg.isSelf && <Avatar><AvatarImage src={msg.avatar} data-ai-hint={msg.hint} /><AvatarFallback>{msg.user.substring(0, 2)}</AvatarFallback></Avatar>}
+                    {!msg.isSelf && <Avatar><AvatarImage src={msg.avatar} /><AvatarFallback>{msg.user.substring(0, 2)}</AvatarFallback></Avatar>}
                     <div className={`rounded-lg p-3 max-w-xs ${msg.isSelf ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
                       {!msg.isSelf && <p className="font-semibold text-sm mb-1">{msg.user}</p>}
                       {msg.attachment && (
@@ -216,7 +216,7 @@ export default function CommunityPage() {
                       )}
                       <p className="text-sm">{msg.text}</p>
                     </div>
-                    {msg.isSelf && <Avatar><AvatarImage src={msg.avatar} data-ai-hint={msg.hint} /><AvatarFallback>{t('community.you')}</AvatarFallback></Avatar>}
+                    {msg.isSelf && <Avatar><AvatarImage src={msg.avatar} /><AvatarFallback>{t('community.you')}</AvatarFallback></Avatar>}
                   </div>
                 ))}
               </div>

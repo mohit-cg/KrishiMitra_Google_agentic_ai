@@ -14,18 +14,18 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { analyzeSearchQuery } from "@/ai/flows/analyze-search-query";
 
 const productsData = [
-  { key: "organicFertilizer", price: "₹450", image: "https://placehold.co/400x400.png", hint: "fertilizer bag" },
-  { key: "pesticideSpray", price: "₹700", image: "https://placehold.co/400x400.png", hint: "pesticide bottle" },
-  { key: "highYieldSeeds", price: "₹1200", image: "https://placehold.co/400x400.png", hint: "seed packet" },
-  { key: "gardeningToolsSet", price: "₹1500", image: "https://placehold.co/400x400.png", hint: "gardening tools" },
-  { key: "dripIrrigationKit", price: "₹2500", image: "https://placehold.co/400x400.png", hint: "irrigation kit" },
-  { key: "soilTestKit", price: "₹900", image: "https://placehold.co/400x400.png", hint: "soil test" },
-  { key: "protectiveGloves", price: "₹250", image: "https://placehold.co/400x400.png", hint: "gloves" },
-  { key: "powerSprayer", price: "₹3500", image: "https://placehold.co/400x400.png", hint: "power sprayer" },
-  { key: "greenhousePolythene", price: "₹4200", image: "https://placehold.co/400x400.png", hint: "greenhouse sheet" },
-  { key: "waterPump", price: "₹5500", image: "https://placehold.co/400x400.png", hint: "water pump" },
-  { key: "cowManure", price: "₹300", image: "https://placehold.co/400x400.png", hint: "manure bag" },
-  { key: "neemOil", price: "₹850", image: "https://placehold.co/400x400.png", hint: "neem oil" },
+  { key: "organicFertilizer", price: "₹450", hint: "fertilizer bag" },
+  { key: "pesticideSpray", price: "₹700", hint: "pesticide bottle" },
+  { key: "highYieldSeeds", price: "₹1200", hint: "seed packet" },
+  { key: "gardeningToolsSet", price: "₹1500", hint: "gardening tools" },
+  { key: "dripIrrigationKit", price: "₹2500", hint: "irrigation kit" },
+  { key: "soilTestKit", price: "₹900", hint: "soil test" },
+  { key: "protectiveGloves", price: "₹250", hint: "gloves" },
+  { key: "powerSprayer", price: "₹3500", hint: "power sprayer" },
+  { key: "greenhousePolythene", price: "₹4200", hint: "greenhouse sheet" },
+  { key: "waterPump", price: "₹5500", hint: "water pump" },
+  { key: "cowManure", price: "₹300", hint: "manure bag" },
+  { key: "neemOil", price: "₹850", hint: "neem oil" },
 ];
 
 const SpeechRecognition =
@@ -146,7 +146,7 @@ export default function MarketplacePage() {
             <Card key={index} className="overflow-hidden">
               <CardHeader className="p-0">
                 <div className="aspect-square relative">
-                  <Image src={product.image} alt={product.name} layout="fill" objectFit="cover" data-ai-hint={product.hint} />
+                  <Image src={`https://source.unsplash.com/400x400/?${product.hint?.replace(/\s/g, ',')}`} alt={product.name} layout="fill" objectFit="cover" />
                 </div>
               </CardHeader>
               <CardContent className="p-4">

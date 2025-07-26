@@ -256,7 +256,7 @@ export function CropRecommenderClient() {
               <Card key={index} className="overflow-hidden">
                 <div className="flex flex-col sm:flex-row">
                     <div className="sm:w-1/3 relative min-h-[150px]">
-                        <Image src="https://placehold.co/400x300.png" alt={rec.cropName} layout="fill" objectFit="cover" data-ai-hint={rec.imageHint}/>
+                        <Image src={`https://source.unsplash.com/400x300/?${rec.imageHint?.replace(/\s/g, ',')}`} alt={rec.cropName} layout="fill" objectFit="cover" />
                     </div>
                     <div className="sm:w-2/3 flex flex-col">
                         <CardHeader>

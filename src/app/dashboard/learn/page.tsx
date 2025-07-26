@@ -20,32 +20,26 @@ import { useTranslation } from '@/contexts/language-context';
 const initialArticlesData = [
   {
     key: "dripIrrigation",
-    image: "https://placehold.co/600x400.png",
     hint: "drip irrigation farm",
   },
   {
     key: "ipm",
-    image: "https://placehold.co/600x400.png",
     hint: "crop pest insect",
   },
   {
     key: "soilHealth",
-    image: "https://placehold.co/600x400.png",
     hint: "healthy farm soil",
   },
   {
     key: "composting",
-    image: "https://placehold.co/600x400.png",
     hint: "farm compost pile",
   },
   {
     key: "cropRotation",
-    image: "https://placehold.co/600x400.png",
     hint: "crop rotation diagram",
   },
   {
     key: "organicFarming",
-    image: "https://placehold.co/600x400.png",
     hint: "organic vegetables farm",
   },
 ];
@@ -54,26 +48,26 @@ const initialVideosData: Video[] = [
     {
         title: "Video Guide to Pruning Tomato Plants",
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
-        thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "12:45",
         videoId: "g-v3a3jK_4s",
-        hint: "tomato plant pruning"
+        hint: "tomato plant pruning",
+        thumbnailUrl: "https://placehold.co/600x400.png",
     },
     {
         title: "Setting Up a Home Vermicompost Bin",
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
-        thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "08:22",
         videoId: "N8_B-g4g_a4",
-        hint: "vermicompost bin"
+        hint: "vermicompost bin",
+        thumbnailUrl: "https://placehold.co/600x400.png",
     },
     {
         title: "Identifying Common Nutrient Deficiencies",
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
-        thumbnailUrl: "https://placehold.co/600x400.png",
         duration: "15:30",
         videoId: "o-rp3f_It2k",
-        hint: "plant nutrient deficiency"
+        hint: "plant nutrient deficiency",
+        thumbnailUrl: "https://placehold.co/600x400.png",
     }
 ];
 
@@ -105,7 +99,7 @@ export default function LearnPage() {
     const [isRecording, setIsRecording] = useState(false);
     const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState("articles");
-    const [videoResults, setVideoResults] = useState<Video[]>(initialVideos);
+    const [videoResults, setVideoResults] = useState<Video[]>(initialVideos.map(v => ({...v, thumbnailUrl: `https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg`})));
     const [isSearchingVideos, setIsSearchingVideos] = useState(false);
     const [summarizedArticle, setSummarizedArticle] = useState<SummarizeArticleOutput | null>(null);
     const [isSummarizing, setIsSummarizing] = useState(false);
@@ -114,7 +108,7 @@ export default function LearnPage() {
     useEffect(() => {
         const handleSearch = async () => {
           if (searchQuery.trim() === '') {
-             if (activeTab === 'videos') setVideoResults(initialVideos); // Reset to initial videos if search is cleared
+             if (activeTab === 'videos') setVideoResults(initialVideos.map(v => ({...v, thumbnailUrl: `https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg`}))); // Reset to initial videos if search is cleared
              setSummarizedArticle(null); // Clear summarized article
              return;
           }
@@ -124,11 +118,11 @@ export default function LearnPage() {
             // We don't clear videoResults here to avoid a flash of "no results"
             try {
               const result = await searchYoutubeVideos({ query: searchQuery });
-              setVideoResults(result.videos);
+              setVideoResults(result.videos.map(v => ({...v, thumbnailUrl: `https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg`})));
             } catch (error) {
               console.error("Video search failed", error);
               toast({ title: t('toast.videoSearchFailed'), description: t('toast.couldNotRetrieveVideos'), variant: "destructive" });
-              setVideoResults(initialVideos); // Restore initial videos on error
+              setVideoResults(initialVideos.map(v => ({...v, thumbnailUrl: `https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg`}))); // Restore initial videos on error
             } finally {
               setIsSearchingVideos(false);
             }
@@ -318,11 +312,10 @@ export default function LearnPage() {
                                     <div className="flex flex-col sm:flex-row gap-4 p-4">
                                         <div className="relative w-full sm:w-48 sm:h-32 shrink-0 aspect-video sm:aspect-auto">
                                             <Image 
-                                                src={article.imageUrl} 
+                                                src={`https://source.unsplash.com/600x400/?${article.imageHint?.replace(/\s/g, ',')}`} 
                                                 alt={article.title} 
                                                 layout="fill" 
                                                 objectFit="cover" 
-                                                data-ai-hint={article.imageHint}
                                                 className="rounded-md"
                                             />
                                         </div>
@@ -353,7 +346,7 @@ export default function LearnPage() {
                     <Card key={index} className="flex flex-col">
                         <CardHeader className="p-0">
                         <div className="aspect-video relative">
-                            <Image src={article.image} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint}/>
+                            <Image src={`https://source.unsplash.com/600x400/?${article.hint?.replace(/\s/g, ',')}`} alt={article.title} layout="fill" objectFit="cover" />
                         </div>
                         </CardHeader>
                         <CardContent className="p-4 flex-grow">
@@ -385,7 +378,7 @@ export default function LearnPage() {
                     <Card key={index} className="flex flex-col group">
                         <CardHeader className="p-0">
                         <button onClick={() => playVideo(video.videoId)} className="block aspect-video relative overflow-hidden rounded-t-lg w-full">
-                            <Image src={video.thumbnailUrl} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint || "youtube thumbnail"} />
+                            <Image src={video.thumbnailUrl} alt={video.title} layout="fill" objectFit="cover" />
                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <PlayCircle className="h-16 w-16 text-white/80"/>
                             </div>
