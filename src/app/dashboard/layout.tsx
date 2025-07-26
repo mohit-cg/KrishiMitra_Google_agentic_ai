@@ -7,9 +7,9 @@ import { Icons } from "@/components/icons";
 import {
   SidebarProvider,
   Sidebar,
-  SidebarHeader,
   SidebarContent,
   SidebarTrigger,
+  SidebarHeader,
 } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Link from "next/link";
@@ -46,22 +46,20 @@ export default function DashboardLayout({
     <TooltipProvider>
       <SidebarProvider>
         <div className="grid h-screen w-full lg:grid-cols-[auto_1fr]">
-          <Sidebar className="hidden lg:flex flex-col border-r h-full bg-background/70 backdrop-blur-sm">
-            <SidebarHeader className="p-4 flex justify-between items-center sticky top-0 z-10 border-b">
+          <Sidebar>
+            <SidebarHeader>
               <Link href="/dashboard" className="flex items-center gap-2 font-semibold font-headline">
                 <Icons.logo className="h-6 w-6 text-primary" />
                 <span className="text-xl">KrishiMitra</span>
               </Link>
             </SidebarHeader>
-            <SidebarContent className="flex-1 overflow-y-auto">
+            <SidebarContent>
               <MainNav />
             </SidebarContent>
           </Sidebar>
           <div className="flex flex-col h-screen overflow-y-hidden">
             <header className="sticky top-0 z-10 flex h-[57px] items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:px-6 py-2 shrink-0">
-               <div className="hidden lg:block">
-                  <SidebarTrigger />
-               </div>
+               <SidebarTrigger />
               <Sheet>
                 <SheetTrigger asChild>
                   <Button size="icon" variant="outline" className="lg:hidden">

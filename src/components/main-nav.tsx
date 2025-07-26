@@ -25,7 +25,6 @@ import {
 } from "@/components/ui/tooltip";
 import { useSidebar } from "@/components/ui/sidebar";
 import { SheetClose } from "@/components/ui/sheet";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslation } from "@/contexts/language-context";
 
 interface MainNavProps {
@@ -35,7 +34,6 @@ interface MainNavProps {
 export function MainNav({ isSheet = false }: MainNavProps) {
   const pathname = usePathname();
   const { state } = useSidebar();
-  const isMobile = useIsMobile();
   const { t } = useTranslation();
 
   const navItems = [
@@ -53,47 +51,48 @@ export function MainNav({ isSheet = false }: MainNavProps) {
     { href: "/dashboard/settings", icon: Settings, label: t('nav.settings') },
   ];
 
+  const renderLink = (item: typeof navItems[0]) => {
+    const isActive = (pathname === item.href) || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+    const isShopActive = (pathname.startsWith("/dashboard/shop") && item.href === "/dashboard/shop");
+    const isDashboardActive = pathname === "/dashboard" && item.href === "/dashboard";
+
+    return (
+      <Link 
+        href={item.href}
+        className={cn(
+          "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+          (isActive || isShopActive || isDashboardActive) && "bg-muted text-primary",
+          state === "collapsed" && !isSheet && "justify-center"
+        )}
+      >
+        <item.icon className="h-5 w-5" />
+        <span
+          className={cn(
+            "truncate",
+            state === "collapsed" && !isSheet ? "lg:hidden" : "block"
+          )}
+        >
+          {item.label}
+        </span>
+      </Link>
+    );
+  }
+
   return (
-    <nav className="flex flex-col gap-2 px-2">
+    <nav className="flex flex-col gap-2 p-2">
       {navItems.map((item) => {
-        const isActive = (pathname === item.href) || (item.href !== "/dashboard" && pathname.startsWith(item.href));
-        
-        // A special case for the shop parent route
-        const isShopActive = (pathname.startsWith("/dashboard/shop") && item.href === "/dashboard/shop");
-
-        const NavLink = (
-            <Link 
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                (isActive || isShopActive) && "bg-muted text-primary",
-                state === "collapsed" && !isMobile && "justify-center"
-              )}
-            >
-              <item.icon className="h-5 w-5" />
-              <span
-                className={cn(
-                  "truncate",
-                  state === "collapsed" && !isMobile ? "hidden" : "block"
-                )}
-              >
-                {item.label}
-              </span>
-            </Link>
-        );
-
         if (isSheet) {
              return (
                  <SheetClose asChild key={item.href}>
-                     {NavLink}
+                     {renderLink(item)}
                  </SheetClose>
              )
         }
         
         return (
-          <Tooltip key={item.href}>
+          <Tooltip key={item.href} delayDuration={0}>
             <TooltipTrigger asChild>
-              {NavLink}
+              {renderLink(item)}
             </TooltipTrigger>
             {state === "collapsed" && (
               <TooltipContent side="right">

@@ -39,12 +39,12 @@ const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 const sidebarVariants = cva(
-  "relative flex flex-col bg-card transition-all duration-300 ease-in-out",
+  "hidden lg:flex flex-col border-r h-full bg-background/70 backdrop-blur-sm transition-all duration-300 ease-in-out",
   {
     variants: {
       state: {
         expanded: "w-64",
-        collapsed: "w-0 p-0 border-0",
+        collapsed: "w-[57px]",
       },
     },
     defaultVariants: {
@@ -62,7 +62,6 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
     const { state } = useSidebar()
     const isMobile = useIsMobile();
     
-    // On mobile, the sidebar is handled by a Sheet, so we don't render the desktop one.
     if(isMobile) return null;
 
     return (
@@ -71,11 +70,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
         className={cn(sidebarVariants({ state }), className)}
         {...props}
       >
-        {/* The children prop contains the actual content of the sidebar (header, nav, etc.) */}
-        {/* We add a wrapper to control visibility based on the collapsed state */}
-        <div className={cn("transition-opacity duration-200", state === "collapsed" ? "opacity-0" : "opacity-100")}>
-           {children}
-        </div>
+        {children}
       </div>
     )
   }
@@ -86,20 +81,23 @@ const SidebarHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex h-[57px] items-center", className)} {...props} />
+  <div ref={ref} className={cn("flex h-[57px] items-center border-b p-4", className)} {...props} />
 ))
 SidebarHeader.displayName = "SidebarHeader"
 
 const SidebarContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex-1 overflow-y-auto", className)}
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+    const { state } = useSidebar()
+    return (
+        <div
+            ref={ref}
+            className={cn("flex-1 overflow-y-auto", state === 'collapsed' ? "overflow-x-hidden" : "", className)}
+            {...props}
+        />
+    )
+})
 SidebarContent.displayName = "SidebarContent"
 
 const SidebarFooter = React.forwardRef<
@@ -126,7 +124,7 @@ const SidebarTrigger = React.forwardRef<
       ref={ref}
       variant="ghost"
       size="icon"
-      className={cn("h-9 w-9", className)}
+      className={cn("h-9 w-9 hidden lg:flex", className)}
       onClick={() =>
         setState(state === "expanded" ? "collapsed" : "expanded")
       }
