@@ -274,10 +274,9 @@ export default function ProfilePage() {
                                 key={district.value}
                                 value={district.value}
                                 onSelect={() => {
-                                  setLocation(district.value === location ? "" : district.value)
-                                  setOpen(false)
+                                    setLocation(district.value)
+                                    setOpen(false)
                                 }}
-                                className="transition-all duration-200 ease-in-out hover:bg-accent"
                             >
                                 <Check
                                 className={cn(
@@ -378,5 +377,6 @@ const ProfileSkeleton = () => {
     </div>
   );
 }
+
 
     
