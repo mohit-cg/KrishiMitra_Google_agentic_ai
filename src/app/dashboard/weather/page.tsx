@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getWeatherForecast, GetWeatherForecastOutput } from '@/ai/flows/get-weather-forecast';
 import { toast } from '@/hooks/use-toast';
 import { useTranslation } from '@/contexts/language-context';
+import { useAuth } from '@/hooks/use-auth';
 
 const iconMap = {
   Cloud,
@@ -32,11 +33,22 @@ const SpeechRecognition =
 
 export default function WeatherPage() {
   const { t, language } = useTranslation();
-  const [city, setCity] = useState("Pune");
-  const [inputCity, setInputCity] = useState("Pune");
+  const { userProfile } = useAuth();
+
+  // Initialize state from userProfile if available
+  const initialCity = userProfile?.location?.split(',')[0] || "Pune";
+  const [city, setCity] = useState(initialCity);
+  const [inputCity, setInputCity] = useState(initialCity);
   const [weatherData, setWeatherData] = useState<GetWeatherForecastOutput | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
+
+  useEffect(() => {
+    // This effect runs when the component mounts and sets the initial city from the profile
+    const profileCity = userProfile?.location?.split(',')[0] || "Pune";
+    setCity(profileCity);
+    setInputCity(profileCity);
+  }, [userProfile]);
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -156,10 +168,10 @@ export default function WeatherPage() {
               <CardDescription>{t('weather.rightNowIn', { city: weatherData.city })}</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
-              {getIcon(weatherData.current.icon, "h-24 w-24 text-accent")}
+              {getIcon(weatherData.current.icon as keyof typeof iconMap, "h-24 w-24 text-accent")}
               <div>
                 <p className="text-6xl font-bold">{weatherData.current.temperature}</p>
-                <p className="text-muted-foreground">{t(`weather.conditions.${weatherData.current.condition}`, weatherData.current.condition)}</p>
+                <p className="text-muted-foreground">{t(`weather.conditions.${weatherData.current.condition}`, {defaultValue: weatherData.current.condition})}</p>
               </div>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p className="flex items-center"><Wind className="mr-2 h-4 w-4" /> {t('weather.wind')}: {weatherData.current.wind}</p>
@@ -174,12 +186,12 @@ export default function WeatherPage() {
               {weatherData.forecast.map((day, index) => (
                 <Card key={index} className="text-center">
                   <CardHeader>
-                    <CardTitle className="text-lg">{t(`weather.days.${day.day.toLowerCase()}`, day.day)}</CardTitle>
+                    <CardTitle className="text-lg">{t(`weather.days.${day.day.toLowerCase()}`, {defaultValue: day.day})}</CardTitle>
                   </CardHeader>
                   <CardContent className="flex flex-col items-center gap-2">
-                    {getIcon(day.icon, "h-10 w-10 text-accent")}
+                    {getIcon(day.icon as keyof typeof iconMap, "h-10 w-10 text-accent")}
                     <p className="text-xl font-semibold">{day.temp}</p>
-                    <p className="text-sm text-muted-foreground">{t(`weather.conditions.${day.condition}`, day.condition)}</p>
+                    <p className="text-sm text-muted-foreground">{t(`weather.conditions.${day.condition}`, {defaultValue: day.condition})}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -236,3 +248,5 @@ const WeatherSkeleton = () => (
         </div>
     </>
 );
+
+    
