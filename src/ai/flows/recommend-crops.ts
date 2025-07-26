@@ -55,7 +55,7 @@ const recommendCropsPrompt = ai.definePrompt({
   - Soil Type: {{#if soilType}}{{soilType}}{{else}}Not specified{{/if}}
   - Water Source: {{#if waterSource}}{{waterSource}}{{else}}Not specified{{/if}}
   - Season: {{#if season}}{{season}}{{else}}Not specified{{/if}}
-  - Previous Crop: {{#if previousCrop}}{{previousCrop}} (Suggest crops that are good for rotation){{else}}Not specified{{/if}}
+  - Previous Crop: {{#if previousCrop}} (Suggest crops that are good for rotation){{else}}Not specified{{/if}}
   - Budget: {{#if budget}}{{budget}}{{else}}Not specified{{/if}}
   - Farmer's Crop Preference: {{#if cropPreference}}{{cropPreference}}{{else}}None{{/if}}
 
@@ -75,8 +75,27 @@ const recommendCropsFlow = ai.defineFlow(
     outputSchema: RecommendCropsOutputSchema,
   },
   async input => {
-    const {output} = await recommendCropsPrompt(input);
-    return output!;
+    try {
+      const {output} = await recommendCropsPrompt(input);
+      return output!;
+    } catch (error) {
+      console.error("Error in recommendCropsFlow, returning fallback.", error);
+      // Return a fallback response that satisfies the schema
+      const fallbackReasoning = `This is a default recommendation due to a temporary service issue. ${input.location} is generally suitable for a variety of crops.`;
+      return {
+        recommendations: [
+          {
+            cropName: "Soybean",
+            reasoning: fallbackReasoning,
+            imageHint: "soybean field",
+          },
+          {
+            cropName: "Cotton",
+            reasoning: fallbackReasoning,
+            imageHint: "ripe cotton crop",
+          },
+        ]
+      }
+    }
   }
 );
-
