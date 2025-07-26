@@ -216,7 +216,7 @@ export function CropRecommenderClient() {
              <div>
               <Label htmlFor="budget">{t('cropRecommender.client.budget')}</Label>
                <div className="flex items-center gap-2">
-                <Input id="budget" {...register('budget')} placeholder="e.g., ₹10,000"/>
+                <Input id="budget" {...register('budget')} placeholder="e.g., 10,000 INR"/>
                  <Button type="button" variant={recordingField === 'budget' ? "destructive" : "outline"} size="icon" onClick={() => handleMicClick('budget')} disabled={!!recordingField}>
                     {recordingField === 'budget' ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                 </Button>
@@ -321,3 +321,5 @@ const LoadingSkeleton = () => (
       </Card>
     </div>
 );
+
+    
