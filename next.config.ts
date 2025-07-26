@@ -12,23 +12,24 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        port: '3000',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'storage.googleapis.com',
-        pathname: '/**',
-      },
+      // {
+      //   protocol: 'https',
+      //   hostname: 'placehold.co',
+      //   port: '3000',
+      //   pathname: '/**',
+      // },
+      // {
+      //   protocol: 'https',
+      //   hostname: 'placehold.co',
+      //   pathname: '/**',
+      // },
+      // {
+      //   protocol: 'https',
+      //   hostname: 'storage.googleapis.com',
+      //   pathname: '/**',
+      // },
     ],
+    unoptimized: true, 
   },
 };
 

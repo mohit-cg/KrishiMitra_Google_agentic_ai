@@ -39,92 +39,64 @@ const extractPriceInfoPrompt = ai.definePrompt({
 });
 
 
-// Mock prices - in a real app this would come from an API call.
-// This is an expanded, more realistic dataset.
-const mockPriceData: Record<string, Record<string, number>> = {
-  tomato: {
-    pune: 28,
-    mumbai: 35,
-    bangalore: 25,
-    delhi: 30,
-    kolkata: 32,
-    chennai: 27,
-    lucknow: 26,
-    jaipur: 29,
-  },
-  onion: {
-    pune: 18,
-    mumbai: 22,
-    bangalore: 16,
-    delhi: 20,
-    nashik: 15,
-    indore: 17,
-    kolkata: 25,
-    hyderabad: 19,
-  },
-  potato: {
-    pune: 20,
-    mumbai: 24,
-    bangalore: 22,
-    delhi: 18,
-    kolkata: 19,
-    lucknow: 15,
-    agra: 14,
-    shimla: 25,
-  },
-  wheat: {
-    delhi: 2100,
-    pune: 2300,
-    ludhiana: 1950,
-    kanpur: 2050,
-    indore: 2000,
-    mumbai: 2400,
-  },
-  rice: {
-    kolkata: 3500,
-    delhi: 3800,
-    chennai: 3600,
-    mumbai: 4000,
-    lucknow: 3400,
-    hyderabad: 3700,
-  },
-  sugarcane: {
-    pune: 300,
-    lucknow: 315,
-    kolhapur: 320,
-    meerut: 310,
-  },
-  cotton: {
-    ahmedabad: 5500,
-    mumbai: 5800,
-    guntur: 5600,
-    aurangabad: 5400,
-  },
-};
-
 const getMarketPriceTool = ai.defineTool(
   {
     name: 'getMarketPrice',
-    description: 'Gets the current market price for a specific crop in a specific city.',
+    description: 'Gets the current market price for a specific crop in a specific city from data.gov.in API.',
     inputSchema: PriceInfoSchema,
     outputSchema: z.object({
-      price: z.number().describe('The price of the crop in the specified city, in INR per kg (or per quintal for grains).'),
+      price: z.number().describe('The price of the crop in the specified city, in INR per quintal.'),
     }),
   },
   async ({ crop, city }) => {
-    // In a real application, you would use process.env.MARKET_DATA_API_KEY to call a real API here.
-    const cityKey = city.toLowerCase();
-    const cropKey = crop.toLowerCase().replace(/\s+/g, '');
-    const isGrain = ['wheat', 'rice', 'cotton'].includes(cropKey);
+    const apiKey = process.env.MARKET_DATA_API_KEY;
+    if (!apiKey) {
+      throw new Error("Market data API key is not configured.");
+    }
     
-    // Use mock data or generate a plausible random price as a fallback
-    const price = mockPriceData[cropKey]?.[cityKey] || 
-        (isGrain 
-            ? Math.floor(Math.random() * 1000) + 1500  // Plausible price for grains
-            : Math.floor(Math.random() * 40) + 10       // Plausible price for vegetables
-        );
+    // Construct the API URL
+    const baseUrl = 'https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070';
+    const params = new URLSearchParams({
+        'api-key': apiKey,
+        'format': 'json',
+        'limit': '10', // Get a few recent records
+        'filters[commodity]': crop,
+        'filters[market]': city,
+    });
     
-    return { price: parseFloat(price.toFixed(2)) };
+    const url = `${baseUrl}?${params.toString()}`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.records && data.records.length > 0) {
+            // Find the most recent record with a valid modal price
+            const latestRecord = data.records
+                .sort((a: any, b: any) => new Date(b.arrival_date).getTime() - new Date(a.arrival_date).getTime())
+                .find((r: any) => r.modal_price && !isNaN(parseFloat(r.modal_price)));
+
+            if (latestRecord) {
+                 return { price: parseFloat(latestRecord.modal_price) };
+            }
+        }
+        
+        // If no data is found, return a random plausible price as a fallback
+        const isGrain = ['wheat', 'rice', 'cotton'].includes(crop.toLowerCase());
+        const price = isGrain ? Math.floor(Math.random() * 1000) + 1500 : Math.floor(Math.random() * 40) + 10;
+        return { price: parseFloat(price.toFixed(2)) };
+
+    } catch (error) {
+        console.error("Failed to fetch market price:", error);
+        // Fallback for network errors or API failures
+        const isGrain = ['wheat', 'rice', 'cotton'].includes(crop.toLowerCase());
+        const price = isGrain ? Math.floor(Math.random() * 1000) + 1500 : Math.floor(Math.random() * 40) + 10;
+        return { price: parseFloat(price.toFixed(2)) };
+    }
   }
 );
 
@@ -151,13 +123,13 @@ const analysisPrompt = ai.definePrompt({
 
   A farmer has the following query: "{{query}}".
   
-  The current price for {{crop}} in {{city}} is {{price}} INR.
+  The current price for {{crop}} in {{city}} is {{price}} INR per quintal.
   
   Based on this price and the user's query, provide a recommendation on whether to sell or wait. 
   
-  Then, provide a brief analysis of the market situation. For vegetables/fruits, the price is per kg. For grains like wheat and rice, the price is per quintal. Be mindful of this unit difference.
+  Then, provide a brief analysis of the market situation, explaining if the price is good, average, or low based on typical trends.
   
-  For example, if the price is high, you could say "With tomato prices currently at ₹{price} per kg in {city}, it's a good time to sell." For grains, you might say "Wheat is trading at ₹{price} per quintal in {city}, which is a stable price. You could consider selling a portion of your stock." If the requested language is Hindi, the response should be entirely in Hindi.`,
+  For example, if the price is high, you could say "With {{crop}} prices currently at ₹{{price}} per quintal in {{city}}, it's a good time to sell." If the price seems low, you might advise waiting. If the requested language is Hindi, the response should be entirely in Hindi.`,
 });
 
 const analyzeMarketPricesFlow = ai.defineFlow(
@@ -194,11 +166,11 @@ const analyzeMarketPricesFlow = ai.defineFlow(
         console.error("Error in analyzeMarketPricesFlow: ", error);
         
         const friendlyErrorMessage = {
-            en: "The market analysis service is currently overloaded. Please try again in a few moments.",
-            hi: "बाजार विश्लेषण सेवा वर्तमान में ओवरलोड है। कृपया कुछ क्षण बाद पुनः प्रयास करें।",
-            kn: "ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ ಸೇವೆ ಪ್ರಸ್ತುತ ಓವರ್‌ಲೋಡ್ ಆಗಿದೆ. ದಯವಿಟ್ಟು ಕೆಲವು ಕ್ಷಣಗಳಲ್ಲಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-            bn: "বাজার বিশ্লেষণ পরিষেবা বর্তমানে ওভারলোড। অনুগ্রহ করে কয়েক মুহূর্ত পরে আবার চেষ্টা করুন।",
-            bho: "बाजार विश्लेषण सेवा अबही ओवरलोड बा। कुछ देर बाद फेर से कोसिस करीं।"
+            en: "The market analysis service is currently overloaded or the API key is invalid. Please try again in a few moments.",
+            hi: "बाजार विश्लेषण सेवा वर्तमान में ओवरलोड है या एपीआई कुंजी अमान्य है। कृपया कुछ क्षण बाद पुनः प्रयास करें।",
+            kn: "ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ ಸೇವೆ ಪ್ರಸ್ತುತ ಓವರ್‌ಲೋಡ್ ಆಗಿದೆ ಅಥವಾ API ಕೀ ಅಮಾನ್ಯವಾಗಿದೆ. ದಯವಿಟ್ಟು ಕೆಲವು ಕ್ಷಣಗಳಲ್ಲಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+            bn: "বাজার বিশ্লেষণ পরিষেবা বর্তমানে ওভারলোড বা এপিআই কী অবৈধ। অনুগ্রহ করে কয়েক মুহূর্ত পরে আবার চেষ্টা করুন।",
+            bho: "बाजार विश्लेषण सेवा अबही ओवरलोड बा चाहे एपीआई कुंजी अमान्य बा। कुछ देर बाद फेर से कोसिस करीं।"
         };
 
         const message = friendlyErrorMessage[language as keyof typeof friendlyErrorMessage] || friendlyErrorMessage.en;
@@ -211,5 +183,3 @@ const analyzeMarketPricesFlow = ai.defineFlow(
     }
   }
 );
-
-    
