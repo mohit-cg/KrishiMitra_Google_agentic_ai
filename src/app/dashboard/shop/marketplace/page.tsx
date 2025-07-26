@@ -14,18 +14,18 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { analyzeSearchQuery } from "@/ai/flows/analyze-search-query";
 
 const productsData = [
-  { key: "organicFertilizer", price: "₹450", hint: "fertilizer bag" },
-  { key: "pesticideSpray", price: "₹700", hint: "pesticide bottle" },
-  { key: "highYieldSeeds", price: "₹1200", hint: "seed packet" },
-  { key: "gardeningToolsSet", price: "₹1500", hint: "gardening tools" },
-  { key: "dripIrrigationKit", price: "₹2500", hint: "irrigation kit" },
-  { key: "soilTestKit", price: "₹900", hint: "soil test" },
-  { key: "protectiveGloves", price: "₹250", hint: "gloves" },
-  { key: "powerSprayer", price: "₹3500", hint: "power sprayer" },
-  { key: "greenhousePolythene", price: "₹4200", hint: "greenhouse sheet" },
-  { key: "waterPump", price: "₹5500", hint: "water pump" },
-  { key: "cowManure", price: "₹300", hint: "manure bag" },
-  { key: "neemOil", price: "₹850", hint: "neem oil" },
+  { key: "organicFertilizer", price: "₹450", hint: "bag of organic fertilizer" },
+  { key: "pesticideSpray", price: "₹700", hint: "agricultural pesticide bottle" },
+  { key: "highYieldSeeds", price: "₹1200", hint: "packet of seeds" },
+  { key: "gardeningToolsSet", price: "₹1500", hint: "set of gardening tools" },
+  { key: "dripIrrigationKit", price: "₹2500", hint: "drip irrigation system" },
+  { key: "soilTestKit", price: "₹900", hint: "soil testing kit" },
+  { key: "protectiveGloves", price: "₹250", hint: "gardening gloves" },
+  { key: "powerSprayer", price: "₹3500", hint: "agricultural power sprayer" },
+  { key: "greenhousePolythene", price: "₹4200", hint: "greenhouse plastic sheet" },
+  { key: "waterPump", price: "₹5500", hint: "agricultural water pump" },
+  { key: "cowManure", price: "₹300", hint: "bag of cow manure" },
+  { key: "neemOil", price: "₹850", hint: "bottle of neem oil" },
 ];
 
 const SpeechRecognition =

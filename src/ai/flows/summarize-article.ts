@@ -22,7 +22,7 @@ const ArticleSummarySchema = z.object({
   title: z.string().describe('The title of the summarized article.'),
   summary: z.string().describe('A concise summary of the article found on the web.'),
   sourceUrl: z.string().describe('The URL of the source article.'),
-  imageHint: z.string().describe("Two keywords for the image, e.g., 'crop rotation'."),
+  imageHint: z.string().describe("Two or three specific keywords for a relevant image, e.g., 'healthy soil farm', 'drip irrigation system', 'agricultural drone'."),
 });
 
 
@@ -52,7 +52,7 @@ const summarizeArticlePrompt = ai.definePrompt({
   4. For each article, generate a realistic title.
   5. For each, write a concise, helpful summary.
   6. For each, provide a plausible, but not necessarily real, .com, .org, or .net URL as the source. For example: 'https://www.agrifarming.org/crop-rotation-benefits'.
-  7. For each, provide a two-word hint for the image based on the article's topic. For example, for a crop rotation article, the hint could be "crop rotation".
+  7. For each, provide a two or three word hint for a relevant image based on the article's topic. For example, for a crop rotation article, the hint could be "crop rotation diagram". For a soil health article, it could be "healthy farm soil".
   `,
 });
 

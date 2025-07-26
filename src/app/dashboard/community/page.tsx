@@ -32,24 +32,24 @@ export default function CommunityPage() {
 
   const allMessages = useMemo(() => ({
     general: [
-      { user: t('community.users.ramesh'), text: t('community.messages.general.0'), isSelf: false, hint: "farmer portrait" },
-      { user: t('community.users.suresh'), text: t('community.messages.general.1'), isSelf: false, hint: "farmer portrait" },
-      { user: t('community.you'), text: t('community.messages.general.2'), isSelf: true, hint: "farmer portrait" },
-      { user: t('community.users.geeta'), text: t('community.messages.general.3'), isSelf: false, hint: "farmer portrait" },
+      { user: t('community.users.ramesh'), text: t('community.messages.general.0'), isSelf: false, hint: "indian farmer portrait" },
+      { user: t('community.users.suresh'), text: t('community.messages.general.1'), isSelf: false, hint: "farmer smiling" },
+      { user: t('community.you'), text: t('community.messages.general.2'), isSelf: true, hint: "farmer looking at phone" },
+      { user: t('community.users.geeta'), text: t('community.messages.general.3'), isSelf: false, hint: "woman farmer india" },
     ],
     tomato: [
-      { user: t('community.users.suresh'), text: t('community.messages.tomato.0'), isSelf: false, hint: "farmer portrait" },
-      { user: t('community.you'), text: t('community.messages.tomato.1'), isSelf: true, hint: "farmer portrait" },
+      { user: t('community.users.suresh'), text: t('community.messages.tomato.0'), isSelf: false, hint: "farmer smiling" },
+      { user: t('community.you'), text: t('community.messages.tomato.1'), isSelf: true, hint: "farmer looking at phone" },
     ],
     pest: [
-      { user: t('community.users.ravi'), text: t('community.messages.pest.0'), isSelf: false, hint: "farmer portrait" },
+      { user: t('community.users.ravi'), text: t('community.messages.pest.0'), isSelf: false, hint: "serious farmer" },
     ],
     organic: [
-      { user: t('community.users.priya'), text: t('community.messages.organic.0'), isSelf: false, hint: "farmer portrait" },
-      { user: t('community.you'), text: t('community.messages.organic.1'), isSelf: true, hint: "farmer portrait" },
+      { user: t('community.users.priya'), text: t('community.messages.organic.0'), isSelf: false, hint: "woman farmer field" },
+      { user: t('community.you'), text: t('community.messages.organic.1'), isSelf: true, hint: "farmer looking at phone" },
     ],
     market: [
-      { user: t('community.users.amit'), text: t('community.messages.market.0'), isSelf: false, hint: "farmer portrait" },
+      { user: t('community.users.amit'), text: t('community.messages.market.0'), isSelf: false, hint: "farmer on phone" },
     ],
   }), [t]);
 
@@ -77,7 +77,7 @@ export default function CommunityPage() {
       text: newMessage,
       attachment: attachmentPreview,
       isSelf: true,
-      hint: "farmer portrait"
+      hint: "farmer looking at phone"
     };
 
     const updatedMessages = [...messages, messageToSend];
@@ -86,7 +86,7 @@ export default function CommunityPage() {
     // This part would be a database call in a real app
     // We update a mutable object for demo purposes
     const translatedMessages = allMessages[activeRoom.id].map(m => ({ ...m, avatar: `https://placehold.co/40x40.png` }));
-    allMessages[activeRoom.id] = [...translatedMessages.slice(0, translatedMessages.length), { user: t('community.you'), text: newMessage, isSelf: true, hint: 'farmer portrait' }];
+    allMessages[activeRoom.id] = [...translatedMessages.slice(0, translatedMessages.length), { user: t('community.you'), text: newMessage, isSelf: true, hint: 'farmer looking at phone' }];
     
     setNewMessage("");
     setAttachmentPreview(null);
@@ -211,7 +211,7 @@ export default function CommunityPage() {
                       {!msg.isSelf && <p className="font-semibold text-sm mb-1">{msg.user}</p>}
                       {msg.attachment && (
                         <div className="relative aspect-video mb-2">
-                           <Image src={msg.attachment} alt="Attachment" layout="fill" objectFit="cover" className="rounded-md" />
+                           <Image src={msg.attachment} alt="Attachment" layout="fill" objectFit="cover" className="rounded-md" data-ai-hint="farmer shared image" />
                         </div>
                       )}
                       <p className="text-sm">{msg.text}</p>
@@ -225,7 +225,7 @@ export default function CommunityPage() {
                 <div className="mt-4 p-2 border-t relative">
                     <p className="text-xs font-semibold mb-2 text-muted-foreground">{t('community.attachmentPreview')}</p>
                     <div className="relative w-24 h-24">
-                        <Image src={attachmentPreview} alt={t('community.attachmentPreview')} layout="fill" objectFit="cover" className="rounded-md"/>
+                        <Image src={attachmentPreview} alt={t('community.attachmentPreview')} layout="fill" objectFit="cover" className="rounded-md" data-ai-hint="shared attachment"/>
                     </div>
                     <Button variant="ghost" size="icon" className="absolute top-0 right-0 h-8 w-8" onClick={removeAttachment}>
                         <X className="h-4 w-4" />

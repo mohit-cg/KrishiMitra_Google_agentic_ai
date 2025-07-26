@@ -86,7 +86,7 @@ export default function LoginPage() {
         <Image
           src="https://placehold.co/1200x900.png"
           alt={t('login.imageAlt')}
-          data-ai-hint="lush farm sunset"
+          data-ai-hint="lush indian farm sunset"
           width="1200"
           height="900"
           className="h-full w-full object-cover"

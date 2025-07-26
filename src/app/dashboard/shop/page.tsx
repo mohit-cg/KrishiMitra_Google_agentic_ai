@@ -32,7 +32,7 @@ export default function ShopPage() {
         <Card className="flex flex-col">
           <CardHeader>
              <div className="relative h-40 w-full mb-4">
-                <Image src="https://placehold.co/600x400.png" alt={t('shop.govStoreAlt')} layout="fill" objectFit="cover" className="rounded-md" data-ai-hint="government building" />
+                <Image src="https://placehold.co/600x400.png" alt={t('shop.govStoreAlt')} layout="fill" objectFit="cover" className="rounded-md" data-ai-hint="indian government building" />
              </div>
             <CardTitle>{t('shop.govStoreTitle')}</CardTitle>
             <CardDescription>
@@ -51,7 +51,7 @@ export default function ShopPage() {
         <Card className="flex flex-col">
           <CardHeader>
             <div className="relative h-40 w-full mb-4">
-                <Image src="https://placehold.co/600x400.png" alt={t('shop.privateMarketplaceAlt')} layout="fill" objectFit="cover" className="rounded-md" data-ai-hint="market stall" />
+                <Image src="https://placehold.co/600x400.png" alt={t('shop.privateMarketplaceAlt')} layout="fill" objectFit="cover" className="rounded-md" data-ai-hint="local market stall" />
             </div>
             <CardTitle>{t('shop.privateMarketplaceTitle')}</CardTitle>
             <CardDescription>

@@ -48,8 +48,8 @@ const InternalDiagnoseCropDiseaseOutputSchema = z.object({
     isPlant: z.boolean().describe('Whether or not the input is a plant or a plant-related issue.'),
     diagnosis: z.string().describe('The diagnosis of the crop disease. If it is not a plant, explain that here.'),
     solutions: z.string().describe('Suggested solutions with local product links. If not a plant, this can be empty.'),
-    documentationSearchQuery: z.string().optional().describe('A search query to find a relevant documentation or article. Only generate if it is a plant.'),
-    youtubeSearchQuery: z.string().optional().describe('A search query for a relevant YouTube video for a visual guide. Only generate if it is a plant.'),
+    documentationSearchQuery: z.string().optional().describe('A concise and effective search query to find a relevant documentation or article. Only generate if it is a plant. Example: "how to treat tomato early blight".'),
+    youtubeSearchQuery: z.string().optional().describe('A concise and effective search query for a relevant YouTube video for a visual guide. Only generate if it is a plant. Example: "visual guide to tomato early blight".'),
 });
 
 

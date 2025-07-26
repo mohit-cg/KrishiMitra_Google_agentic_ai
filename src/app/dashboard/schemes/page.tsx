@@ -14,17 +14,17 @@ import { useMemo } from "react";
 const keySchemesData = [
   {
     key: "pmkisan",
-    hint: "coin stack rupee",
+    hint: "stack of coins",
     link: "https://pmkisan.gov.in/",
   },
   {
     key: "pmfby",
-    hint: "crop insurance document",
+    hint: "insurance document shield",
     link: "https://pmfby.gov.in/",
   },
   {
     key: "kcc",
-    hint: "credit card",
+    hint: "credit card bank",
     link: "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-finance/kisan-credit-card",
   },
 ];

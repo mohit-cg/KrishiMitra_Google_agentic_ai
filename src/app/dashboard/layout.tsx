@@ -54,13 +54,13 @@ export default function DashboardLayout({
             <div 
               className="absolute inset-0 -z-10" 
               style={{
-                backgroundImage: "url('https://placehold.co/600x900.png')",
+                backgroundImage: "url('https://placehold.co/800x1200.png')",
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 filter: 'blur(8px) brightness(0.6)',
                 backgroundAttachment:'fixed'
               }}
-              data-ai-hint="abstract ai agriculture"
+              data-ai-hint="abstract farm background"
             />
             <SidebarHeader className="p-4 bg-background/70 backdrop-blur-sm border-b">
               <Link href="/dashboard" className="flex items-center gap-2 font-semibold font-headline">

@@ -20,11 +20,11 @@ import { useTranslation } from '@/contexts/language-context';
 const initialArticlesData = [
   {
     key: "dripIrrigation",
-    hint: "drip irrigation farm",
+    hint: "farm drip irrigation",
   },
   {
     key: "ipm",
-    hint: "crop pest insect",
+    hint: "insect on crop",
   },
   {
     key: "soilHealth",
@@ -32,15 +32,15 @@ const initialArticlesData = [
   },
   {
     key: "composting",
-    hint: "farm compost pile",
+    hint: "large compost pile",
   },
   {
     key: "cropRotation",
-    hint: "crop rotation diagram",
+    hint: "crop rotation infographic",
   },
   {
     key: "organicFarming",
-    hint: "organic vegetables farm",
+    hint: "organic vegetable basket",
   },
 ];
 
@@ -50,7 +50,7 @@ const initialVideosData: Video[] = [
         description: "A step-by-step visual guide on how to properly prune your tomato plants for better growth and yield.",
         duration: "12:45",
         videoId: "g-v3a3jK_4s",
-        hint: "tomato plant pruning",
+        hint: "pruning tomato plant",
         thumbnailUrl: "https://placehold.co/600x400.png",
     },
     {
@@ -58,7 +58,7 @@ const initialVideosData: Video[] = [
         description: "Learn how to create and manage your own vermicompost system with this easy-to-follow video tutorial.",
         duration: "08:22",
         videoId: "N8_B-g4g_a4",
-        hint: "vermicompost bin",
+        hint: "worms in compost",
         thumbnailUrl: "https://placehold.co/600x400.png",
     },
     {
@@ -66,7 +66,7 @@ const initialVideosData: Video[] = [
         description: "This video helps you visually identify common nutrient deficiencies in your plants and how to correct them.",
         duration: "15:30",
         videoId: "o-rp3f_It2k",
-        hint: "plant nutrient deficiency",
+        hint: "yellow plant leaf",
         thumbnailUrl: "https://placehold.co/600x400.png",
     }
 ];

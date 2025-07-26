@@ -28,7 +28,7 @@ export type RecommendCropsInput = z.infer<typeof RecommendCropsInputSchema>;
 const RecommendedCropSchema = z.object({
     cropName: z.string().describe("The name of the recommended crop."),
     reasoning: z.string().describe("The detailed reasoning for recommending this crop, considering location, climate, soil, market demand, and water needs."),
-    imageHint: z.string().describe("Two keywords for a relevant image of the crop, e.g., 'pearl millet'."),
+    imageHint: z.string().describe("Two or three specific keywords for a relevant image of the crop, e.g., 'pearl millet farm', 'ripe cotton crop', 'sugarcane field'."),
 });
 
 const RecommendCropsOutputSchema = z.object({
@@ -62,7 +62,7 @@ const recommendCropsPrompt = ai.definePrompt({
   Your recommendations must be well-reasoned. For each recommended crop, provide the following:
   1.  **cropName**: The name of the crop.
   2.  **reasoning**: A detailed explanation. Justify your choice by considering all the farmer's details provided above. Analyze how the location's climate, soil type, water source, season, budget, and crop rotation principles make the crop a suitable choice. Also factor in general market demand. If the farmer had a preference, address it in your reasoning.
-  3.  **imageHint**: Two keywords for a relevant image of the crop.
+  3.  **imageHint**: Two or three specific keywords for a relevant image of the crop. For example, for a pearl millet recommendation, the hint could be "pearl millet farm". For cotton, it could be "ripe cotton crop".
 
   Generate a list of 2 to 3 diverse and practical crop recommendations.
   `,
