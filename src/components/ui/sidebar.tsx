@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -27,7 +28,7 @@ function useSidebar() {
 
 const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, setState] = React.useState<"expanded" | "collapsed">(
-    "expanded"
+    "collapsed"
   )
 
   return (
@@ -58,16 +59,7 @@ interface SidebarProps
 
 const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
   ({ className, children, ...props }, ref) => {
-    const isMobile = useIsMobile()
-    const { state, setState } = useSidebar()
-
-    React.useEffect(() => {
-      if (isMobile) {
-        setState("collapsed")
-      } else {
-        setState("expanded")
-      }
-    }, [isMobile, setState])
+    const { state } = useSidebar()
 
     return (
       <div
@@ -120,19 +112,22 @@ const SidebarTrigger = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, ...props }, ref) => {
   const { state, setState } = useSidebar()
+  const isMobile = useIsMobile();
+
+  if (isMobile) return null;
 
   return (
     <Button
       ref={ref}
       variant="ghost"
       size="icon"
-      className={cn("rounded-full", className)}
+      className={cn("rounded-full h-7 w-7", className)}
       onClick={() =>
         setState(state === "expanded" ? "collapsed" : "expanded")
       }
       {...props}
     >
-      {state === "expanded" ? <ChevronLeft /> : <ChevronRight />}
+      {state === "expanded" ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
       <span className="sr-only">Toggle sidebar</span>
     </Button>
   )

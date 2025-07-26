@@ -9,6 +9,8 @@ import {
   Sidebar,
   SidebarHeader,
   SidebarContent,
+  SidebarTrigger,
+  SidebarInset,
 } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Link from "next/link";
@@ -45,7 +47,7 @@ export default function DashboardLayout({
     <TooltipProvider>
       <SidebarProvider>
         <div className="grid h-screen w-full lg:grid-cols-[auto_1fr]">
-          <Sidebar className="hidden lg:flex flex-col border-r h-full">
+          <Sidebar className="hidden lg:flex flex-col border-r h-full relative">
              <div 
               className="absolute inset-0 -z-10" 
               style={{
@@ -57,18 +59,19 @@ export default function DashboardLayout({
               }}
               data-ai-hint="abstract farm background"
             />
-            <SidebarHeader className="p-4 bg-background/70 backdrop-blur-sm border-b">
+            <SidebarHeader className="p-4 bg-background/70 backdrop-blur-sm border-b flex justify-between items-center">
               <Link href="/dashboard" className="flex items-center gap-2 font-semibold font-headline">
                 <Icons.logo className="h-6 w-6 text-primary" />
-                <span>KrishiMitra</span>
+                <span className="text-xl">KrishiMitra</span>
               </Link>
+               <SidebarTrigger />
             </SidebarHeader>
             <SidebarContent className="flex-1 bg-background/20 backdrop-blur-sm overflow-y-auto">
               <MainNav />
             </SidebarContent>
           </Sidebar>
           <div className="flex flex-col h-screen">
-            <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-2 shrink-0">
+            <header className="sticky top-0 z-10 flex h-[57px] items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-2 shrink-0">
               <Sheet>
                 <SheetTrigger asChild>
                   <Button size="icon" variant="outline" className="lg:hidden">
