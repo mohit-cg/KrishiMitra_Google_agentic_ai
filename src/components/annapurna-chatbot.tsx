@@ -104,6 +104,13 @@ export function AnnapurnaChatbot() {
       });
     }
   }, [messages]);
+
+  // Effect to reset chat when language changes
+  useEffect(() => {
+    // When the language changes, clear the chat history.
+    // The welcome message will be re-added by the effect below.
+    setMessages([]);
+  }, [language]);
   
   useEffect(() => {
     if (isOpen && messages.length === 0) {
@@ -112,7 +119,7 @@ export function AnnapurnaChatbot() {
       const welcomeMessage: Message = { id: messageId, sender: 'bot', text: welcomeMessageText };
       setMessages([welcomeMessage]);
     }
-  }, [isOpen, messages.length, t, userProfile]);
+  }, [isOpen, messages.length, t, userProfile, language]);
 
   useEffect(() => {
     // Audio cleanup
