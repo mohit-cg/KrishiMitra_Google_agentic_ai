@@ -99,9 +99,31 @@ const annapurnaChatFlow = ai.defineFlow(
     inputSchema: AnnapurnaChatInputSchema,
     outputSchema: AnnapurnaChatOutputSchema,
   },
-  async input => {
-    const {output} = await annapurnaPrompt(input);
-    return output!;
+  async (input) => {
+    try {
+      const { output } = await annapurnaPrompt(input);
+      if (!output) {
+        throw new Error('Chatbot returned an empty response.');
+      }
+      return output;
+    } catch (error) {
+      console.error("Error in annapurnaChatFlow: ", error);
+      
+      const errorMessages = {
+        en: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.",
+        hi: "मुझे खेद है, मुझे अभी कनेक्ट करने में समस्या हो रही है। कृपया कुछ क्षण बाद पुनः प्रयास करें।",
+        kn: "ಕ್ಷಮಿಸಿ, ನನಗೆ ಇದೀಗ ಸಂಪರ್ಕಿಸಲು ತೊಂದರೆಯಾಗುತ್ತಿದೆ. ದಯವಿಟ್ಟು ಒಂದು ಕ್ಷಣದಲ್ಲಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+        bn: "আমি দুঃখিত, আমি এই মুহূর্তে সংযোগ করতে সমস্যায় পড়ছি। অনুগ্রহ করে এক মুহূর্ত পরে আবার চেষ্টা করুন।",
+        bho: "हमरा के माफ करीं, हमरा के अबहीं कनेक्ट करे में दिक्कत होखत बा। कुछ देर बाद फेर से कोसिस करीं।"
+      };
+
+      // Provide a fallback response that fits the schema
+      return {
+        response: errorMessages[input.language as keyof typeof errorMessages] || errorMessages.en,
+        intent: 'unknown',
+        entities: {},
+      };
+    }
   }
 );
 
