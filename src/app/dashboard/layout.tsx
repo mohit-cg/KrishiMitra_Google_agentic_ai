@@ -7,6 +7,7 @@ import {
   SidebarProvider,
   Sidebar,
   SidebarContent,
+  SidebarHeader,
 } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
@@ -15,11 +16,18 @@ import { useEffect } from "react";
 import { useTranslation } from "@/contexts/language-context";
 import { AnnapurnaChatbot } from "@/components/annapurna-chatbot";
 import { Notifications } from "@/components/notifications";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
+import Link from "next/link";
+import { Icons } from "@/components/icons";
 
 function DashboardPageLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -34,20 +42,52 @@ function DashboardPageLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="h-screen w-full flex flex-col">
        <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background px-4 sm:px-6 shrink-0">
-          <div className="flex-1">
-             {/* Header content can go here if needed */}
+          {isMobile ? (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0"
+                >
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">{t('dashboardLayout.toggleMenu')}</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="flex flex-col">
+                <nav className="grid gap-2 text-lg font-medium">
+                  <Link
+                    href="#"
+                    className="flex items-center gap-2 text-lg font-semibold mb-4"
+                  >
+                    <Icons.logo className="h-6 w-6" />
+                    <span>KrishiMitra</span>
+                  </Link>
+                  <MainNav isSheet={true} />
+                </nav>
+              </SheetContent>
+            </Sheet>
+          ) : (
+             <Link href="/dashboard" className="flex items-center gap-2 font-semibold font-headline">
+                <Icons.logo className="h-6 w-6 text-primary" />
+                <span>KrishiMitra</span>
+             </Link>
+          )}
+
+          <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 justify-end">
+            <Notifications />
+            <UserNav />
           </div>
-          <Notifications />
-          <UserNav />
         </header>
 
       <div className="flex-1 grid grid-cols-[auto_1fr] overflow-hidden">
         <Sidebar>
+          <SidebarHeader />
           <SidebarContent>
             <MainNav />
           </SidebarContent>
         </Sidebar>
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 m-4 rounded-lg border">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           {children}
         </main>
       </div>
