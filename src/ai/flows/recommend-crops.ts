@@ -27,12 +27,14 @@ export type RecommendCropsInput = z.infer<typeof RecommendCropsInputSchema>;
 
 const RecommendedCropSchema = z.object({
     cropName: z.string().describe("The name of the recommended crop."),
-    reasoning: z.string().describe("The detailed reasoning for recommending this crop, considering location, climate, soil, market demand, and water needs."),
+    icon: z.enum(['Leaf', 'Sprout', 'Carrot', 'Wheat', 'Grape']).describe("A relevant Lucide icon name from the provided list for the crop. Use 'Leaf' as a default."),
+    plantingDates: z.string().describe("Recommended planting date range for the specified season and location, e.g., 'June 15 - July 30'."),
+    benefits: z.array(z.string()).min(2).max(3).describe("A list of 2-3 key benefits of growing this crop, e.g., 'High market demand', 'Drought resistant'."),
     imageHint: z.string().describe("Two or three specific keywords for a relevant image of the crop, e.g., 'pearl millet farm', 'ripe cotton crop', 'sugarcane field'."),
 });
 
 const RecommendCropsOutputSchema = z.object({
-  recommendations: z.array(RecommendedCropSchema).min(2).max(3).describe('A list of 2-3 recommended crops.'),
+  recommendations: z.array(RecommendedCropSchema).length(3).describe('A list of exactly 3 recommended crops.'),
 });
 export type RecommendCropsOutput = z.infer<typeof RecommendCropsOutputSchema>;
 
@@ -44,9 +46,9 @@ const recommendCropsPrompt = ai.definePrompt({
   name: 'recommendCropsPrompt',
   input: {schema: RecommendCropsInputSchema},
   output: {schema: RecommendCropsOutputSchema},
-  prompt: `You are an expert agricultural advisor in India. Your task is to recommend 2-3 profitable and suitable crops for a farmer based on their specific inputs.
+  prompt: `You are an expert agricultural advisor in India. Your task is to recommend exactly 3 profitable and suitable crops for a farmer based on their specific inputs.
 
-  The farmer's preferred language is {{language}}. All of your text output (cropName, reasoning) MUST be in this language.
+  The farmer's preferred language is {{language}}. All of your text output (cropName, benefits) MUST be in this language.
 
   Farmer's Details:
   - Location: {{location}}
@@ -55,16 +57,18 @@ const recommendCropsPrompt = ai.definePrompt({
   - Soil Type: {{#if soilType}}{{soilType}}{{else}}Not specified{{/if}}
   - Water Source: {{#if waterSource}}{{waterSource}}{{else}}Not specified{{/if}}
   - Season: {{#if season}}{{season}}{{else}}Not specified{{/if}}
-  - Previous Crop: {{#if previousCrop}} (Suggest crops that are good for rotation){{else}}Not specified{{/if}}
+  - Previous Crop: {{#if previousCrop}} (Suggest crops that are good for rotation with {{previousCrop}}){{else}}Not specified{{/if}}
   - Budget: {{#if budget}}{{budget}}{{else}}Not specified{{/if}}
   - Farmer's Crop Preference: {{#if cropPreference}}{{cropPreference}}{{else}}None{{/if}}
 
-  Your recommendations must be well-reasoned. For each recommended crop, provide the following:
+  Your recommendations must be well-reasoned and detailed. For each of the 3 recommended crops, provide the following:
   1.  **cropName**: The name of the crop.
-  2.  **reasoning**: A detailed explanation. Justify your choice by considering all the farmer's details provided above. Analyze how the location's climate, soil type, water source, season, budget, and crop rotation principles make the crop a suitable choice. Also factor in general market demand. If the farmer had a preference, address it in your reasoning.
-  3.  **imageHint**: Two or three specific keywords for a relevant image of the crop. For example, for a pearl millet recommendation, the hint could be "pearl millet farm". For cotton, it could be "ripe cotton crop".
+  2.  **icon**: A relevant Lucide icon name from this list: ['Leaf', 'Sprout', 'Carrot', 'Wheat', 'Grape']. Use 'Leaf' as a generic default if none are a perfect fit. For example, for cotton or soybean, use 'Leaf'. For wheat or maize, use 'Wheat'. For vegetables, use 'Carrot'.
+  3.  **plantingDates**: A specific, recommended planting date range for the farmer's location and season. For example, "June 15 - July 30".
+  4.  **benefits**: A list of 2 or 3 key benefits for the farmer. These should be concise and compelling, such as "High market demand in your region", "Drought resistant, lower water needs", or "Improves soil nitrogen for next season".
+  5.  **imageHint**: Two or three specific keywords for a relevant image of the crop. For example, for a pearl millet recommendation, the hint could be "pearl millet farm". For cotton, it could be "ripe cotton crop".
 
-  Generate a list of 2 to 3 diverse and practical crop recommendations.
+  Generate a list of exactly 3 diverse and practical crop recommendations.
   `,
 });
 
@@ -81,19 +85,34 @@ const recommendCropsFlow = ai.defineFlow(
     } catch (error) {
       console.error("Error in recommendCropsFlow, returning fallback.", error);
       // Return a fallback response that satisfies the schema
-      const fallbackReasoning = `This is a default recommendation due to a temporary service issue. ${input.location} is generally suitable for a variety of crops.`;
+      const fallbackBenefits = [
+          `Good market value in ${input.location}`,
+          "Suitable for various soil types",
+      ];
+
       return {
         recommendations: [
           {
             cropName: "Soybean",
-            reasoning: fallbackReasoning,
+            icon: "Leaf",
+            plantingDates: "June - July",
+            benefits: fallbackBenefits,
             imageHint: "soybean field",
           },
           {
             cropName: "Cotton",
-            reasoning: fallbackReasoning,
+            icon: "Leaf",
+            plantingDates: "May - June",
+            benefits: fallbackBenefits,
             imageHint: "ripe cotton crop",
           },
+          {
+            cropName: "Maize",
+            icon: "Wheat",
+            plantingDates: "June - July",
+            benefits: fallbackBenefits,
+            imageHint: "maize corn field",
+          }
         ]
       }
     }

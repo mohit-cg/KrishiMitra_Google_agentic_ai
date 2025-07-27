@@ -628,7 +628,8 @@
                 "zaid": "Zaid"
             },
             "previousCrop": "Previous Crop (Optional)",
-            "budget": "Budget (Optional)"
+            "budget": "Budget (Optional)",
+            "keyBenefits": "Key Benefits"
         }
     },
     "chatbot": {
