@@ -3,11 +3,12 @@
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-
+import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Button } from "@/components/ui/button"
 import { PanelLeft, PanelRight } from "lucide-react"
+import { Icons } from "@/components/icons"
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed"
@@ -39,7 +40,7 @@ const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 const sidebarVariants = cva(
-  "hidden lg:flex flex-col border-r bg-background/70 backdrop-blur-sm transition-all duration-300 ease-in-out",
+  "hidden lg:flex flex-col border-r bg-background transition-all duration-300 ease-in-out z-30",
   {
     variants: {
       state: {
@@ -70,9 +71,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
         className={cn(sidebarVariants({ state }), className)}
         {...props}
       >
-        <SidebarHeader>
-           <SidebarTrigger />
-        </SidebarHeader>
+        <SidebarHeader />
         {children}
       </div>
     )
@@ -89,12 +88,18 @@ const SidebarHeader = React.forwardRef<
     <div 
       ref={ref} 
       className={cn(
-        "flex h-[57px] items-center border-b px-2", 
-        state === "expanded" ? "justify-end" : "justify-center",
+        "flex h-[57px] items-center border-b p-2", 
+        state === "expanded" ? "justify-between" : "justify-center",
         className
       )} 
       {...props} 
-    />
+    >
+      <Link href="/dashboard" className={cn("flex items-center gap-2 font-semibold font-headline", state === 'collapsed' && "hidden")}>
+        <Icons.logo className="h-6 w-6 text-primary" />
+        <span>KrishiMitra</span>
+      </Link>
+      <SidebarTrigger />
+    </div>
   )
 })
 SidebarHeader.displayName = "SidebarHeader"
