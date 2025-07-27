@@ -23,6 +23,7 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
 
+// Moved DashboardPageLayout to be a top-level function
 function DashboardPageLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
