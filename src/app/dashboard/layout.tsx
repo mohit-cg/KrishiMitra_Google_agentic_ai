@@ -17,7 +17,7 @@ import { useTranslation } from "@/contexts/language-context";
 import { AnnapurnaChatbot } from "@/components/annapurna-chatbot";
 import { Notifications } from "@/components/notifications";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import Link from "next/link";
@@ -56,9 +56,13 @@ function DashboardPageLayout({ children }: { children: React.ReactNode }) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="flex flex-col">
+                 <SheetHeader className="sr-only">
+                    <SheetTitle>{t('dashboardLayout.menuTitle')}</SheetTitle>
+                    <SheetDescription>{t('dashboardLayout.menuDescription')}</SheetDescription>
+                  </SheetHeader>
                 <nav className="grid gap-2 text-lg font-medium">
                   <Link
-                    href="#"
+                    href="/dashboard"
                     className="flex items-center gap-2 text-lg font-semibold mb-4"
                   >
                     <Icons.logo className="h-6 w-6" />
