@@ -130,7 +130,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await signInWithEmailAndPassword(auth, email, pass);
     } catch (error) {
-      console.error("Error during email sign-in", error);
       setLoading(false);
       throw error; // Re-throw the error to be caught by the UI
     }
