@@ -118,8 +118,8 @@ export default function ProfilePage() {
         displayName ? translateText({ text: displayName, targetLanguage: currentLanguage as 'hi' | 'kn' | 'bn' | 'bho' }) : Promise.resolve({ translatedText: '' }),
         crops ? translateText({ text: crops, targetLanguage: currentLanguage as 'hi' | 'kn' | 'bn' | 'bho' }) : Promise.resolve({ translatedText: '' }),
       ]);
-      setTranslatedDisplayName(nameRes.translatedText);
-      setTranslatedCrops(cropsRes.translatedText);
+      setTranslatedDisplayName(nameRes.translatedText || displayName);
+      setTranslatedCrops(cropsRes.translatedText || crops);
     } catch (error) {
       console.error("Failed to translate user data for display", error);
       // On error, fall back to showing the untranslated data.
@@ -235,7 +235,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="name">{t('profile.fullName')}</Label>
-              <Input id="name" value={isTranslating ? '...' : translatedDisplayName} onChange={(e) => setDisplayName(e.target.value)} />
+              <Input id="name" value={isTranslating ? '...' : (currentLanguage === 'en' ? displayName : translatedDisplayName)} onChange={(e) => setDisplayName(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">{t('profile.email')}</Label>
@@ -279,7 +279,7 @@ export default function ProfilePage() {
             <p className="text-sm text-muted-foreground">
               {t('profile.myCropsDescription')}
             </p>
-            <Input id="crops" value={isTranslating ? '...' : translatedCrops} onChange={(e) => setCrops(e.target.value)} />
+            <Input id="crops" value={isTranslating ? '...' : (currentLanguage === 'en' ? crops : translatedCrops)} onChange={(e) => setCrops(e.target.value)} />
           </div>
           <div className="flex justify-end">
             <Button onClick={handleSaveChanges} disabled={isSaving || isUploading || isTranslating}>
@@ -342,3 +342,5 @@ const ProfileSkeleton = () => {
     </div>
   );
 }
+
+    
