@@ -14,6 +14,7 @@ import { ArrowLeft, Upload } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { useTranslation } from '@/contexts/language-context';
+import { translateText } from '@/ai/flows/translate-text';
 
 const districts = [
     { value: "Port Blair, Andaman & Nicobar", label: "Port Blair, Andaman & Nicobar" },
@@ -69,27 +70,65 @@ const districts = [
 
 export default function ProfilePage() {
   const { user, userProfile, updateUserProfile, uploadProfileImage, loading } = useAuth();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const [displayName, setDisplayName] = useState('');
+  // Canonical, untranslated state
+  const [canonicalDisplayName, setCanonicalDisplayName] = useState('');
+  const [canonicalCrops, setCanonicalCrops] = useState('');
+
+  // Translated state for display
+  const [displayDisplayName, setDisplayDisplayName] = useState('');
+  const [displayCrops, setDisplayCrops] = useState('');
+  
   const [email, setEmail] = useState('');
   const [location, setLocation] = useState('');
-  const [crops, setCrops] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
+
 
   useEffect(() => {
     if (userProfile) {
-      setDisplayName(userProfile.displayName || '');
+      const name = userProfile.displayName || '';
+      const crops = userProfile.crops || '';
+
+      setCanonicalDisplayName(name);
+      setCanonicalCrops(crops);
+      setDisplayDisplayName(name);
+      setDisplayCrops(crops);
       setEmail(userProfile.email || '');
       setLocation(userProfile.location || 'Pune, Maharashtra');
-      setCrops(userProfile.crops || '');
     } else if (user) {
-        setDisplayName(user.displayName || '');
         setEmail(user.email || '');
     }
   }, [user, userProfile]);
+
+  // This effect handles the translation whenever the language or canonical data changes
+  useEffect(() => {
+    const translateFields = async () => {
+        setIsTranslating(true);
+        if (language === 'en') {
+            setDisplayDisplayName(canonicalDisplayName);
+            setDisplayCrops(canonicalCrops);
+        } else {
+            const [translatedName, translatedCrops] = await Promise.all([
+                canonicalDisplayName ? translateText({text: canonicalDisplayName, targetLanguage: language}) : Promise.resolve({translatedText: ''}),
+                canonicalCrops ? translateText({text: canonicalCrops, targetLanguage: language}) : Promise.resolve({translatedText: ''}),
+            ]);
+            setDisplayDisplayName(translatedName.translatedText);
+            setDisplayCrops(translatedCrops.translatedText);
+        }
+        setIsTranslating(false);
+    };
+
+    if ((userProfile?.language || 'en') !== language) {
+        translateFields();
+    } else {
+        setDisplayDisplayName(canonicalDisplayName);
+        setDisplayCrops(canonicalCrops);
+    }
+  }, [language, canonicalDisplayName, canonicalCrops, userProfile?.language]);
 
   
   const getInitials = (name: string | null | undefined) => {
@@ -105,9 +144,9 @@ export default function ProfilePage() {
     setIsSaving(true);
     try {
       await updateUserProfile({
-        displayName,
+        displayName: canonicalDisplayName,
         location,
-        crops,
+        crops: canonicalCrops,
       });
       toast({
         title: t('toast.profileUpdated'),
@@ -142,6 +181,20 @@ export default function ProfilePage() {
       }
     }
   };
+  
+  // When user types, update the canonical state, not the display state
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDisplayDisplayName(e.target.value);
+    // Here you would ideally have a debounce mechanism to reverse-translate
+    // For simplicity, we update canonical state directly. This works best if user edits in their primary language.
+    setCanonicalDisplayName(e.target.value);
+  }
+
+  const handleCropsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDisplayCrops(e.target.value);
+    setCanonicalCrops(e.target.value);
+  }
+
 
   if (loading) {
     return <ProfileSkeleton />;
@@ -173,8 +226,8 @@ export default function ProfilePage() {
         <CardContent className="space-y-6">
            <div className="flex flex-col items-center space-y-4">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={userProfile?.photoURL || `https://placehold.co/100x100.png`} alt={displayName} data-ai-hint="smiling indian farmer"/>
-                <AvatarFallback className="text-3xl">{getInitials(displayName)}</AvatarFallback>
+                <AvatarImage src={userProfile?.photoURL || `https://placehold.co/100x100.png`} alt={canonicalDisplayName} data-ai-hint="smiling indian farmer"/>
+                <AvatarFallback className="text-3xl">{getInitials(canonicalDisplayName)}</AvatarFallback>
               </Avatar>
               <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading}/>
               <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
@@ -186,7 +239,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="name">{t('profile.fullName')}</Label>
-              <Input id="name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
+              <Input id="name" value={displayDisplayName} onChange={handleNameChange} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">{t('profile.email')}</Label>
@@ -213,10 +266,10 @@ export default function ProfilePage() {
             <p className="text-sm text-muted-foreground">
               {t('profile.myCropsDescription')}
             </p>
-            <Input id="crops" value={crops} onChange={(e) => setCrops(e.target.value)} />
+            <Input id="crops" value={displayCrops} onChange={handleCropsChange} />
           </div>
           <div className="flex justify-end">
-            <Button onClick={handleSaveChanges} disabled={isSaving || isUploading}>
+            <Button onClick={handleSaveChanges} disabled={isSaving || isUploading || isTranslating}>
               {isSaving ? t('profile.saving') : t('profile.saveChanges')}
             </Button>
           </div>
