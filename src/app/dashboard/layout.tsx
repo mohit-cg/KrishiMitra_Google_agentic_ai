@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 // Moved DashboardPageLayout to be a top-level function
 function DashboardPageLayout({ children }: { children: React.ReactNode }) {
@@ -80,6 +81,7 @@ function DashboardPageLayout({ children }: { children: React.ReactNode }) {
           )}
 
           <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 justify-end">
+            <LanguageSwitcher />
             <Notifications />
             <UserNav />
           </div>

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,6 @@ import { ArrowLeft, Upload } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { useTranslation } from '@/contexts/language-context';
-import { translateText } from '@/ai/flows/translate-text';
-
 
 const districts = [
     { value: "Port Blair, Andaman & Nicobar", label: "Port Blair, Andaman & Nicobar" },
@@ -71,69 +69,27 @@ const districts = [
 
 export default function ProfilePage() {
   const { user, userProfile, updateUserProfile, uploadProfileImage, loading } = useAuth();
-  const { t, language: currentLanguage, setLanguage: setAppLanguage } = useTranslation();
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // State for form inputs (untranslated, canonical values)
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [location, setLocation] = useState('');
-  const [language, setLanguage] = useState(currentLanguage);
   const [crops, setCrops] = useState('');
-
-  // State for translated display values shown in the UI
-  const [translatedDisplayName, setTranslatedDisplayName] = useState('');
-  const [translatedCrops, setTranslatedCrops] = useState('');
-
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [isTranslating, setIsTranslating] = useState(false);
 
-  // This effect runs when the component mounts or the user profile data changes.
-  // It populates the form with the canonical (usually English) data from the profile.
   useEffect(() => {
     if (userProfile) {
       setDisplayName(userProfile.displayName || '');
       setEmail(userProfile.email || '');
       setLocation(userProfile.location || 'Pune, Maharashtra');
-      setLanguage(userProfile.language || 'en');
       setCrops(userProfile.crops || '');
     } else if (user) {
         setDisplayName(user.displayName || '');
         setEmail(user.email || '');
     }
   }, [user, userProfile]);
-
-  // This callback is for translating the canonical data into the currently selected language for display.
-  const translateDataForDisplay = useCallback(async () => {
-    if (currentLanguage === 'en') {
-      setTranslatedDisplayName(displayName);
-      setTranslatedCrops(crops);
-      return;
-    }
-
-    setIsTranslating(true);
-    try {
-      const [nameRes, cropsRes] = await Promise.all([
-        displayName ? translateText({ text: displayName, targetLanguage: currentLanguage as 'hi' | 'kn' | 'bn' | 'bho' }) : Promise.resolve({ translatedText: '' }),
-        crops ? translateText({ text: crops, targetLanguage: currentLanguage as 'hi' | 'kn' | 'bn' | 'bho' }) : Promise.resolve({ translatedText: '' }),
-      ]);
-      setTranslatedDisplayName(nameRes.translatedText || displayName);
-      setTranslatedCrops(cropsRes.translatedText || crops);
-    } catch (error) {
-      console.error("Failed to translate user data for display", error);
-      // On error, fall back to showing the untranslated data.
-      setTranslatedDisplayName(displayName);
-      setTranslatedCrops(crops);
-    } finally {
-      setIsTranslating(false);
-    }
-  }, [displayName, crops, currentLanguage]);
-
-  // This effect triggers the translation whenever the canonical data or the current language changes.
-  useEffect(() => {
-    translateDataForDisplay();
-  }, [translateDataForDisplay]);
 
   
   const getInitials = (name: string | null | undefined) => {
@@ -148,16 +104,11 @@ export default function ProfilePage() {
   const handleSaveChanges = async () => {
     setIsSaving(true);
     try {
-      // Always save the untranslated (canonical) values to the database.
       await updateUserProfile({
         displayName,
         location,
-        language,
         crops,
       });
-      // Also update language in context to trigger app-wide re-render.
-      setAppLanguage(language as 'en' | 'hi' | 'kn' | 'bn' | 'bho');
-
       toast({
         title: t('toast.profileUpdated'),
         description: t('toast.profileUpdatedDesc'),
@@ -235,54 +186,37 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="name">{t('profile.fullName')}</Label>
-              <Input id="name" value={isTranslating ? '...' : (currentLanguage === 'en' ? displayName : translatedDisplayName)} onChange={(e) => setDisplayName(e.target.value)} />
+              <Input id="name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">{t('profile.email')}</Label>
               <Input id="email" type="email" value={email} disabled />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="location">{t('profile.location')}</Label>
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger id="location">
-                  <SelectValue placeholder={t('profile.selectDistrict')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {districts.map((district) => (
-                    <SelectItem key={district.value} value={district.value}>
-                      {district.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="language">{t('profile.language')}</Label>
-              <Select value={language} onValueChange={(value) => setLanguage(value)}>
-                <SelectTrigger id="language">
-                  <SelectValue placeholder={t('profile.selectLanguage')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="hi">Hindi (हिंदी)</SelectItem>
-                  <SelectItem value="kn">Kannada (ಕನ್ನಡ)</SelectItem>
-                  <SelectItem value="bn">Bangla (বাংলা)</SelectItem>
-                  <SelectItem value="bho">Bhojpuri (भोजपुरी)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="location">{t('profile.location')}</Label>
+            <Select value={location} onValueChange={setLocation}>
+              <SelectTrigger id="location">
+                <SelectValue placeholder={t('profile.selectDistrict')} />
+              </SelectTrigger>
+              <SelectContent>
+                {districts.map((district) => (
+                  <SelectItem key={district.value} value={district.value}>
+                    {district.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="crops">{t('profile.myCrops')}</Label>
             <p className="text-sm text-muted-foreground">
               {t('profile.myCropsDescription')}
             </p>
-            <Input id="crops" value={isTranslating ? '...' : (currentLanguage === 'en' ? crops : translatedCrops)} onChange={(e) => setCrops(e.target.value)} />
+            <Input id="crops" value={crops} onChange={(e) => setCrops(e.target.value)} />
           </div>
           <div className="flex justify-end">
-            <Button onClick={handleSaveChanges} disabled={isSaving || isUploading || isTranslating}>
+            <Button onClick={handleSaveChanges} disabled={isSaving || isUploading}>
               {isSaving ? t('profile.saving') : t('profile.saveChanges')}
             </Button>
           </div>
@@ -342,5 +276,3 @@ const ProfileSkeleton = () => {
     </div>
   );
 }
-
-    
