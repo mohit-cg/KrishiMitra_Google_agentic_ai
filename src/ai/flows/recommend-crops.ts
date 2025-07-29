@@ -29,6 +29,7 @@ const RecommendedCropSchema = z.object({
     cropName: z.string().describe("The name of the recommended crop."),
     icon: z.enum(['Leaf', 'Sprout', 'Carrot', 'Wheat', 'Grape']).describe("A relevant Lucide icon name from the provided list for the crop. Use 'Leaf' as a default."),
     plantingDates: z.string().describe("Recommended planting date range for the specified season and location, e.g., 'June 15 - July 30'."),
+    reasoning: z.string().min(1).describe("A short, one-sentence reason why this crop is a good choice, e.g., 'It is well-suited for your location's climate and has high market demand.'"),
     benefits: z.array(z.string()).min(2).max(3).describe("A list of 2-3 key benefits of growing this crop, e.g., 'High market demand', 'Drought resistant'."),
     imageHint: z.string().describe("Two or three specific keywords for a relevant image of the crop, e.g., 'pearl millet farm', 'ripe cotton crop', 'sugarcane field'."),
 });
@@ -48,7 +49,7 @@ const recommendCropsPrompt = ai.definePrompt({
   output: {schema: RecommendCropsOutputSchema},
   prompt: `You are an expert agricultural advisor in India. Your task is to recommend exactly 3 profitable and suitable crops for a farmer based on their specific inputs.
 
-  The farmer's preferred language is {{language}}. All of your text output (cropName, benefits) MUST be in this language.
+  The farmer's preferred language is {{language}}. All of your text output (cropName, reasoning, benefits) MUST be in this language.
 
   Farmer's Details:
   - Location: {{location}}
@@ -65,8 +66,9 @@ const recommendCropsPrompt = ai.definePrompt({
   1.  **cropName**: The name of the crop.
   2.  **icon**: A relevant Lucide icon name from this list: ['Leaf', 'Sprout', 'Carrot', 'Wheat', 'Grape']. Use 'Leaf' as a generic default if none are a perfect fit. For example, for cotton or soybean, use 'Leaf'. For wheat or maize, use 'Wheat'. For vegetables, use 'Carrot'.
   3.  **plantingDates**: A specific, recommended planting date range for the farmer's location and season. For example, "June 15 - July 30".
-  4.  **benefits**: A list of 2 or 3 key benefits for the farmer. These should be concise and compelling, such as "High market demand in your region", "Drought resistant, lower water needs", or "Improves soil nitrogen for next season".
-  5.  **imageHint**: Two or three specific keywords for a relevant image of the crop. For example, for a pearl millet recommendation, the hint could be "pearl millet farm". For cotton, it could be "ripe cotton crop".
+  4.  **reasoning**: A short, one-sentence reason why this crop is a good choice based on the inputs provided. For example, "This crop is well-suited to your soil type and has strong market demand in your region."
+  5.  **benefits**: A list of 2 or 3 key benefits for the farmer. These should be concise and compelling, such as "High market demand in your region", "Drought resistant, lower water needs", or "Improves soil nitrogen for next season".
+  6.  **imageHint**: Two or three specific keywords for a relevant image of the crop. For example, for a pearl millet recommendation, the hint could be "pearl millet farm". For cotton, it could be "ripe cotton crop".
 
   Generate a list of exactly 3 diverse and practical crop recommendations.
   `,
@@ -96,6 +98,7 @@ const recommendCropsFlow = ai.defineFlow(
             cropName: "Soybean",
             icon: "Leaf",
             plantingDates: "June - July",
+            reasoning: "A robust and profitable Kharif crop suitable for many Indian climates.",
             benefits: fallbackBenefits,
             imageHint: "soybean field",
           },
@@ -103,6 +106,7 @@ const recommendCropsFlow = ai.defineFlow(
             cropName: "Cotton",
             icon: "Leaf",
             plantingDates: "May - June",
+            reasoning: "High demand in the textile industry and grows well in drier conditions.",
             benefits: fallbackBenefits,
             imageHint: "ripe cotton crop",
           },
@@ -110,6 +114,7 @@ const recommendCropsFlow = ai.defineFlow(
             cropName: "Maize",
             icon: "Wheat",
             plantingDates: "June - July",
+            reasoning: "A versatile crop used for both food and animal feed, with good yield potential.",
             benefits: fallbackBenefits,
             imageHint: "maize corn field",
           }

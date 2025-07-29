@@ -224,9 +224,9 @@ export default function DashboardPage() {
                     <CardHeader>
                         <div className="flex items-center gap-2">
                            <Icons.sprout className="h-6 w-6 text-primary"/>
-                           <CardTitle>Seasonal Crop Recommendations</CardTitle>
+                           <CardTitle>{t('dashboard.recommendations.title')}</CardTitle>
                         </div>
-                        <CardDescription>Crops suggested for the current season based on your location and weather.</CardDescription>
+                        <CardDescription>{t('dashboard.recommendations.description')}</CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-4 md:grid-cols-2">
                         {loadingRecommendations ? (
@@ -241,13 +241,13 @@ export default function DashboardPage() {
                                 </Card>
                              ))
                         ) : recommendations && recommendations.recommendations.length > 0 ? (
-                           recommendations.recommendations.map(rec => (
+                           recommendations.recommendations.slice(0,2).map(rec => (
                             <Card key={rec.cropName} className="overflow-hidden">
                                 <div className="flex items-start gap-4 p-4">
                                     <Image src={`https://placehold.co/100x100.png`} alt={rec.cropName} width={80} height={80} className="rounded-lg object-cover" data-ai-hint={rec.imageHint}/>
                                     <div className="flex-1">
                                         <h4 className="font-semibold text-base">{rec.cropName}</h4>
-                                        <p className="text-xs text-muted-foreground mt-1 mb-2 truncate">{rec.reasoning}</p>
+                                        <p className="text-xs text-muted-foreground mt-1 mb-2 line-clamp-2">{rec.reasoning}</p>
                                         <Button asChild size="sm" variant="secondary" className="text-xs">
                                             <Link href={`/dashboard/learn?q=${encodeURIComponent(rec.cropName)}`}>
                                                 Learn More <ArrowRight className="ml-1 h-3 w-3"/>
@@ -258,7 +258,7 @@ export default function DashboardPage() {
                             </Card>
                            ))
                         ) : (
-                             <p className="text-sm text-muted-foreground text-center py-4 md:col-span-2">Could not load recommendations at this time.</p>
+                             <p className="text-sm text-muted-foreground text-center py-4 md:col-span-2">{t('dashboard.recommendations.unavailable')}</p>
                         )}
                     </CardContent>
                 </Card>

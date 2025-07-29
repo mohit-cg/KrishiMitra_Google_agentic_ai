@@ -57,7 +57,12 @@
             "eLearning": "Browse guides and tutorials."
         },
         "currentWeather": "Current Weather",
-        "weatherUnavailable": "Weather data unavailable."
+        "weatherUnavailable": "Weather data unavailable.",
+        "recommendations": {
+            "title": "Seasonal Crop Recommendations",
+            "description": "Crops suggested for the current season based on your location and weather.",
+            "unavailable": "Could not load recommendations at this time."
+        }
     },
     "cropDoctor": {
         "title": "AI Crop Doctor",

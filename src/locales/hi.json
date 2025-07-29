@@ -57,7 +57,12 @@
             "cropRecommender": "AI-संचालित फसल सुझाव प्राप्त करें।"
         },
         "currentWeather": "वर्तमान मौसम",
-        "weatherUnavailable": "मौसम डेटा अनुपलब्ध है।"
+        "weatherUnavailable": "मौसम डेटा अनुपलब्ध है।",
+        "recommendations": {
+            "title": "मौसमी फसल सिफारिशें",
+            "description": "आपके स्थान और मौसम के आधार पर वर्तमान मौसम के लिए सुझाई गई फसलें।",
+            "unavailable": "इस समय सिफारिशें लोड नहीं की जा सकीं।"
+        }
     },
     "cropDoctor": {
         "title": "एआई फसल डॉक्टर",
