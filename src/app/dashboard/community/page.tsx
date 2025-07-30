@@ -161,7 +161,7 @@ export default function CommunityPage() {
 
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col">
-       <div className="flex justify-between items-center mb-4">
+       <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-3xl font-bold mb-2 font-headline">{t('community.title')}</h1>
           <p className="text-muted-foreground">
@@ -247,8 +247,8 @@ export default function CommunityPage() {
                  <span className="sr-only">{isRecording ? t('community.stopRecording') : t('community.startRecording')}</span>
               </Button>
               <Button type="submit" disabled={!newMessage.trim() && !attachmentPreview}>
-                <Send className="h-4 w-4 mr-2" />
-                {attachmentPreview ? t('community.sendPhoto') : t('community.send')}
+                <Send className="h-4 w-4 md:mr-2" />
+                <span className="hidden md:inline">{attachmentPreview ? t('community.sendPhoto') : t('community.send')}</span>
               </Button>
             </form>
           </CardContent>

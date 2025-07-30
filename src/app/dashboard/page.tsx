@@ -184,7 +184,7 @@ export default function DashboardPage() {
                         <CardTitle className="text-sm font-medium">{t('dashboard.currentWeather')}</CardTitle>
                         <Cloud className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent className="flex items-center space-x-4">
+                    <CardContent className="flex flex-col sm:flex-row items-center sm:space-x-4">
                         {loadingWeather ? (
                         <div className="flex items-center space-x-4 w-full">
                             <Skeleton className="h-16 w-16 rounded-full" />
@@ -200,13 +200,13 @@ export default function DashboardPage() {
                         ) : weatherData ? (
                             <>
                                 {getIcon(weatherData.current.icon as keyof typeof iconMap)}
-                                <div>
+                                <div className="text-center sm:text-left mt-2 sm:mt-0">
                                     <div className="text-3xl font-bold">{weatherData.current.temperature}</div>
                                     <p className="text-sm text-muted-foreground">
                                     {t(`weather.conditions.${weatherData.current.condition}`)} in {weatherData.city}
                                     </p>
                                 </div>
-                                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm pl-4">
+                                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm pl-4 mt-2 sm:mt-0">
                                     <div className="flex items-center gap-1">
                                         <Wind className="h-4 w-4" /> <span>{weatherData.current.wind}</span>
                                     </div>

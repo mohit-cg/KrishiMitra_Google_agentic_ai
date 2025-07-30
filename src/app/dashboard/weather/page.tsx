@@ -126,7 +126,7 @@ export default function WeatherPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <div className="flex-1">
             <h1 className="text-3xl font-bold mb-2 font-headline">{t('weather.title')}</h1>
             <p className="text-muted-foreground">
@@ -139,7 +139,7 @@ export default function WeatherPage() {
               placeholder={t('weather.enterCity')}
               value={inputCity}
               onChange={(e) => setInputCity(e.target.value)}
-              className="min-w-[200px]"
+              className="min-w-[150px] sm:min-w-[200px]"
             />
             <Button type="submit" size="icon" disabled={isLoading || isRecording}>
               <Search className="h-4 w-4"/>
@@ -149,7 +149,7 @@ export default function WeatherPage() {
             {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
             <span className="sr-only">{isRecording ? t('learn.stopRecording') : t('learn.startVoiceSearch')}</span>
           </Button>
-           <Button asChild variant="outline">
+           <Button asChild variant="outline" className="hidden sm:inline-flex">
                 <Link href="/dashboard">
                     <ArrowLeft className="mr-2 h-4 w-4" /> {t('profile.backToDashboard')}
                 </Link>
@@ -185,13 +185,13 @@ export default function WeatherPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {weatherData.forecast.map((day, index) => (
                 <Card key={index} className="text-center">
-                  <CardHeader>
-                    <CardTitle className="text-lg">{t(`weather.days.${day.day.toLowerCase()}`, {defaultValue: day.day})}</CardTitle>
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-base sm:text-lg">{t(`weather.days.${day.day.toLowerCase()}`, {defaultValue: day.day})}</CardTitle>
                   </CardHeader>
-                  <CardContent className="flex flex-col items-center gap-2">
+                  <CardContent className="flex flex-col items-center gap-2 p-4 pt-0">
                     {getIcon(day.icon as keyof typeof iconMap, "h-10 w-10 text-accent")}
                     <p className="text-xl font-semibold">{day.temp}</p>
-                    <p className="text-sm text-muted-foreground">{t(`weather.conditions.${day.condition}`, {defaultValue: day.condition})}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{t(`weather.conditions.${day.condition}`, {defaultValue: day.condition})}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -234,10 +234,10 @@ const WeatherSkeleton = () => (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
                 {Array.from({ length: 7 }).map((_, index) => (
                     <Card key={index} className="text-center">
-                        <CardHeader>
+                        <CardHeader className="p-4">
                            <Skeleton className="h-6 w-1/2 mx-auto" />
                         </CardHeader>
-                        <CardContent className="flex flex-col items-center gap-2">
+                        <CardContent className="flex flex-col items-center gap-2 p-4 pt-0">
                             <Skeleton className="h-10 w-10 rounded-full" />
                             <Skeleton className="h-6 w-12" />
                             <Skeleton className="h-4 w-20" />
@@ -248,5 +248,3 @@ const WeatherSkeleton = () => (
         </div>
     </>
 );
-
-    

@@ -58,7 +58,7 @@ export default function TrackerPage() {
             <Button onClick={handleAdd}>
                 <PlusCircle className="mr-2 h-4 w-4"/> {t('tracker.addTransaction')}
             </Button>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="shrink-0">
                 <Link href="/dashboard">
                     <ArrowLeft className="mr-2 h-4 w-4" /> {t('profile.backToDashboard')}
                 </Link>

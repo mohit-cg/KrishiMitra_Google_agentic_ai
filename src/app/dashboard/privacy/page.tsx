@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -23,12 +24,12 @@ export default function PrivacyPolicyPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col md:flex-row justify-between md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold mb-2 font-headline">{t('settings.legal.privacy')}</h1>
           <p className="text-muted-foreground">{t('privacy.description')}</p>
         </div>
-        <Button asChild variant="outline">
+        <Button asChild variant="outline" className="shrink-0">
           <Link href="/dashboard/settings">
             <ArrowLeft className="mr-2 h-4 w-4" /> {t('privacy.backToSettings')}
           </Link>
