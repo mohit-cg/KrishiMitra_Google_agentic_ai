@@ -57,7 +57,7 @@ Edit
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/krishimitra.git
+   git clone https://github.com/mohit-cg/studio.git
    cd krishimitra
 Install dependencies:
 
